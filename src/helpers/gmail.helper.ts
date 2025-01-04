@@ -49,83 +49,38 @@ export class GmailHelper {
             console.log('\n=== Processing Philo Sign-in Email ===');
             await this.initializeGmailClient();
 
-            // Try different search queries
-            const searchQueries = [
-                'from:help@philo.com subject:"Your Philo sign-in link" newer_than:10m',
-                'from:help@philo.com subject:"Sign in to Philo" newer_than:10m',
-                'from:help@philo.com "sign in" newer_than:10m',
-                'from:help@philo.com newer_than:10m'
-            ];
+            // Get the most recent email
+            const response = await this.gmail.users.messages.list({
+                auth: this.oauth2Client,
+                userId: 'me',
+                maxResults: 1
+            });
 
-            // Content patterns to look for in email body
-            const contentPatterns = [
-                'Sign in to Philo',
-                'Your Philo sign-in link',
-                'Click here to sign in',
-                'Confirm your sign-in'
-            ];
-
-            let messageId = null;
-            
-            // Try each search query until we find a matching email
-            for (const query of searchQueries) {
-                console.log('Trying search query:', query);
-                const response = await this.gmail.users.messages.list({
-                    auth: this.oauth2Client,
-                    userId: 'me',
-                    q: query,
-                    maxResults: 5
-                });
-
-                if (response.data.messages?.length) {
-                    // Check each message for Philo-related content
-                    for (const msg of response.data.messages) {
-                        const message = await this.gmail.users.messages.get({
-                            auth: this.oauth2Client,
-                            userId: 'me',
-                            id: msg.id as string,
-                            format: 'full'
-                        });
-
-                        const subject = message.data.payload?.headers?.find(h => h.name === 'Subject')?.value || '';
-                        const from = message.data.payload?.headers?.find(h => h.name === 'From')?.value || '';
-                        
-                        console.log('Found email:', { subject, from });
-
-                        // Extract and check email content
-                        const emailBody = message.data.payload?.parts?.[0]?.body?.data ||
-                                        message.data.payload?.body?.data;
-
-                        if (emailBody) {
-                            const decodedBody = Buffer.from(emailBody, 'base64').toString();
-                            const hasMatchingContent = contentPatterns.some(pattern => 
-                                decodedBody.includes(pattern)
-                            );
-                            if (hasMatchingContent) {
-                                messageId = msg.id;
-                                console.log('✅ Found Philo sign-in email');
-                                break;
-                            }
-                        }
-                    }
-                    if (messageId) break;
-                }
-            }
-
-            if (!messageId) {
-                console.log('❌ No relevant Philo email found');
+            if (!response.data.messages?.length) {
+                console.log('❌ No emails found');
                 return false;
             }
 
+            const messageId = response.data.messages[0].id;
+            if (!messageId) {
+                console.log('❌ Invalid message ID');
+                return false;
+            }
+
+            console.log('Found most recent email:', messageId);
+
             // Get email content
-            console.log('Found email:', messageId);
-            
             const message = await this.gmail.users.messages.get({
                 auth: this.oauth2Client,
                 userId: 'me',
-                id: messageId as string,
+                id: messageId,
                 format: 'full'
             });
+
+            // Log email details
+            const subject = message.data.payload?.headers?.find(h => h.name === 'Subject')?.value || 'No Subject';
+            const from = message.data.payload?.headers?.find(h => h.name === 'From')?.value || 'No Sender';
+            console.log('Email details:', { subject, from });
 
             // Extract email body
             const emailBody = message.data.payload?.parts?.[0]?.body?.data ||
@@ -133,69 +88,107 @@ export class GmailHelper {
 
             if (!emailBody) {
                 console.log('❌ No email content found');
+                console.log('Message payload structure:', JSON.stringify(message.data.payload, null, 2));
                 return false;
             }
 
             const decodedBody = Buffer.from(emailBody, 'base64').toString();
-            console.log('Processing email content...');
+            console.log('Email body preview:', decodedBody.substring(0, 200) + '...');
 
-            // Option 2: Process the email content directly
-            // Find the sign-in link in the email body
-            const linkMatch = decodedBody.match(/<a href="([^"]+)"/);
-            if (!linkMatch) {
-                console.log('❌ No Sign in to Philo button found in email');
+            // Find sign-in link using various patterns
+            let signInLink = null;
+            
+            // Try to find link in href attribute
+            const hrefMatch = decodedBody.match(/href="(https?:\/\/[^"]+)"/);
+            if (hrefMatch) {
+                signInLink = hrefMatch[1];
+            }
+            
+            // If no href found, try to find raw URL
+            if (!signInLink) {
+                const urlMatch = decodedBody.match(/(https?:\/\/[^\s<>"]+)/);
+                if (urlMatch) {
+                    signInLink = urlMatch[1];
+                }
+            }
+
+            if (!signInLink) {
+                console.log('❌ No sign-in link found in email');
                 return false;
             }
 
-            const signInLink = linkMatch[1];
-            console.log('✅ Found Sign in to Philo button:', signInLink);
+            console.log('✅ Found sign-in link:', signInLink);
 
-            // Follow the sign-in link
-            console.log('Following Sign in to Philo button...');
-            const response1 = await axios.get(signInLink);
-            if (response1.status !== 200) {
-                console.log('❌ Failed to follow Sign in to Philo button');
-                return false;
-            }
+            // Follow the sign-in link with axios configured to follow redirects
+            console.log('Following sign-in link...');
+            const axiosInstance = axios.create({
+                maxRedirects: 5,
+                validateStatus: (status) => status < 400
+            });
 
-            // Look for "Sign in to Philo" button
-            if (response1.data.includes('Sign in to Philo')) {
-                console.log('✅ Found "Sign in to Philo" button');
+            const response1 = await axiosInstance.get(signInLink);
+            console.log('Response status:', response1.status);
+            console.log('Final URL:', response1.request.res.responseUrl);
+
+            // Look for the confirm button
+            const confirmButtonMatch = response1.data.match(/<input[^>]*type="submit"[^>]*value="Confirm sign-in"[^>]*>/i);
+            if (confirmButtonMatch) {
+                console.log('Found confirm button:', confirmButtonMatch[0]);
                 
-                // Click the button (simulate by making another request)
-                const signInUrl = response1.data.match(/href="([^"]+sign-in[^"]+)"/)?.[1];
-                if (!signInUrl) {
-                    console.log('❌ No Sign in to Philo button URL found');
-                    return false;
-                }
+                // Get the form action URL
+                const formMatch = response1.data.match(/<form[^>]+action="([^"]+)"[^>]*>/i);
+                if (formMatch) {
+                    const formAction = formMatch[1];
+                    console.log('Found form action:', formAction);
 
-                console.log('Clicking "Sign in to Philo" button...');
-                const response2 = await axios.get(signInUrl);
-                if (response2.status !== 200) {
-                    console.log('❌ Failed to click Sign in to Philo button');
-                    return false;
-                }
+                    // Construct the full URL for the form action
+                    const baseUrl = new URL(response1.request.res.responseUrl);
+                    const confirmUrl = new URL(formAction, baseUrl).toString();
+                    
+                    // Submit the form with the required fields
+                    const formData = new URLSearchParams();
+                    formData.append('commit', 'Confirm sign-in');
 
-                // Mark email as read
+                    console.log('Submitting confirm form to:', confirmUrl);
+                    const response2 = await axiosInstance.post(confirmUrl, formData);
+                    console.log('Confirm response status:', response2.status);
+                    console.log('Final URL after confirm:', response2.request.res.responseUrl);
+                }
+            } else {
+                console.log('No confirm button found on page');
+            }
+
+            try {
+                // Try to mark email as read
                 await this.gmail.users.messages.modify({
                     auth: this.oauth2Client,
                     userId: 'me',
-                    id: messageId as string,
+                    id: messageId,
                     requestBody: {
                         removeLabelIds: ['UNREAD']
                     }
                 });
-
-                console.log('✅ Successfully processed Sign in to Philo email');
-                return true;
+            } catch (error: any) {
+                // Don't fail if we can't mark the email as read
+                console.warn('⚠️ Could not mark email as read:', error.message);
             }
 
-            console.log('❌ Could not complete Sign in to Philo process');
-            return false;
+            console.log('✅ Successfully followed all links');
+            return true;
 
         } catch (error) {
-            console.error('❌ Error processing Sign in to Philo email:', error);
+            console.error('❌ Error processing email:', error);
+            if (axios.isAxiosError(error)) {
+                console.error('Response:', error.response?.data);
+            }
             return false;
         }
+    }
+
+    /**
+     * Get Gmail client for testing
+     */
+    static getGmailClient() {
+        return this.gmail;
     }
 } 

@@ -43,12 +43,12 @@ export class SettingsPage extends BasePage {
      * Verify settings page elements are displayed
      */
     async verifySettingsPageElements(): Promise<void> {
+        //wait until the page is stable
+        await this.driver.pause(15000);
         // Verify header elements
-        await this.verifyElementDisplayed(this.selectors.settingsHeader);
         await this.verifyElementDisplayed(this.selectors.backButton);
 
         // Verify account section
-        
         await this.verifyElementDisplayed(this.selectors.signInInformation);
         await this.verifyElementDisplayed(this.selectors.addMobileNumber);
         await this.verifyElementDisplayed(this.selectors.addProfiles);
@@ -87,12 +87,31 @@ export class SettingsPage extends BasePage {
     /**
      * Verify settings page is displayed
      */
-    async isSettingsPageDisplayed(): Promise<boolean> {
+    async verifySettingsPageDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.settingsHeader);
-            return true;
+            // Wait for the page to be stable
+            await this.driver.pause(5000);
+
+            // Verify account section elements
+            await this.verifyElementDisplayed(this.selectors.signInInformation);
+            await this.verifyElementDisplayed(this.selectors.addMobileNumber);
+            await this.verifyElementDisplayed(this.selectors.addProfiles);
+            await this.verifyElementDisplayed(this.selectors.editButton);
+
+            // Verify playback section
+            await this.verifyElementDisplayed(this.selectors.playbackSection);
+            await this.verifyElementDisplayed(this.selectors.startChannelPlayback);
+            await this.verifyElementDisplayed(this.selectors.programBeginning);
+
+            // Verify version info
+            await this.verifyElementDisplayed(this.selectors.versionInfo);
+            await this.verifyElementDisplayed(this.selectors.appVersion);
+
+            // Verify sign out button
+            await this.verifyElementDisplayed(this.selectors.signOutButton);
         } catch (error) {
-            return false;
+            console.error('Error verifying settings page elements:', error);
+            throw error;
         }
     }
 

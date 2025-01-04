@@ -25,11 +25,11 @@ async function formatUiDump() {
         await ensureDirectoryExists(txtDir);
 
         // First, get a fresh dump
-        await execAsync('adb shell uiautomator dump /sdcard/sdp_dump.xml');
-        await execAsync(`adb pull /sdcard/sdp_dump.xml ${path.join(xmlDir, 'sdp_dump.xml')}`);
+        await execAsync('adb shell uiautomator dump /sdcard/channels_dump.xml');
+        await execAsync(`adb pull /sdcard/channels_dump.xml ${path.join(xmlDir, 'channels_dump.xml')}`);
 
         // Read the XML file
-        const xmlContent = await fs.readFile(path.join(xmlDir, 'sdp_dump.xml'), 'utf-8');
+        const xmlContent = await fs.readFile(path.join(xmlDir, 'channels_dump.xml'), 'utf-8');
 
         // Parse XML to JSON
         const parser = new xml2js.Parser();
@@ -47,22 +47,22 @@ async function formatUiDump() {
 
         // Write the formatted XML
         await fs.writeFile(
-            path.join(xmlDir, 'formatted_sdp_dump.xml'),
+            path.join(xmlDir, 'formatted_channels_dump.xml'),
             formattedXml,
             'utf-8'
         );
 
-        console.log('UI dump has been formatted and saved to src/config/xml_files/formatted_sdp_dump.xml');
+        console.log('UI dump has been formatted and saved to src/config/xml_files/formatted_channels_dump.xml');
 
         // Create a simplified version with just resource-ids and text
         const simplifiedContent = extractRelevantInfo(result);
         await fs.writeFile(
-            path.join(txtDir, 'simplified_sdp_dump.txt'),
+            path.join(txtDir, 'simplified_channels_dump.txt'),
             simplifiedContent,
             'utf-8'
         );
 
-        console.log('Simplified version saved to src/config/txt_files/simplified_sdp_dump.txt');
+        console.log('Simplified version saved to src/config/txt_files/simplified_channels_dump.txt');
 
     } catch (error) {
         console.error('Error formatting UI dump:', error);

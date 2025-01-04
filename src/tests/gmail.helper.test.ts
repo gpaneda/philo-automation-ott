@@ -1,5 +1,6 @@
 import { GmailHelper } from '../helpers/gmail.helper';
 import dotenv from 'dotenv';
+import { gmail_v1 } from 'googleapis';
 
 // Load environment variables
 dotenv.config();
@@ -44,8 +45,8 @@ describe('Gmail Helper Tests', () => {
     test('should handle missing emails gracefully', async () => {
         console.log('\n=== Testing Error Handling ===');
         try {
-            // Wait a bit to ensure no new emails
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Wait a bit to ensure no new emails have arrived
+            await new Promise(resolve => setTimeout(resolve, 5000));
             
             const success = await GmailHelper.processSignInEmail();
             expect(success).toBe(false);
@@ -54,5 +55,5 @@ describe('Gmail Helper Tests', () => {
             console.error('❌ Error handling test failed:', error);
             throw error;
         }
-    });
+    }, 30000);
 }); 

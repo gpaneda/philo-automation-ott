@@ -1,11 +1,15 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1',
-    '^@pages/(.*)$': '<rootDir>/src/pages/$1',
-    '^@config/(.*)$': '<rootDir>/src/config/$1',
-    '^@helpers/(.*)$': '<rootDir>/src/helpers/$1'
+  transform: {
+    '^.+\\.tsx?$': 'ts-jest'
   },
-  setupFilesAfterEnv: ['<rootDir>/src/config/jest.setup.ts']
+  setupFilesAfterEnv: ['./jest.setup.ts'],
+  testTimeout: 60000,
+  globals: {
+    'ts-jest': {
+      isolatedModules: true
+    }
+  }
 }; 

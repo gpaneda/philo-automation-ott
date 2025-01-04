@@ -1,6 +1,6 @@
 import { AppHelper } from '../helpers/app.helper';
 import { Browser } from 'webdriverio';
-import { HomeScreenSignedInPage } from '../pages/homeScreenSignedIn.page';
+import { HomeScreenPage } from '../pages/homescreen.page';
 import { GuidePage } from '../pages/guide.page';
 import { SettingsPage } from '../pages/settings.page';
 import { TopPage } from '../pages/top.page';
@@ -8,7 +8,7 @@ import path from 'path';
 import fs from 'fs/promises';
 
 let driver: Browser<'async'>;
-let homeScreen: HomeScreenSignedInPage;
+let homeScreen: HomeScreenPage;
 let guidePage: GuidePage;
 let settingsPage: SettingsPage;
 let topPage: TopPage;
@@ -34,7 +34,7 @@ beforeAll(async () => {
     try {
         await ensureDirectories();
         driver = await AppHelper.launchPhiloApp();
-        homeScreen = new HomeScreenSignedInPage(driver);
+        homeScreen = new HomeScreenPage(driver);
         guidePage = new GuidePage(driver);
         settingsPage = new SettingsPage(driver);
         topPage = new TopPage(driver);
@@ -222,7 +222,7 @@ describe('Top Nav Tests', () => {
     }, 180000);
 
     //Test Case 109 - Verify that the Saved Page is visible when the Saved button is clicked
-    test.only('TC109 - should display the Saved Page', async () => {
+    test('TC109 - should display the Saved Page', async () => {
         try {
             await homeScreen.pressUpButton();
             await new Promise(resolve => setTimeout(resolve, 5000));
@@ -277,7 +277,7 @@ describe('Top Nav Tests', () => {
     }, 180000);
 
     //Test Case 110 - Verify that the Search Page is visible when the Search button is clicked
-    test.only('TC110 - should display the Search Page', async () => {
+    test('TC110 - should display the Search Page', async () => {
         try {
             await homeScreen.pressUpButton();
             await new Promise(resolve => setTimeout(resolve, 5000));

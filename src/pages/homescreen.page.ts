@@ -2,7 +2,7 @@ import { Browser } from 'webdriverio';
 import { BasePage } from './base.page';
 import { exec } from 'child_process';
 
-export class HomeScreenSignedInPage extends BasePage {
+export class HomeScreenPage extends BasePage {
     
 
     getSettingsButtonElement() {
