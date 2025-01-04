@@ -1,0 +1,312 @@
+Element: android.widget.LinearLayout
+  resource-id: com.philo.philo:id/action_bar_root
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: android:id/content
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/activity_host
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/player_fragment_host
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/modal_fragment_host
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/dialog_fragment_host
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/fragment_host
+  bounds: [0,0][1920,1080]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/fragment_search
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/search_src_text
+  bounds: [104,288][608,360]
+
+Element: android.widget.GridLayout
+  resource-id: com.philo.philo:id/keypad
+  bounds: [104,376][608,808]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_a
+  text: a
+  bounds: [104,376][176,448]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_b
+  text: b
+  bounds: [176,376][248,448]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_c
+  text: c
+  bounds: [248,376][320,448]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_d
+  text: d
+  bounds: [320,376][392,448]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_e
+  text: e
+  bounds: [392,376][464,448]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_f
+  text: f
+  bounds: [464,376][536,448]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_g
+  text: g
+  bounds: [536,376][608,448]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_h
+  text: h
+  bounds: [104,448][176,520]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_i
+  text: i
+  bounds: [176,448][248,520]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_j
+  text: j
+  bounds: [248,448][320,520]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_k
+  text: k
+  bounds: [320,448][392,520]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_l
+  text: l
+  bounds: [392,448][464,520]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_m
+  text: m
+  bounds: [464,448][536,520]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_n
+  text: n
+  bounds: [536,448][608,520]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_o
+  text: o
+  bounds: [104,520][176,592]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_p
+  text: p
+  bounds: [176,520][248,592]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_q
+  text: q
+  bounds: [248,520][320,592]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_r
+  text: r
+  bounds: [320,520][392,592]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_s
+  text: s
+  bounds: [392,520][464,592]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_t
+  text: t
+  bounds: [464,520][536,592]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_u
+  text: u
+  bounds: [536,520][608,592]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_v
+  text: v
+  bounds: [104,592][176,664]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_w
+  text: w
+  bounds: [176,592][248,664]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_x
+  text: x
+  bounds: [248,592][320,664]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_y
+  text: y
+  bounds: [320,592][392,664]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_z
+  text: z
+  bounds: [392,592][464,664]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_1
+  text: 1
+  bounds: [464,592][536,664]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_2
+  text: 2
+  bounds: [536,592][608,664]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_3
+  text: 3
+  bounds: [104,664][176,736]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_4
+  text: 4
+  bounds: [176,664][248,736]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_5
+  text: 5
+  bounds: [248,664][320,736]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_6
+  text: 6
+  bounds: [320,664][392,736]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_7
+  text: 7
+  bounds: [392,664][464,736]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_8
+  text: 8
+  bounds: [464,664][536,736]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_9
+  text: 9
+  bounds: [536,664][608,736]
+
+Element: android.widget.LinearLayout
+  resource-id: com.philo.philo:id/keypad_bottom_row
+  bounds: [104,736][600,808]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_0
+  text: 0
+  bounds: [104,736][176,808]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_space
+  text: SPACE
+  bounds: [176,736][352,808]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/button_clear
+  text: CLEAR
+  bounds: [352,736][528,808]
+
+Element: android.widget.Button
+  resource-id: com.philo.philo:id/keypad_backspace
+  bounds: [528,736][600,808]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/fragment_tabs
+  bounds: [0,0][1920,244]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/widget_tabs
+  bounds: [0,0][1920,244]
+
+Element: android.widget.LinearLayout
+  resource-id: com.philo.philo:id/tab_bar
+  bounds: [482,50][1439,146]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_home
+  bounds: [490,58][661,138]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/label_tab
+  text: Home
+  bounds: [526,74][625,122]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_guide
+  bounds: [661,58][832,138]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/label_tab
+  text: Guide
+  bounds: [697,74][796,122]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_top
+  bounds: [832,58][964,138]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/label_tab
+  text: Top
+  bounds: [868,74][928,122]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_saved
+  bounds: [964,58][1138,138]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/label_tab
+  text: Saved
+  bounds: [1000,74][1102,122]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_search
+  bounds: [1138,58][1327,138]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/label_tab
+  text: Search
+  bounds: [1174,74][1291,122]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_profile
+  bounds: [1327,62][1399,134]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/icon_tab
+  bounds: [1327,62][1399,134]
+
+Element: android.widget.LinearLayout
+  resource-id: com.philo.philo:id/tab_bar_time
+  bounds: [1588,50][1772,146]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/tab_bar_time_label
+  text: 11:18a
+  bounds: [1620,50][1740,146]
+

@@ -1,0 +1,363 @@
+Element: android.widget.LinearLayout
+  resource-id: com.philo.philo:id/action_bar_root
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: android:id/content
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/activity_host
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/player_fragment_host
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/modal_fragment_host
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/dialog_fragment_host
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/fragment_host
+  bounds: [0,0][1920,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/fragment_tile_group_list
+  bounds: [0,0][1920,1080]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tile_groups_container
+  bounds: [0,0][1920,1080]
+
+Element: androidx.recyclerview.widget.RecyclerView
+  resource-id: com.philo.philo:id/tile_groups
+  bounds: [0,0][1920,1080]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/guide_tile_row
+  bounds: [0,0][1920,502]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/tile_group_row_header_background
+  bounds: [0,0][370,502]
+
+Element: android.widget.LinearLayout
+  resource-id: com.philo.philo:id/group_header_layout
+  bounds: [50,186][1920,234]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/group_header_icon
+  bounds: [50,186][98,234]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/group_header_label
+  text: Free channels
+  bounds: [118,192][1900,228]
+
+Element: androidx.recyclerview.widget.RecyclerView
+  resource-id: com.philo.philo:id/list_view_broadcasts
+  bounds: [0,234][1920,502]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [370,234][852,502]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [370,234][852,502]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [858,234][1340,502]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [858,234][1340,502]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [1346,234][1828,502]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [1346,234][1828,502]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [1834,234][1920,502]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [1834,234][1920,502]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tile_group_row_header_layout
+  bounds: [60,234][358,502]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/button_tile_group
+  bounds: [60,234][358,502]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [60,234][358,502]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/channel_logo
+  bounds: [145,304][273,432]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/guide_tile_row
+  bounds: [0,502][1920,770]
+
+Element: androidx.recyclerview.widget.RecyclerView
+  resource-id: com.philo.philo:id/list_view_broadcasts
+  bounds: [0,502][1920,770]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [370,502][852,770]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [370,502][852,770]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [858,502][1340,770]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [858,502][1340,770]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [1346,502][1828,770]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [1346,502][1828,770]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [1834,502][1920,770]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [1834,502][1920,770]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/tile_group_row_header_background
+  bounds: [0,502][370,770]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tile_group_row_header_layout
+  bounds: [60,502][358,770]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/button_tile_group
+  bounds: [60,502][358,770]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [60,502][358,770]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/channel_logo
+  bounds: [145,572][273,700]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/guide_tile_row
+  bounds: [0,770][1920,1038]
+
+Element: androidx.recyclerview.widget.RecyclerView
+  resource-id: com.philo.philo:id/list_view_broadcasts
+  bounds: [0,770][1920,1038]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [370,770][852,1038]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [370,770][852,1038]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [858,770][1340,1038]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [858,770][1340,1038]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [1346,770][1828,1038]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [1346,770][1828,1038]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [1834,770][1920,1038]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [1834,770][1920,1038]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/tile_group_row_header_background
+  bounds: [0,770][370,1038]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tile_group_row_header_layout
+  bounds: [60,770][358,1038]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/button_tile_group
+  bounds: [60,770][358,1038]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [60,770][358,1038]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/channel_logo
+  bounds: [145,840][273,968]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/guide_tile_row
+  bounds: [0,1038][1920,1080]
+
+Element: androidx.recyclerview.widget.RecyclerView
+  resource-id: com.philo.philo:id/list_view_broadcasts
+  bounds: [0,1038][1920,1080]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [370,1038][852,1080]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [370,1038][852,1080]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [858,1038][1340,1080]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [858,1038][1340,1080]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [1346,1038][1828,1080]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [1346,1038][1828,1080]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/background_image
+  bounds: [1834,1038][1920,1080]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [1834,1038][1920,1080]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/tile_group_row_header_background
+  bounds: [0,1038][370,1080]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tile_group_row_header_layout
+  bounds: [60,1038][358,1080]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/button_tile_group
+  bounds: [60,1038][358,1080]
+
+Element: android.view.View
+  resource-id: com.philo.philo:id/pressed_overlay
+  bounds: [60,1038][358,1080]
+
+Element: android.widget.FrameLayout
+  resource-id: com.philo.philo:id/fragment_tabs
+  bounds: [0,0][1920,244]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/widget_tabs
+  bounds: [0,0][1920,244]
+
+Element: android.widget.LinearLayout
+  resource-id: com.philo.philo:id/tab_bar
+  bounds: [482,50][1439,146]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_home
+  bounds: [490,58][661,138]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/label_tab
+  text: Home
+  bounds: [526,74][625,122]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_guide
+  bounds: [661,58][832,138]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/label_tab
+  text: Guide
+  bounds: [697,74][796,122]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_top
+  bounds: [832,58][964,138]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/label_tab
+  text: Top
+  bounds: [868,74][928,122]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_saved
+  bounds: [964,58][1138,138]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/label_tab
+  text: Saved
+  bounds: [1000,74][1102,122]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_search
+  bounds: [1138,58][1327,138]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/label_tab
+  text: Search
+  bounds: [1174,74][1291,122]
+
+Element: android.view.ViewGroup
+  resource-id: com.philo.philo:id/tab_profile
+  bounds: [1327,62][1399,134]
+
+Element: android.widget.ImageView
+  resource-id: com.philo.philo:id/icon_tab
+  bounds: [1327,62][1399,134]
+
+Element: android.widget.LinearLayout
+  resource-id: com.philo.philo:id/tab_bar_time
+  bounds: [1588,50][1772,146]
+
+Element: android.widget.TextView
+  resource-id: com.philo.philo:id/tab_bar_time_label
+  text: 10:44a
+  bounds: [1620,50][1740,146]
+
