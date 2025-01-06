@@ -4,30 +4,36 @@ import { BasePage } from './base.page';
 export class MoviesDetailsPage extends BasePage {
     public selectors = {
         // Movie Information
-        movieTitle: 'android=resourceId("com.philo.philo:id/show_title")',
-        movieDescription: 'android=resourceId("com.philo.philo:id/show_description")',
-        moviePoster: 'android=resourceId("com.philo.philo:id/big_tile_poster_image")',
-        movieRating: 'android=resourceId("com.philo.philo:id/rating")',
-        releaseDate: 'android=resourceId("com.philo.philo:id/release_date")',
-        ratingAdvisories: 'android=resourceId("com.philo.philo:id/rating_advisories")',
+        movieTitle: 'android=resourceId("com.philo.philo:id/show_title").className("android.widget.TextView")',
+        movieDescription: 'android=resourceId("com.philo.philo:id/show_description").className("android.widget.TextView")',
+        moviePoster: 'android=resourceId("com.philo.philo:id/big_tile_poster_image").className("android.widget.ImageView")',
+        movieRating: 'android=resourceId("com.philo.philo:id/rating").className("android.widget.TextView")',
+        releaseDate: 'android=resourceId("com.philo.philo:id/release_date").className("android.widget.TextView")',
+        ratingAdvisories: 'android=resourceId("com.philo.philo:id/rating_advisories").className("android.widget.TextView")',
         
         // Channel Information
-        channelLogo: 'android=resourceId("com.philo.philo:id/big_tile_channel_logo")',
-        channelButton: 'android=resourceId("com.philo.philo:id/button_channel")',
-        channelName: 'android=resourceId("com.philo.philo:id/label_channel")',
+        channelLogo: 'android=resourceId("com.philo.philo:id/big_tile_channel_logo").className("android.widget.ImageView")',
+        channelButton: 'android=resourceId("com.philo.philo:id/button_channel").className("android.view.ViewGroup")',
+        channelName: 'android=resourceId("com.philo.philo:id/label_channel").className("android.widget.TextView")',
         
         // Action Buttons
-        playButton: 'android=resourceId("com.philo.philo:id/button_play")',
-        playLabel: 'android=resourceId("com.philo.philo:id/label_play")',
-        saveButton: 'android=resourceId("com.philo.philo:id/button_save")',
-        saveLabel: 'android=resourceId("com.philo.philo:id/label_save")',
+        playButton: 'android=resourceId("com.philo.philo:id/button_play").className("android.widget.LinearLayout")',
+        playLabel: 'android=resourceId("com.philo.philo:id/label_play").className("android.widget.TextView")',
+        saveButton: 'android=resourceId("com.philo.philo:id/button_save").className("android.widget.FrameLayout")',
+        saveLabel: 'android=resourceId("com.philo.philo:id/label_save").className("android.widget.TextView")',
         
         // Background Elements
-        backgroundImage: 'android=resourceId("com.philo.philo:id/big_tile_background_image_view")',
-        backgroundVideo: 'android=resourceId("com.philo.philo:id/big_tile_background_video_view")',
+        backgroundImage: 'android=resourceId("com.philo.philo:id/big_tile_background_image_view").className("android.widget.ImageView")',
+        backgroundVideo: 'android=resourceId("com.philo.philo:id/big_tile_background_video_view").className("android.widget.FrameLayout")',
+        backgroundGradient: 'android=resourceId("com.philo.philo:id/big_tile_gradient_layer_view").className("android.view.View")',
+        
+        // Container Elements
+        detailsContainer: 'android=resourceId("com.philo.philo:id/big_tile_item_details_container").className("android.view.ViewGroup")',
+        otherInfoContainer: 'android=resourceId("com.philo.philo:id/other_information_container").className("android.view.ViewGroup")',
+        buttonsContainer: 'android=resourceId("com.philo.philo:id/big_tile_buttons_container").className("android.view.ViewGroup")',
         
         // Navigation
-        dismissButton: 'android=resourceId("com.philo.philo:id/big_tile_dismiss_text")',
+        dismissButton: 'android=resourceId("com.philo.philo:id/big_tile_dismiss_text")'
     };
 
     constructor(driver: Browser<'async'>) {
@@ -122,6 +128,21 @@ export class MoviesDetailsPage extends BasePage {
      * Waits for the movie details page to be fully loaded
      */
     async waitForLoaded(): Promise<void> {
+        await this.waitForElement(this.selectors.movieTitle);
+    }
+
+    /**
+     * Verifies if the movie title is displayed
+     * @returns Promise<boolean> True if the movie title is displayed
+     */
+    async isShowTitleDisplayed(): Promise<boolean> {
+        return await this.isElementDisplayed(this.selectors.movieTitle);
+    }
+
+    /**
+     * Waits for the movie title to be fully loaded
+     */
+    async waitForShowTitle(): Promise<void> {
         await this.waitForElement(this.selectors.movieTitle);
     }
 } 

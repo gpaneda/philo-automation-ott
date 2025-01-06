@@ -4,22 +4,33 @@ import { BasePage } from './base.page';
 export class SeriesDetailsPage extends BasePage {
     public selectors = {
         // Series Information
-        seriesTitle: 'android=resourceId("com.philo.philo:id/show_title")',
-        seriesDescription: 'android=resourceId("com.philo.philo:id/show_description")',
-        seriesBackgroundImage: 'android=resourceId("com.philo.philo:id/big_tile_background_image_view")',
-        seriesBackgroundVideo: 'android=resourceId("com.philo.philo:id/big_tile_background_video_view")',
+        seriesTitle: 'android=resourceId("com.philo.philo:id/show_title").className("android.widget.TextView")',
+        seriesDescription: 'android=resourceId("com.philo.philo:id/show_description").className("android.widget.TextView")',
+        seriesPoster: 'android=resourceId("com.philo.philo:id/big_tile_poster_image").className("android.widget.ImageView")',
+        seriesRating: 'android=resourceId("com.philo.philo:id/rating").className("android.widget.TextView")',
+        releaseDate: 'android=resourceId("com.philo.philo:id/release_date").className("android.widget.TextView")',
+        ratingAdvisories: 'android=resourceId("com.philo.philo:id/rating_advisories").className("android.widget.TextView")',
         
-        // Metadata
-        releaseYear: 'android=className("android.widget.TextView").text("2010")',
-        seasonCount: 'android=className("android.widget.TextView").text("11 Seasons")',
-        contentRating: 'android=className("android.widget.TextView").text("TV-MA")',
+        // Channel Information
+        channelLogo: 'android=resourceId("com.philo.philo:id/big_tile_channel_logo").className("android.widget.ImageView")',
+        channelButton: 'android=resourceId("com.philo.philo:id/button_channel").className("android.view.ViewGroup")',
+        channelName: 'android=resourceId("com.philo.philo:id/label_channel").className("android.widget.TextView")',
         
         // Action Buttons
-        playButton: 'android=className("android.view.View").descriptionContains("Play")',
-        playButtonText: 'android=className("android.widget.TextView").textContains("Play")',
-        saveButton: 'android=className("android.view.View").descriptionContains("Save")',
-        saveButtonText: 'android=className("android.widget.TextView").text("Save")',
-        channelButton: 'android=className("android.view.View").descriptionContains("View")',
+        playButton: 'android=resourceId("com.philo.philo:id/button_play").className("android.widget.LinearLayout")',
+        playLabel: 'android=resourceId("com.philo.philo:id/label_play").className("android.widget.TextView")',
+        saveButton: 'android=resourceId("com.philo.philo:id/button_save").className("android.widget.FrameLayout")',
+        saveLabel: 'android=resourceId("com.philo.philo:id/label_save").className("android.widget.TextView")',
+        
+        // Background Elements
+        backgroundImage: 'android=resourceId("com.philo.philo:id/big_tile_background_image_view").className("android.widget.ImageView")',
+        backgroundVideo: 'android=resourceId("com.philo.philo:id/big_tile_background_video_view").className("android.widget.FrameLayout")',
+        backgroundGradient: 'android=resourceId("com.philo.philo:id/big_tile_gradient_layer_view").className("android.view.View")',
+        
+        // Container Elements
+        detailsContainer: 'android=resourceId("com.philo.philo:id/big_tile_item_details_container").className("android.view.ViewGroup")',
+        otherInfoContainer: 'android=resourceId("com.philo.philo:id/other_information_container").className("android.view.ViewGroup")',
+        buttonsContainer: 'android=resourceId("com.philo.philo:id/big_tile_buttons_container").className("android.view.ViewGroup")',
         
         // Navigation Tabs
         episodesTab: 'android=className("android.widget.TextView").text("Episodes")',
@@ -27,6 +38,9 @@ export class SeriesDetailsPage extends BasePage {
         relatedTab: 'android=className("android.widget.TextView").text("Related")',
         extrasTab: 'android=className("android.widget.TextView").text("Extras")',
         detailsTab: 'android=className("android.widget.TextView").text("Details")',
+        
+        // Navigation
+        dismissButton: 'android=resourceId("com.philo.philo:id/big_tile_dismiss_text")'
     };
 
     constructor(driver: Browser<'async'>) {
@@ -54,7 +68,7 @@ export class SeriesDetailsPage extends BasePage {
      * @returns Promise<string> The release year
      */
     async getReleaseYear(): Promise<string> {
-        return await this.getText(this.selectors.releaseYear);
+        return await this.getText(this.selectors.releaseDate);
     }
 
     /**
@@ -62,7 +76,8 @@ export class SeriesDetailsPage extends BasePage {
      * @returns Promise<string> The season count
      */
     async getSeasonCount(): Promise<string> {
-        return await this.getText(this.selectors.seasonCount);
+        const element = await this.driver.$('android=className("android.widget.TextView").text("11 Seasons")');
+        return await element.getText();
     }
 
     /**
@@ -70,7 +85,7 @@ export class SeriesDetailsPage extends BasePage {
      * @returns Promise<string> The content rating
      */
     async getContentRating(): Promise<string> {
-        return await this.getText(this.selectors.contentRating);
+        return await this.getText(this.selectors.ratingAdvisories);
     }
 
     /**
@@ -142,5 +157,11 @@ export class SeriesDetailsPage extends BasePage {
      */
     async waitForLoaded(): Promise<void> {
         await this.waitForElement(this.selectors.seriesTitle);
+    }
+    /**
+     * Clicks on the series poster
+     */
+    async clickOnSeries(): Promise<void> {
+        await this.click(this.selectors.seriesPoster);
     }
 } 
