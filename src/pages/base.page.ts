@@ -13,11 +13,11 @@ export interface Selector {
 
 export class BasePage {
     protected driver: Browser<'async'>;
-    
+
     constructor(driver?: Browser<'async'>) {
         this.driver = driver || (global as any).driver;
     }
-    
+
     // Common selectors across pages
     protected commonSelectors = {
         // Landing Page Selectors
@@ -27,24 +27,24 @@ export class BasePage {
             signInButton: 'android=new UiSelector().text("Sign in")',
             seeAllChannelsButton: 'android=new UiSelector().text("See all channels, including Free Channels")',
             exploreFreeChannelsButton: 'android=new UiSelector().text("Explore Free Channels")',
-            
+
             // Images
             heroImage: 'android=new UiSelector().className("android.widget.ImageView").resourceId("com.philo.philo:id/hero_image")',
             philoLogo: 'android=new UiSelector().className("android.widget.ImageView").description("Philo")',
-            
+
             // Text Elements
             headerText: 'android=new UiSelector().resourceId("com.philo.philo:id/header_text")',
             unlimitedDvrText: 'android=new UiSelector().resourceId("com.philo.philo:id/right_text_top")',
             onDemandTitlesText: 'android=new UiSelector().resourceId("com.philo.philo:id/right_text_bottom")',
             freeTrialText: 'android=new UiSelector().resourceId("com.philo.philo:id/left_text_top")',
             noContractText: 'android=new UiSelector().resourceId("com.philo.philo:id/left_text_bottom")',
-            
+
             // Layout Elements
             mainLayout: 'android=new UiSelector().resourceId("com.philo.philo:id/select_login_action_layout")',
             landingPage: 'android=new UiSelector().resourceId("com.philo.philo:id/landing_screen_page_1")',
             dividerLine: 'android=new UiSelector().resourceId("com.philo.philo:id/text_line_divider_guideline")'
         },
-        
+
         // Channel Icons Content Descriptions
         channels: {
             // Live Channels
@@ -167,7 +167,7 @@ export class BasePage {
             sonyMovies: 'android=new UiSelector().className("android.widget.ImageView").description("Sony Movies")',
             hallmarkPlus: 'android=new UiSelector().className("android.widget.ImageView").description("Hallmark+")'
         },
-        
+
         // Auth Screen Selectors
         auth: {
             emailInput: 'android=new UiSelector().resourceId("com.philo.philo:id/auth_credentials_input_text_view")',
@@ -216,10 +216,10 @@ export class BasePage {
     async gatherPageSelectors(): Promise<Selector[]> {
         const source = await this.driver.getPageSource();
         const selectors: Selector[] = [];
-        
+
         // Parse XML and extract nodes with resource-id
         const nodes = source.match(/<node[^>]*>/g) || [];
-        
+
         nodes.forEach(node => {
             const resourceId = node.match(/resource-id="([^"]+)"/)?.[1];
             if (resourceId) {
@@ -234,7 +234,7 @@ export class BasePage {
                 });
             }
         });
-        
+
         return selectors;
     }
 
@@ -344,17 +344,17 @@ export class BasePage {
      */
     async verifyLandingPageElements(): Promise<void> {
         const selectors = this.commonSelectors.landing;
-        
+
         // Verify buttons
         await this.verifyElementDisplayed(selectors.startTrialButton, 'Start your free trial');
         await this.verifyElementDisplayed(selectors.signInButton, 'Sign in');
         await this.verifyElementDisplayed(selectors.seeAllChannelsButton, 'See all channels, including Free Channels');
-        
+
         // Verify text elements
         await this.verifyElementDisplayed(selectors.headerText, 'Hit shows, blockbuster movies, live TV, and classic collections!');
         await this.verifyElementDisplayed(selectors.unlimitedDvrText, 'Unlimited DVR.');
         await this.verifyElementDisplayed(selectors.onDemandTitlesText, '80,000+ titles on-demand.');
-        
+
         // Verify images
         await this.verifyElementDisplayed(selectors.heroImage);
         await this.verifyElementDisplayed(selectors.philoLogo);
@@ -366,7 +366,7 @@ export class BasePage {
     protected async verifyElementDisplayed(selector: string, expectedText?: string): Promise<void> {
         const element = await this.driver.$(selector);
         await element.waitForDisplayed({ timeout: 30000 });
-        
+
         if (expectedText) {
             const actualText = await element.getText();
             if (actualText !== expectedText) {
@@ -381,12 +381,12 @@ export class BasePage {
     async verifyChannelsDisplayed(): Promise<void> {
         // Wait for the page to be stable and for channels to load
         await this.driver.pause(5000);
-        
+
         // Try to find the A&E channel first as an indicator that channels are loaded
         const aAndESelector = this.commonSelectors.channels.aAndE;
         try {
             const aAndEElement = await this.driver.$(aAndESelector);
-            await aAndEElement.waitForDisplayed({ 
+            await aAndEElement.waitForDisplayed({
                 timeout: 30000,
                 timeoutMsg: 'A&E channel not found after 30 seconds'
             });
@@ -420,7 +420,7 @@ export class BasePage {
         try {
             // Wait for the page to be stable
             await this.driver.pause(5000);
-            
+
             // Verify login screen elements
             await this.verifyElementDisplayed(this.commonSelectors.auth.emailInput);
             await this.verifyElementDisplayed(this.commonSelectors.auth.submitButton);
@@ -430,5 +430,5 @@ export class BasePage {
             console.error('Error verifying login screen:', error);
             throw error;
         }
-    }   
+    }
 } 
