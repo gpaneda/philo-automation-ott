@@ -6,12 +6,18 @@ import { SettingsPage } from '../pages/settings.page';
 import { TopPage } from '../pages/top.page';
 import path from 'path';
 import fs from 'fs/promises';
+import { CategoriesPage } from '../pages/categories.page';
+import { MoviesDetailsPage } from '../pages/moviesDetails.page';
+import { SeriesDetailsPage } from '../pages/seriesDetails.page';
 
 let driver: Browser<'async'>;
 let homeScreen: HomeScreenPage;
 let guidePage: GuidePage;
 let settingsPage: SettingsPage;
 let topPage: TopPage;
+let categoriesPage: CategoriesPage;
+let movieDetailsPage: MoviesDetailsPage;
+let seriesDetailsPage: SeriesDetailsPage;
 
 // Define screenshot directories
 const SCREENSHOT_BASE_DIR = path.join(process.cwd(), 'screenshots');
@@ -38,295 +44,133 @@ beforeAll(async () => {
         guidePage = new GuidePage(driver);
         settingsPage = new SettingsPage(driver);
         topPage = new TopPage(driver);
+        categoriesPage = new CategoriesPage(driver);
+        movieDetailsPage = new MoviesDetailsPage(driver);
+        seriesDetailsPage = new SeriesDetailsPage(driver);
     } catch (error) {
         console.error('Error in beforeAll:', error);
         throw error;
     }
 }, 60000);
 
+//Create afterEach to exit the app then open it back up to home screen separate from afterAll
+
 afterAll(async () => {
     try {
         if (driver) {
+            console.log('Terminating app...');
+            await driver.terminateApp('com.philo.philo');
+            await driver.pause(2000);
+            
+            console.log('Cleaning up WebDriver session...');
             await driver.deleteSession();
+            await new Promise(resolve => setTimeout(resolve, 10000));
+            console.log('WebDriver session cleaned up successfully');
         }
     } catch (error) {
         console.error('Error in afterAll:', error);
     }
-});
+}, 30000);
 
-describe('Top Nav Tests', () => {
-    //Verify that the Settings Page is visible  
+describe('Navigation Tests', () => {
     test('TC106 - should display the Settings Page', async () => {
         try {
-            await homeScreen.pressUpButton();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            //press right button 5 times
-            for (let i = 0; i < 5; i++) {
-                await homeScreen.pressRightButton();
-            }
-            await homeScreen.pressEnterButton();
-            //add a delay
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            
-            //check if the text "Start channel playback from..." is visible
-            await settingsPage.isElementVisible(settingsPage.getStartChannelPlaybackSelector());
-            
-            // Generate timestamp for current screenshot
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const currentScreenshotName = `settings_page_current_${timestamp}.png`;
-            
-            // Take screenshot of the current state
-            const screenshotPath = await topPage.takeScreenshot(path.join(CURRENT_DIR, currentScreenshotName));
-            const referenceScreenshotPath = path.join(REFERENCE_DIR, 'settings_page_reference.png');
-
-            try {
-                // First check if reference exists
-                await fs.access(referenceScreenshotPath);
-                
-                // If reference exists, compare with current
-                const comparison = await topPage.compareImages(
-                    screenshotPath,
-                    referenceScreenshotPath,
-                    path.join(DIFFERENCE_DIR, `settings_difference_${timestamp}.png`)
-                );
-                console.log('Settings page comparison results:', {
-                    misMatchPercentage: comparison.misMatchPercentage,
-                    isSameDimensions: comparison.isSameDimensions,
-                    timestamp: timestamp
-                });
-                
-                // Consider test passed if difference is less than 5%
-                expect(comparison.misMatchPercentage).toBeLessThan(5);
-            } catch (error) {
-                // Only on first run: save current as reference
-                console.log('First run - creating settings page reference image');
-                await fs.copyFile(screenshotPath, referenceScreenshotPath);
-            }
-
-            //press back button
-            await homeScreen.pressBackButton();
+            await homeScreen.verifySettingsPage(settingsPage, topPage);
         } catch (error) {
-            console.error('Error in TC106:', error);
+            console.error('Settings page was not displayed:', error);
             throw error;
         }
     }, 180000);
 
-    //Test Case 107 - Verify that the Guide Page is visible when the Guide button is clicked
     test('TC107 - should display the Guide Page', async () => {
         try {
-            await homeScreen.pressUpButton();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            //press right button once
-            await homeScreen.pressRightButton();
-            await homeScreen.pressEnterButton();
-            //add a delay
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            
-            //Check if the text Free channels is visible
-            const isVisible = await guidePage.isElementVisible(guidePage.freeChannels);
-            expect(isVisible).toBe(true);
-
-            // Generate timestamp for current screenshot
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const currentScreenshotName = `guide_page_current_${timestamp}.png`;
-            
-            // Take screenshot of the current state
-            const screenshotPath = await topPage.takeScreenshot(path.join(CURRENT_DIR, currentScreenshotName));
-            const referenceScreenshotPath = path.join(REFERENCE_DIR, 'guide_page_reference.png');
-
-            try {
-                // First check if reference exists
-                await fs.access(referenceScreenshotPath);
-                
-                // If reference exists, compare with current
-                const comparison = await topPage.compareImages(
-                    screenshotPath,
-                    referenceScreenshotPath,
-                    path.join(DIFFERENCE_DIR, `guide_difference_${timestamp}.png`)
-                );
-                console.log('Guide page comparison results:', {
-                    misMatchPercentage: comparison.misMatchPercentage,
-                    isSameDimensions: comparison.isSameDimensions,
-                    timestamp: timestamp
-                });
-                
-                // Consider test passed if difference is less than 5%
-                expect(comparison.misMatchPercentage).toBeLessThan(5);
-            } catch (error) {
-                // Only on first run: save current as reference
-                console.log('First run - creating guide page reference image');
-                await fs.copyFile(screenshotPath, referenceScreenshotPath);
-            }
-
-            //press back button
-            await homeScreen.pressBackButton();
+            await homeScreen.navigateAndVerifyGuidePage(guidePage, topPage);
         } catch (error) {
             console.error('Error in TC107:', error);
             throw error;
         }
     }, 180000);
 
-    //Test Case 108 - Verify that the Top Page is visible when the Top button is clicked
     test('TC108 - should display the Top Page', async () => {
         try {
-            await homeScreen.pressUpButton();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            
-            //press right button twice
-            for (let i = 0; i < 2; i++) {
-                await homeScreen.pressRightButton();
-            }
-            await homeScreen.pressEnterButton();
-            
-            //add a delay for content to load
-            await new Promise(resolve => setTimeout(resolve, 10000));
-
-            // Generate timestamp for current screenshot
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const currentScreenshotName = `top_page_current_${timestamp}.png`;
-            
-            // Take screenshot of the current state
-            const screenshotPath = await topPage.takeScreenshot(path.join(CURRENT_DIR, currentScreenshotName));
-            const referenceScreenshotPath = path.join(REFERENCE_DIR, 'top_page_reference.png');
-
-            try {
-                // First check if reference exists
-                await fs.access(referenceScreenshotPath);
-                
-                // If reference exists, compare with current
-                const comparison = await topPage.compareImages(
-                    screenshotPath,
-                    referenceScreenshotPath,
-                    path.join(DIFFERENCE_DIR, `top_difference_${timestamp}.png`)
-                );
-                console.log('Top page comparison results:', {
-                    misMatchPercentage: comparison.misMatchPercentage,
-                    isSameDimensions: comparison.isSameDimensions,
-                    timestamp: timestamp
-                });
-                
-                // Consider test passed if difference is less than 5%
-                expect(comparison.misMatchPercentage).toBeLessThan(5);
-            } catch (error) {
-                // Only on first run: save current as reference
-                console.log('First run - creating top page reference image');
-                await fs.copyFile(screenshotPath, referenceScreenshotPath);
-            }
-
-            // Press back button to return to previous screen
-            await homeScreen.pressBackButton();
+            await homeScreen.verifyTopPage(topPage);
         } catch (error) {
             console.error('Error in TC108:', error);
             throw error;
         }
     }, 180000);
 
-    //Test Case 109 - Verify that the Saved Page is visible when the Saved button is clicked
     test('TC109 - should display the Saved Page', async () => {
         try {
-            await homeScreen.pressUpButton();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-
-            //press right button three times
-            for (let i = 0; i < 3; i++) {
-                await homeScreen.pressRightButton();
-            }
-            await homeScreen.pressEnterButton();
-
-            //add a delay for content to load
-            await new Promise(resolve => setTimeout(resolve, 10000));
-
-            // Generate timestamp for current screenshot
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const currentScreenshotName = `saved_page_current_${timestamp}.png`;
-
-            // Take screenshot of the current state
-            const screenshotPath = await topPage.takeScreenshot(path.join(CURRENT_DIR, currentScreenshotName));
-            const referenceScreenshotPath = path.join(REFERENCE_DIR, 'saved_page_reference.png');
-
-            try {
-                // First check if reference exists
-                await fs.access(referenceScreenshotPath);
-                
-                // If reference exists, compare with current
-                const comparison = await topPage.compareImages(
-                    screenshotPath,
-                    referenceScreenshotPath,
-                    path.join(DIFFERENCE_DIR, `saved_difference_${timestamp}.png`)
-                );
-                console.log('Saved page comparison results:', {
-                    misMatchPercentage: comparison.misMatchPercentage,
-                    isSameDimensions: comparison.isSameDimensions,
-                    timestamp: timestamp
-                });
-                
-                // Consider test passed if difference is less than 5%
-                expect(comparison.misMatchPercentage).toBeLessThan(5);
-            } catch (error) {
-                // Only on first run: save current as reference
-                console.log('First run - creating saved page reference image');
-                await fs.copyFile(screenshotPath, referenceScreenshotPath);
-            }
-
-            // Press back button to return to previous screen
-            await homeScreen.pressBackButton();
+            await homeScreen.verifySavedPage(topPage);
         } catch (error) {
             console.error('Error in TC109:', error);
             throw error;
         }
     }, 180000);
 
-    //Test Case 110 - Verify that the Search Page is visible when the Search button is clicked
     test('TC110 - should display the Search Page', async () => {
         try {
-            await homeScreen.pressUpButton();
-            await new Promise(resolve => setTimeout(resolve, 5000));
-
-            //press right button four times
-            for (let i = 0; i < 4; i++) {
-                await homeScreen.pressRightButton();
-            }
-            await homeScreen.pressEnterButton();
-
-            //add a delay for content to load
-            await new Promise(resolve => setTimeout(resolve, 10000));
-
-            // Generate timestamp for current screenshot
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const currentScreenshotName = `search_page_current_${timestamp}.png`;
-
-            // Take screenshot of the current state
-            const screenshotPath = await topPage.takeScreenshot(path.join(CURRENT_DIR, currentScreenshotName));
-            const referenceScreenshotPath = path.join(REFERENCE_DIR, 'search_page_reference.png');
-
-            try {
-                // First check if reference exists
-                await fs.access(referenceScreenshotPath);
-
-                // If reference exists, compare with current
-                const comparison = await topPage.compareImages(
-                    screenshotPath,
-                    referenceScreenshotPath,
-                    path.join(DIFFERENCE_DIR, `search_difference_${timestamp}.png`)
-                );
-                console.log('Search page comparison results:', {
-                    misMatchPercentage: comparison.misMatchPercentage,
-                    isSameDimensions: comparison.isSameDimensions,
-                    timestamp: timestamp
-                });
-
-                // Consider test passed if difference is less than 5%
-                expect(comparison.misMatchPercentage).toBeLessThan(5);
-            } catch (error) {
-                // Only on first run: save current as reference
-                console.log('First run - creating search page reference image');
-                await fs.copyFile(screenshotPath, referenceScreenshotPath);
-            }
-
-            // Press back button to return to previous screen
-            await homeScreen.pressBackButton();
+            await homeScreen.verifySearchPage(topPage);
         } catch (error) {
-            console.error('Error in TC110:', error);
+            console.error('Search page was not displayed:', error);
+            throw error;
+        }
+    }, 180000);
+
+    test('TC111 - should display the Top Free Movies category', async () => {
+        try {
+            await homeScreen.verifyTopFreeMovies(categoriesPage, topPage);
+        } catch (error) {
+            console.error('Top Free Movies category was not displayed:', error);
+            throw error;
+        }
+    }, 180000);
+
+    test('TC112 - should display the Top Free Shows category', async () => {
+        try {
+            await homeScreen.verifyTopFreeShows(categoriesPage, topPage);
+        } catch (error) {
+            console.error('Top Free Shows category was not displayed:', error);
+            throw error;
+        }
+    }, 180000);
+
+    test('TC113 - should display the Recommended category', async () => {
+        try {
+            await homeScreen.verifyRecommended(categoriesPage, topPage);
+        } catch (error) {
+            console.error('Recommended category was not displayed:', error);
+            throw error;
+        }
+    }, 180000);
+
+    test('TC115 - should display the Saved category', async () => {
+        try {
+            await homeScreen.verifySavedCategory(categoriesPage, topPage);
+        } catch (error) {
+            console.error('Saved category was not displayed:', error);
+            throw error;
+        }
+    }, 180000);
+    test('TC114 - should display the Trending Live category', async () => {
+        try {
+            await homeScreen.verifyTrendingLive(categoriesPage, topPage);
+        } catch (error) {
+            console.error('Trending Live category was not displayed:', error);
+            throw error;
+        }
+    }, 180000);
+
+    test('TC116 - should display the Movie Details Page', async () => {
+        try {
+            const verifiedTitles = await categoriesPage.verifyMultipleMovies(3, movieDetailsPage);
+            expect(verifiedTitles.length).toBe(3);
+            verifiedTitles.forEach(({categoryTitle, detailsTitle}) => {
+                expect(categoryTitle).toBe(detailsTitle);
+            });
+        } catch (error) {
+            console.error('Error in TC116:', error);
             throw error;
         }
     }, 180000);

@@ -1,10 +1,8 @@
 import { Browser } from 'webdriverio';
 import { BasePage } from '../pages/base.page';
-import { AppHelper } from '../helpers/app.helper';
 import { HomeScreenPage } from '../pages/homescreen.page';
 import { SettingsPage } from '../pages/settings.page';
-
-jest.setTimeout(90000); // Set global timeout
+import { AppHelper } from '../helpers/app.helper';
 
 describe('Landing Page', () => {
     let driver: Browser<'async'>;
@@ -27,35 +25,33 @@ describe('Landing Page', () => {
     afterEach(async () => {
         try {
             if (driver) {
+                console.log('Terminating app...');
                 await driver.terminateApp('com.philo.philo');
+                await driver.pause(2000);
+                
+                console.log('Cleaning up WebDriver session...');
                 await driver.deleteSession();
+                await new Promise(resolve => setTimeout(resolve, 10000));
+                console.log('WebDriver session cleaned up successfully');
             }
         } catch (error) {
             console.error('Error in afterAll:', error);
         }
     });
 
-    beforeEach(async () => {
-        // Add a small delay before each test to ensure app is stable
-        await driver.pause(2000);
-    });
-
-    afterEach(async () => {
-        // Add cleanup after each test if needed
-        await driver.pause(1000);
-    });
-
-    // Test Case 101 - Verify landing page buttons are displayed
     test('TC101 - should display landing page buttons', async () => {
-        await driver.pause(15000);
-        await basePage.verifyLandingPageElements();
+        try {
+            await driver.pause(15000);
+            await basePage.verifyLandingPageElements();
+        } catch (error) {
+            console.error('Landing page buttons were not displayed:', error);
+            throw error;
+        }
     });
 
-    // Test Case 102 - Verify channels are displayed after pressing the down button once
     test('TC102 - should display channels after pressing the down button once', async () => {
         try {
             await homeScreenPage.pressDownButton();
-            // Wait for any animations to complete
             await driver.pause(5000);
             await basePage.verifyChannelsDisplayed();
         } catch (error) {
@@ -64,16 +60,12 @@ describe('Landing Page', () => {
         }
     });
 
-    // Test Case 103 - Verify that the Login Screen is displayed after pressing the Explore Free Channels button
     test('TC103 - should display login screen after pressing the Explore Free Channels button', async () => {
         try {
             await homeScreenPage.pressDownButton();
-            // Wait for any animations to complete
             await driver.pause(5000);
             await basePage.pressExploreFreeChannelsButton();
-            // Wait for navigation to complete
             await driver.pause(5000);
-            //Check if the login screen is displayed
             await basePage.verifyLoginScreenDisplayed();
         } catch (error) {
             console.error('TC103 failed:', error);
