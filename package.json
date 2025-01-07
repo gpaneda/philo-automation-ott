@@ -15,7 +15,8 @@
     "test:gmail": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/gmail.helper.test.ts",
     "test:formatUiDump": "ts-node src/scripts/formatUiDump.ts",
     "test:navigation": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/navigation.test.ts",
-    "test:landing": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/landingPage.test.ts"
+    "test:landing": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/landingPage.test.ts",
+    "test:playback": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/playback.test.ts"
   },
   "dependencies": {
     "@types/resemblejs": "^4.1.3",

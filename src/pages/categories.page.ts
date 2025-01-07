@@ -45,18 +45,18 @@ export class CategoriesPage extends HomeScreenPage {
             headerWhitespace: 'android=resourceId("com.philo.philo:id/header_whitespace")',
             categoryIcon: 'android=resourceId("com.philo.philo:id/icon_tile_group")',
             categoryLabel: 'android=resourceId("com.philo.philo:id/label_tile_group")',
-            
+
             // Grid Elements - Updated to match XML structure
             gridContainer: 'android=resourceId("com.philo.philo:id/fragment_tile_group_grid")',
             tileGroups: 'android=resourceId("com.philo.philo:id/tile_groups")',
             gridRow: 'android=resourceId("com.philo.philo:id/grid_row")',
             movieGrid: 'android=resourceId("com.philo.philo:id/list_view_broadcasts").className("android.widget.GridView")',
-            
+
             // Movie Tile Elements - Updated to match XML structure
             movieTileWrapper: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).focusable(true)',
             movieBackgroundImage: 'android=resourceId("com.philo.philo:id/background_image").className("android.widget.ImageView")',
             moviePressedOverlay: 'android=resourceId("com.philo.philo:id/pressed_overlay").className("android.view.View")',
-            
+
             // Category Headers
             topFreeMovies: 'android=text("Top Free Movies")',
             topFreeShows: 'android=text("Top Free Shows")',
@@ -66,7 +66,7 @@ export class CategoriesPage extends HomeScreenPage {
             trueCrime: 'android=text("True Crime")',
             saved: 'android=text("Saved")',
             homeAndTravel: 'android=text("Home & Travel")',
-            
+
             // Movie Tiles (Top Free Movies) - Updated to match XML structure
             killBillVol1: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).description("Kill Bill: Vol. 1")',
             walkToRemember: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).description("A Walk to Remember")',
@@ -327,7 +327,7 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async goToTopFreeShows(): Promise<void> {
         try {
-        
+
             // Two down presses to reach Top Free Shows
             for (let i = 0; i < 2; i++) {
                 await this.pressDownButton();
@@ -426,15 +426,15 @@ export class CategoriesPage extends HomeScreenPage {
         try {
             // Add initial pause to ensure the page has loaded
             await this.driver.pause(5000);
-            
+
             // Find the focused movie element
             const focusedMovie = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
             const title = await focusedMovie.getAttribute('content-desc');
-            
+
             if (!title) {
                 throw new Error('No movie title found on the focused element');
             }
-            
+
             return title;
         } catch (error) {
             console.error('Error getting movie title:', error);
@@ -446,7 +446,7 @@ export class CategoriesPage extends HomeScreenPage {
         try {
             // Add initial pause to ensure the page has loaded
             await this.driver.pause(2000);
-            
+
             // Instead of clicking, press enter since the element is already focused
             await this.pressEnterButton();
         } catch (error) {
@@ -476,13 +476,13 @@ export class CategoriesPage extends HomeScreenPage {
         try {
             // Add initial pause to ensure the page has loaded
             await this.driver.pause(2000);
-            
+
             // Instead of clicking, press enter since the element is already focused
             await this.pressEnterButton();
         } catch (error) {
             console.error('Error clicking on series:', error);
             throw error;
-        }   
+        }
     }
 
     /**
@@ -491,21 +491,21 @@ export class CategoriesPage extends HomeScreenPage {
      * @param movieDetailsPage The movie details page object
      * @returns Promise<{categoryTitle: string, detailsTitle: string}> The titles that were compared
      */
-    async verifyMovieTitle(movieNumber: number, movieDetailsPage: any): Promise<{categoryTitle: string, detailsTitle: string}> {
+    async verifyMovieTitle(movieNumber: number, movieDetailsPage: any): Promise<{ categoryTitle: string, detailsTitle: string }> {
         try {
             // Get and verify movie
             const categoryTitle = await this.getMovieTitle();
             console.log(`Movie ${movieNumber} title in Top Free Movies:`, `"${categoryTitle}"`);
-            
+
             await this.clickOnMovie();
             await this.driver.pause(2000);
-            
+
             const detailsTitle = await movieDetailsPage.getMovieTitle();
             console.log(`Movie ${movieNumber} title in Movie Details Page:`, `"${detailsTitle}"`);
-            
+
             expect(categoryTitle).toEqual(detailsTitle);
             await this.driver.pause(2000);
-            
+
             return { categoryTitle, detailsTitle };
         } catch (error) {
             console.error(`Error verifying movie ${movieNumber}:`, error);
@@ -519,9 +519,9 @@ export class CategoriesPage extends HomeScreenPage {
      * @param movieDetailsPage The movie details page object
      * @returns Promise<Array<{categoryTitle: string, detailsTitle: string}>> Array of verified titles
      */
-    async verifyMultipleMovies(movieCount: number, movieDetailsPage: any): Promise<Array<{categoryTitle: string, detailsTitle: string}>> {
+    async verifyMultipleMovies(movieCount: number, movieDetailsPage: any): Promise<Array<{ categoryTitle: string, detailsTitle: string }>> {
         const verifiedTitles = [];
-        
+
         try {
             // Navigate to Top Free Movies
             await this.goToTopFreeMovies();

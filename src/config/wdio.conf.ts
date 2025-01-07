@@ -1,15 +1,7 @@
 import type { Options } from '@wdio/types';
-import type { Capabilities } from '@wdio/types';
 
-export const config: Options.Testrunner = {
+export const config: any = {
     runner: 'local',
-    autoCompileOpts: {
-        autoCompile: true,
-        tsNodeOpts: {
-            project: './tsconfig.json',
-            transpileOnly: true
-        }
-    },
     specs: [
         './src/tests/**/*.ts'
     ],
@@ -22,9 +14,14 @@ export const config: Options.Testrunner = {
         'appium:appPackage': 'com.philo.philo',
         'appium:appActivity': 'com.philo.philo.MainActivity',
         'appium:noReset': true,
-        'appium:newCommandTimeout': 240
+        'appium:newCommandTimeout': 240,
+        // Performance optimizations
+        'appium:skipServerInstallation': true,
+        'appium:skipDeviceInitialization': true,
+        'appium:ignoreUnimportantViews': true,
+        'appium:disableWindowAnimation': true
     }],
-    logLevel: 'info',
+    logLevel: 'error',
     bail: 0,
     baseUrl: '',
     waitforTimeout: 10000,
@@ -35,19 +32,8 @@ export const config: Options.Testrunner = {
     reporters: ['spec'],
     jasmineOpts: {
         defaultTimeoutInterval: 60000,
-        expectationResultHandler: function(passed, assertion) {
-        }
-    },
-    before: async function (capabilities: Capabilities.RemoteCapability) {
-        if (browser) {
-            await browser.setTimeout({ 'implicit': 5000 });
-        }
-    },
-    afterTest: async function(test: any, context: any, results: { error?: Error, passed: boolean }) {
-        if (!results.passed) {
-            if (browser) {
-                await browser.takeScreenshot();
-            }
+        expectationResultHandler: function(passed: boolean, assertion: any): void {
+            // Handle test results
         }
     }
 }; 

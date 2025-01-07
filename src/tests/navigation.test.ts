@@ -1,5 +1,5 @@
 import { AppHelper } from '../helpers/app.helper';
-import { Browser } from 'webdriverio';
+import { Browser, Element } from 'webdriverio';
 import { HomeScreenPage } from '../pages/homescreen.page';
 import { GuidePage } from '../pages/guide.page';
 import { SettingsPage } from '../pages/settings.page';
@@ -53,19 +53,25 @@ beforeAll(async () => {
     }
 }, 60000);
 
-//Create afterEach to exit the app then open it back up to home screen separate from afterAll
+beforeEach(async () => {
+    try {
+        await driver.terminateApp('com.philo.philo');
+        await driver.pause(2000);
+        await driver.activateApp('com.philo.philo');
+        await driver.pause(5000);
+    } catch (error) {
+        console.error('Error in beforeEach:', error);
+        throw error;
+    }
+});
 
 afterAll(async () => {
     try {
         if (driver) {
-            console.log('Terminating app...');
             await driver.terminateApp('com.philo.philo');
             await driver.pause(2000);
-            
-            console.log('Cleaning up WebDriver session...');
             await driver.deleteSession();
             await new Promise(resolve => setTimeout(resolve, 10000));
-            console.log('WebDriver session cleaned up successfully');
         }
     } catch (error) {
         console.error('Error in afterAll:', error);
@@ -75,6 +81,7 @@ afterAll(async () => {
 describe('Navigation Tests', () => {
     test('TC106 - should display the Settings Page', async () => {
         try {
+            // 1. Navigate to and verify Settings page
             await homeScreen.verifySettingsPage(settingsPage, topPage);
         } catch (error) {
             console.error('Settings page was not displayed:', error);
@@ -84,6 +91,7 @@ describe('Navigation Tests', () => {
 
     test('TC107 - should display the Guide Page', async () => {
         try {
+            // 1. Navigate to and verify Guide page
             await homeScreen.navigateAndVerifyGuidePage(guidePage, topPage);
         } catch (error) {
             console.error('Error in TC107:', error);
@@ -93,6 +101,7 @@ describe('Navigation Tests', () => {
 
     test('TC108 - should display the Top Page', async () => {
         try {
+            // 1. Navigate to and verify Top page
             await homeScreen.verifyTopPage(topPage);
         } catch (error) {
             console.error('Error in TC108:', error);
@@ -102,6 +111,7 @@ describe('Navigation Tests', () => {
 
     test('TC109 - should display the Saved Page', async () => {
         try {
+            // 1. Navigate to and verify Saved page
             await homeScreen.verifySavedPage(topPage);
         } catch (error) {
             console.error('Error in TC109:', error);
@@ -111,6 +121,7 @@ describe('Navigation Tests', () => {
 
     test('TC110 - should display the Search Page', async () => {
         try {
+            // 1. Navigate to and verify Search page
             await homeScreen.verifySearchPage(topPage);
         } catch (error) {
             console.error('Search page was not displayed:', error);
@@ -118,8 +129,9 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test('TC111 - should display the Top Free Movies category', async () => {
+    test.only('TC111 - should display the Top Free Movies category', async () => {
         try {
+            // 1. Navigate to and verify Top Free Movies category
             await homeScreen.verifyTopFreeMovies(categoriesPage, topPage);
         } catch (error) {
             console.error('Top Free Movies category was not displayed:', error);
@@ -127,8 +139,9 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test('TC112 - should display the Top Free Shows category', async () => {
+    test.only('TC112 - should display the Top Free Shows category', async () => {
         try {
+            // 1. Navigate to and verify Top Free Shows category
             await homeScreen.verifyTopFreeShows(categoriesPage, topPage);
         } catch (error) {
             console.error('Top Free Shows category was not displayed:', error);
@@ -136,8 +149,9 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test('TC113 - should display the Recommended category', async () => {
+    test.only('TC113 - should display the Recommended category', async () => {
         try {
+            // 1. Navigate to and verify Recommended category
             await homeScreen.verifyRecommended(categoriesPage, topPage);
         } catch (error) {
             console.error('Recommended category was not displayed:', error);
@@ -145,16 +159,19 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test('TC115 - should display the Saved category', async () => {
+    test.only('TC115 - should display the Saved category', async () => {
         try {
+            // 1. Navigate to and verify Saved category
             await homeScreen.verifySavedCategory(categoriesPage, topPage);
         } catch (error) {
             console.error('Saved category was not displayed:', error);
             throw error;
         }
     }, 180000);
-    test('TC114 - should display the Trending Live category', async () => {
+
+    test.only('TC114 - should display the Trending Live category', async () => {
         try {
+            // 1. Navigate to and verify Trending Live category
             await homeScreen.verifyTrendingLive(categoriesPage, topPage);
         } catch (error) {
             console.error('Trending Live category was not displayed:', error);
@@ -164,13 +181,51 @@ describe('Navigation Tests', () => {
 
     test('TC116 - should display the Movie Details Page', async () => {
         try {
+            // 1. Verify multiple movies and their details
             const verifiedTitles = await categoriesPage.verifyMultipleMovies(3, movieDetailsPage);
+            
+            // 2. Verify the number of movies checked
             expect(verifiedTitles.length).toBe(3);
+            
+            // 3. Verify titles match between category and details pages
             verifiedTitles.forEach(({categoryTitle, detailsTitle}) => {
                 expect(categoryTitle).toBe(detailsTitle);
             });
         } catch (error) {
             console.error('Error in TC116:', error);
+            throw error;
+        }
+    }, 180000);
+
+    test('TC117 - should log all category rows', async () => {
+        try {
+            // 1. Verify home screen is open
+            await homeScreen.verifyHomeScreenElements();
+
+            // Create log file
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const logPath = path.join(process.cwd(), 'logs');
+            await fs.mkdir(logPath, { recursive: true });
+            const logFile = path.join(logPath, `categories_${timestamp}.log`);
+
+            // Write initial timestamp
+            await fs.writeFile(logFile, `Starting category scan at ${timestamp}\n\n`);
+
+            // Scan all categories
+            const foundCategories = await homeScreen.scanContentCategories();
+
+            // Log final summary
+            const summary = `\n=== Scan Complete ===
+Total categories found: ${foundCategories.length}
+
+All Categories found:
+${foundCategories.join('\n')}`;
+            
+            await fs.appendFile(logFile, summary);
+            console.log('Scan complete. Found', foundCategories.length, 'categories');
+
+        } catch (error) {
+            console.error('Error logging categories:', error);
             throw error;
         }
     }, 180000);

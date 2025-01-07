@@ -3,13 +3,13 @@ import { BasePage } from './base.page';
 
 export class SeriesDetailsPage extends BasePage {
     public selectors = {
-        // Series Information
-        seriesTitle: 'android=resourceId("com.philo.philo:id/show_title").className("android.widget.TextView")',
-        seriesDescription: 'android=resourceId("com.philo.philo:id/show_description").className("android.widget.TextView")',
+        // Series Information - Using index-based selectors from XML structure
+        seriesTitle: 'android=className("android.widget.TextView").index(1)',  // First TextView in the details
+        seriesDescription: 'android=className("android.widget.TextView").index(5)',  // Description TextView
+        releaseYear: 'android=className("android.widget.TextView").index(2)',  // Year TextView
+        seasonCount: 'android=className("android.widget.TextView").index(3)',  // Seasons TextView
+        rating: 'android=className("android.widget.TextView").index(4)',  // Rating TextView
         seriesPoster: 'android=resourceId("com.philo.philo:id/big_tile_poster_image").className("android.widget.ImageView")',
-        seriesRating: 'android=resourceId("com.philo.philo:id/rating").className("android.widget.TextView")',
-        releaseDate: 'android=resourceId("com.philo.philo:id/release_date").className("android.widget.TextView")',
-        ratingAdvisories: 'android=resourceId("com.philo.philo:id/rating_advisories").className("android.widget.TextView")',
         
         // Channel Information
         channelLogo: 'android=resourceId("com.philo.philo:id/big_tile_channel_logo").className("android.widget.ImageView")',
@@ -17,10 +17,15 @@ export class SeriesDetailsPage extends BasePage {
         channelName: 'android=resourceId("com.philo.philo:id/label_channel").className("android.widget.TextView")',
         
         // Action Buttons
-        playButton: 'android=resourceId("com.philo.philo:id/button_play").className("android.widget.LinearLayout")',
-        playLabel: 'android=resourceId("com.philo.philo:id/label_play").className("android.widget.TextView")',
-        saveButton: 'android=resourceId("com.philo.philo:id/button_save").className("android.widget.FrameLayout")',
-        saveLabel: 'android=resourceId("com.philo.philo:id/label_save").className("android.widget.TextView")',
+        playButton: 'android=className("android.view.View").descriptionContains("Play")',
+        saveButton: 'android=className("android.view.View").descriptionContains("Save")',
+        
+        // Navigation Tabs
+        episodesTab: 'android=className("android.widget.TextView").text("Episodes")',
+        scheduleTab: 'android=className("android.widget.TextView").text("Schedule")',
+        relatedTab: 'android=className("android.widget.TextView").text("Related")',
+        extrasTab: 'android=className("android.widget.TextView").text("Extras")',
+        detailsTab: 'android=className("android.widget.TextView").text("Details")',
         
         // Background Elements
         backgroundImage: 'android=resourceId("com.philo.philo:id/big_tile_background_image_view").className("android.widget.ImageView")',
@@ -31,13 +36,6 @@ export class SeriesDetailsPage extends BasePage {
         detailsContainer: 'android=resourceId("com.philo.philo:id/big_tile_item_details_container").className("android.view.ViewGroup")',
         otherInfoContainer: 'android=resourceId("com.philo.philo:id/other_information_container").className("android.view.ViewGroup")',
         buttonsContainer: 'android=resourceId("com.philo.philo:id/big_tile_buttons_container").className("android.view.ViewGroup")',
-        
-        // Navigation Tabs
-        episodesTab: 'android=className("android.widget.TextView").text("Episodes")',
-        scheduleTab: 'android=className("android.widget.TextView").text("Schedule")',
-        relatedTab: 'android=className("android.widget.TextView").text("Related")',
-        extrasTab: 'android=className("android.widget.TextView").text("Extras")',
-        detailsTab: 'android=className("android.widget.TextView").text("Details")',
         
         // Navigation
         dismissButton: 'android=resourceId("com.philo.philo:id/big_tile_dismiss_text")'
@@ -52,7 +50,8 @@ export class SeriesDetailsPage extends BasePage {
      * @returns Promise<string> The series title
      */
     async getSeriesTitle(): Promise<string> {
-        return await this.getText(this.selectors.seriesTitle);
+        const element = await this.waitForElement(this.selectors.seriesTitle);
+        return element.getText();
     }
 
     /**
@@ -60,7 +59,8 @@ export class SeriesDetailsPage extends BasePage {
      * @returns Promise<string> The series description
      */
     async getSeriesDescription(): Promise<string> {
-        return await this.getText(this.selectors.seriesDescription);
+        const element = await this.waitForElement(this.selectors.seriesDescription);
+        return element.getText();
     }
 
     /**
@@ -68,7 +68,8 @@ export class SeriesDetailsPage extends BasePage {
      * @returns Promise<string> The release year
      */
     async getReleaseYear(): Promise<string> {
-        return await this.getText(this.selectors.releaseDate);
+        const element = await this.waitForElement(this.selectors.releaseYear);
+        return element.getText();
     }
 
     /**
@@ -76,8 +77,8 @@ export class SeriesDetailsPage extends BasePage {
      * @returns Promise<string> The season count
      */
     async getSeasonCount(): Promise<string> {
-        const element = await this.driver.$('android=className("android.widget.TextView").text("11 Seasons")');
-        return await element.getText();
+        const element = await this.waitForElement(this.selectors.seasonCount);
+        return element.getText();
     }
 
     /**
@@ -85,7 +86,8 @@ export class SeriesDetailsPage extends BasePage {
      * @returns Promise<string> The content rating
      */
     async getContentRating(): Promise<string> {
-        return await this.getText(this.selectors.ratingAdvisories);
+        const element = await this.waitForElement(this.selectors.rating);
+        return element.getText();
     }
 
     /**

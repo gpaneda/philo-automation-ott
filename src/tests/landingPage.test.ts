@@ -25,14 +25,10 @@ describe('Landing Page', () => {
     afterEach(async () => {
         try {
             if (driver) {
-                console.log('Terminating app...');
                 await driver.terminateApp('com.philo.philo');
                 await driver.pause(2000);
-                
-                console.log('Cleaning up WebDriver session...');
                 await driver.deleteSession();
                 await new Promise(resolve => setTimeout(resolve, 10000));
-                console.log('WebDriver session cleaned up successfully');
             }
         } catch (error) {
             console.error('Error in afterAll:', error);
