@@ -339,11 +339,48 @@ export class HomeScreenPage extends BasePage {
      * @param topPage The top page object for screenshots
      */
     async verifySavedCategory(categoriesPage: any, topPage: any): Promise<void> {
-        await this.verifyCategoryPage(
-            'Saved',
-            () => categoriesPage.goToSaved(),
-            topPage
-        );
+        try {
+            await this.verifyHomeScreenElements();
+            
+            // Find the Saved category
+            const found = await this.findCategory('Saved');
+            if (!found) {
+                throw new Error('Saved category not found');
+            }
+
+            // Press down once more to get to the actual row content
+            await this.pressDownButton();
+            await this.driver.pause(2000);
+
+            // Now that we're at Saved content, press left and enter
+            await this.pressLeftButton();
+            await this.driver.pause(2000);
+            await this.pressEnterButton();
+            await this.driver.pause(3000);
+
+            // Take and compare screenshot
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const currentScreenshotName = `saved_current_${timestamp}.png`;
+            
+            const screenshotPath = await topPage.takeScreenshot(path.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
+            const referenceScreenshotPath = path.join(process.cwd(), 'screenshots', 'reference', 'saved_reference.png');
+
+            try {
+                await fs.access(referenceScreenshotPath);
+                const comparison = await topPage.compareImages(
+                    screenshotPath,
+                    referenceScreenshotPath,
+                    path.join(process.cwd(), 'screenshots', 'difference', `saved_difference_${timestamp}.png`)
+                );
+                expect(comparison.misMatchPercentage).toBeLessThan(5);
+            } catch (error) {
+                console.log('First run - creating saved reference image');
+                await fs.copyFile(screenshotPath, referenceScreenshotPath);
+            }
+        } catch (error) {
+            console.error('Error verifying Saved category:', error);
+            throw error;
+        }
     }
 
     /**

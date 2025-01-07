@@ -1,4 +1,4 @@
-import { Browser } from 'webdriverio';
+import { Browser, Element } from 'webdriverio';
 import { BasePage } from './base.page';
 
 export class PlayerPage extends BasePage {
@@ -230,7 +230,7 @@ export class PlayerPage extends BasePage {
     }
 
     async getCurrentPosition(): Promise<number> {
-        const element = await this.waitForElement(this.selectors.progressBar);
+        const element = await this.waitForElement(this.selectors.progressBar) as Element<'async'>;
         const progress = await element.getAttribute('progress');
         return parseFloat(progress || '0');
     }   

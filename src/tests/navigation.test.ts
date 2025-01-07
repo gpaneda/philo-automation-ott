@@ -129,7 +129,7 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test.only('TC111 - should display the Top Free Movies category', async () => {
+    test('TC111 - should display the Top Free Movies category', async () => {
         try {
             // 1. Navigate to and verify Top Free Movies category
             await homeScreen.verifyTopFreeMovies(categoriesPage, topPage);
@@ -139,7 +139,7 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test.only('TC112 - should display the Top Free Shows category', async () => {
+    test('TC112 - should display the Top Free Shows category', async () => {
         try {
             // 1. Navigate to and verify Top Free Shows category
             await homeScreen.verifyTopFreeShows(categoriesPage, topPage);
@@ -149,7 +149,7 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test.only('TC113 - should display the Recommended category', async () => {
+    test('TC113 - should display the Recommended category', async () => {
         try {
             // 1. Navigate to and verify Recommended category
             await homeScreen.verifyRecommended(categoriesPage, topPage);
@@ -159,7 +159,7 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test.only('TC115 - should display the Saved category', async () => {
+    test('TC115 - should display the Saved category', async () => {
         try {
             // 1. Navigate to and verify Saved category
             await homeScreen.verifySavedCategory(categoriesPage, topPage);
@@ -169,7 +169,7 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test.only('TC114 - should display the Trending Live category', async () => {
+    test('TC114 - should display the Trending Live category', async () => {
         try {
             // 1. Navigate to and verify Trending Live category
             await homeScreen.verifyTrendingLive(categoriesPage, topPage);
@@ -226,6 +226,91 @@ ${foundCategories.join('\n')}`;
 
         } catch (error) {
             console.error('Error logging categories:', error);
+            throw error;
+        }
+    }, 180000);
+
+    test('TC118 - should log all movie titles in Top Free Movies row', async () => {
+        try {
+            // 1. Verify home screen is open
+            await homeScreen.verifyHomeScreenElements();
+
+            // Create log file
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const logPath = path.join(process.cwd(), 'logs');
+            await fs.mkdir(logPath, { recursive: true });
+            const logFile = path.join(logPath, `movie_titles_${timestamp}.log`);
+
+            // Write initial timestamp
+            await fs.writeFile(logFile, `Starting movie title scan at ${timestamp}\n\n`);
+
+            // Navigate to Top Free Movies row
+            const found = await homeScreen.findCategory('Top Free Movies');
+            if (!found) {
+                throw new Error('Top Free Movies category not found');
+            }
+
+            // Press down to get to the actual row content
+            await homeScreen.pressDownButton();
+            await driver.pause(2000);
+            await homeScreen.pressUpButton();
+            await driver.pause(2000);
+
+            // Press left to ensure we're at the start of the row
+            for (let i = 0; i < 5; i++) {
+                await homeScreen.pressLeftButton();
+                await driver.pause(1000);
+            }
+
+            const movieTitles: string[] = [];
+            let previousTitle = '';
+            let samePositionCount = 0;
+            const maxAttempts = 30;
+
+            // Navigate through the row
+            for (let attempt = 0; attempt < maxAttempts; attempt++) {
+                // Get the current focused movie title
+                const focusedElement = await driver.$('android=focused(true)');
+                const title = await focusedElement.getAttribute('content-desc');
+
+                if (title) {
+                    await fs.appendFile(logFile, `\nPress ${attempt + 1}: Found movie "${title}"\n`);
+                    
+                    if (!movieTitles.includes(title)) {
+                        movieTitles.push(title);
+                        await fs.appendFile(logFile, `*** New movie added to list ***\n`);
+                    }
+
+                    // Check if we've reached the end of the row
+                    if (title === previousTitle) {
+                        samePositionCount++;
+                        if (samePositionCount >= 3) {
+                            await fs.appendFile(logFile, `\nReached end of row (same title "${title}" found 3 times)\n`);
+                            break;
+                        }
+                    } else {
+                        samePositionCount = 0;
+                    }
+                    previousTitle = title;
+                }
+
+                // Press right to move to next movie
+                await homeScreen.pressRightButton();
+                await driver.pause(1500);
+            }
+
+            // Log final summary
+            const summary = `\n=== Scan Complete ===
+Total unique movies found: ${movieTitles.length}
+
+All Movies in order of discovery:
+${movieTitles.join('\n')}`;
+            
+            await fs.appendFile(logFile, summary);
+            console.log('Scan complete. Found', movieTitles.length, 'movies');
+
+        } catch (error) {
+            console.error('Error scanning movie titles:', error);
             throw error;
         }
     }, 180000);
