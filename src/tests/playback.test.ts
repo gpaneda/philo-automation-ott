@@ -5,6 +5,7 @@ import { AppHelper } from '../helpers/app.helper';
 import { CategoriesPage } from '../pages/categories.page';
 import { TopPage } from '../pages/top.page';
 import { SeriesDetailsPage } from '../pages/seriesDetails.page';
+import path from 'path';
 describe('Playback Tests', () => {
     let driver: Browser<'async'>;
     let homeScreenPage: HomeScreenPage;
@@ -54,31 +55,38 @@ describe('Playback Tests', () => {
     describe('Basic Playback Controls', () => {
         test('TC201 - should verify content playback', async () => {
             try {
+                // Step 1: Click on the first movie from the home screen
                 await homeScreenPage.clickFirstMovie();
                 await driver.pause(5000);
 
+                // Step 2: Get the initial movie title from details page
                 const movieTitleElement = await driver.$('android=resourceId("com.philo.philo:id/show_title")');
                 await movieTitleElement.waitForDisplayed({ timeout: 10000 });
                 const initialTitle = await movieTitleElement.getText();
 
+                // Step 3: Click play button to start playback
                 const playButton = await driver.$('android=resourceId("com.philo.philo:id/button_play")');
                 await playButton.waitForDisplayed({ timeout: 10000 });
                 await playButton.click();
 
+                // Step 4: Wait for player to load and verify content is playing
                 await playerPage.waitForLoaded();
                 await driver.pause(5000);
 
                 const isPlaying = await playerPage.isPlaying();
                 expect(isPlaying).toBe(true);
 
+                // Step 5: Test pause functionality
                 await playerPage.togglePlayPause();
                 await driver.pause(2000);
 
+                // Step 6: Verify seekbar is displayed while paused
                 const seekbar = await driver.$('android=resourceId("com.philo.philo:id/seekbar_seekbar3")');
                 await seekbar.waitForDisplayed({ timeout: 10000 });
 
                 await driver.pause(5000);
 
+                // Step 7: Verify the movie title in player matches the initial title
                 const movieTitleFromPlayer = await playerPage.getShowTitle();
                 expect(movieTitleFromPlayer).toBe(initialTitle);
             } catch (error) {
@@ -87,7 +95,7 @@ describe('Playback Tests', () => {
             }
         }, 120000);
 
-        test.only('TC202 - should verify that series playback and pause works', async () => {
+        test('TC202 - should verify that series playback and pause works', async () => {
             try {
                 await categoriesPage.goToTopFreeShows();
                 await driver.pause(5000);
