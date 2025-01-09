@@ -1,0 +1,282 @@
+Element: undefined
+
+  Element: android.widget.FrameLayout
+    bounds: [0,0][1920,1080]
+
+    Element: android.widget.LinearLayout
+      bounds: [0,0][1920,1080]
+
+      Element: android.widget.FrameLayout
+        bounds: [0,0][1920,1080]
+
+        Element: android.widget.LinearLayout
+          resource-id: com.philo.philo:id/action_bar_root
+          bounds: [0,0][1920,1080]
+
+          Element: android.widget.FrameLayout
+            resource-id: android:id/content
+            bounds: [0,0][1920,1080]
+
+            Element: android.widget.FrameLayout
+              resource-id: com.philo.philo:id/activity_host
+              bounds: [0,0][1920,1080]
+
+              Element: android.widget.FrameLayout
+                resource-id: com.philo.philo:id/player_fragment_host
+                bounds: [0,0][1920,1080]
+
+              Element: android.widget.FrameLayout
+                resource-id: com.philo.philo:id/modal_fragment_host
+                bounds: [0,0][1920,1080]
+
+              Element: android.widget.FrameLayout
+                resource-id: com.philo.philo:id/dialog_fragment_host
+                bounds: [0,0][1920,1080]
+
+              Element: android.widget.FrameLayout
+                resource-id: com.philo.philo:id/fragment_host
+                bounds: [0,0][1920,1080]
+
+                Element: android.view.ViewGroup
+                  resource-id: com.philo.philo:id/tile_groups_container
+                  bounds: [0,0][1920,1080]
+
+                  Element: android.widget.FrameLayout
+                    resource-id: com.philo.philo:id/compose_view_wrapper
+                    bounds: [0,0][1920,1080]
+
+                    Element: androidx.compose.ui.platform.ComposeView
+                      resource-id: com.philo.philo:id/compose_view
+                      bounds: [0,0][1920,1080]
+
+                      Element: android.view.View
+                        bounds: [0,0][1920,1080]
+
+                        Element: android.view.View
+                          bounds: [0,0][1920,1080]
+
+                          Element: android.widget.ImageView
+                            bounds: [0,0][1920,1080]
+                            content-desc: Kill Bill: Vol. 2
+
+                          Element: android.widget.ImageView
+                            bounds: [112,280][208,352]
+                            content-desc: MovieSphere by Lionsgate
+
+                          Element: android.widget.ImageView
+                            bounds: [218,292][266,340]
+                            content-desc: Keep watching
+
+                          Element: android.widget.TextView
+                            bounds: [276,296][467,336]
+                            text: Keep watching
+
+                          Element: android.widget.TextView
+                            bounds: [112,368][471,444]
+                            text: Kill Bill: Vol. 2
+
+                          Element: android.widget.TextView
+                            bounds: [112,460][776,500]
+                            text: An assassin confronts her former boss and his gang.
+
+                          Element: android.view.View
+                            bounds: [332,528][512,624]
+
+                            Element: android.widget.TextView
+                              bounds: [364,558][488,594]
+                              text: More info
+
+                            Element: android.widget.Button
+                              bounds: [332,540][512,612]
+
+                          Element: android.view.View
+                            bounds: [112,528][320,624]
+
+                            Element: android.view.View
+                              bounds: [128,552][176,600]
+                              content-desc: Play
+
+                            Element: android.widget.TextView
+                              bounds: [192,558][296,594]
+                              text: Resume
+
+                            Element: android.widget.Button
+                              bounds: [112,540][320,612]
+
+                  Element: android.widget.FrameLayout
+                    resource-id: com.philo.philo:id/tiles_wrapper
+                    bounds: [0,918][1920,1080]
+
+                    Element: androidx.recyclerview.widget.RecyclerView
+                      resource-id: com.philo.philo:id/tile_groups
+                      bounds: [0,918][1920,1080]
+
+                      Element: android.view.ViewGroup
+                        resource-id: com.philo.philo:id/default_tile_row
+                        bounds: [0,928][1920,1080]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/tile_group_row_header_layout
+                          bounds: [100,928][1920,994]
+                          content-desc: Expand collection Top Free Movies
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/button_tile_group
+                            bounds: [100,938][1920,984]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/label_tile_group
+                              bounds: [100,938][363,984]
+                              text: Top Free Movies
+
+                        Element: androidx.recyclerview.widget.RecyclerView
+                          resource-id: com.philo.philo:id/list_view_broadcasts
+                          bounds: [0,994][1920,1080]
+                          content-desc: Top Free Movies
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/widget_tile_wrapper
+                            bounds: [80,994][390,1080]
+                            content-desc: Kill Bill: Vol. 1
+
+                            Element: android.widget.FrameLayout
+                              resource-id: com.philo.philo:id/tile_view_wrapper
+                              bounds: [80,994][390,1080]
+
+                              Element: android.view.ViewGroup
+                                resource-id: com.philo.philo:id/tile_view
+                                bounds: [80,994][384,1080]
+
+                                Element: android.widget.ImageView
+                                  resource-id: com.philo.philo:id/background_image
+                                  bounds: [80,994][384,1080]
+
+                                Element: android.view.View
+                                  resource-id: com.philo.philo:id/pressed_overlay
+                                  bounds: [80,994][384,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/widget_tile_wrapper
+                            bounds: [390,994][700,1080]
+                            content-desc: A Walk to Remember
+
+                            Element: android.widget.FrameLayout
+                              resource-id: com.philo.philo:id/tile_view_wrapper
+                              bounds: [390,994][700,1080]
+
+                              Element: android.view.ViewGroup
+                                resource-id: com.philo.philo:id/tile_view
+                                bounds: [390,994][694,1080]
+
+                                Element: android.widget.ImageView
+                                  resource-id: com.philo.philo:id/background_image
+                                  bounds: [390,994][694,1080]
+
+                                Element: android.view.View
+                                  resource-id: com.philo.philo:id/pressed_overlay
+                                  bounds: [390,994][694,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/widget_tile_wrapper
+                            bounds: [700,994][1010,1080]
+                            content-desc: Kill Bill: Vol. 2
+
+                            Element: android.widget.FrameLayout
+                              resource-id: com.philo.philo:id/tile_view_wrapper
+                              bounds: [700,994][1010,1080]
+
+                              Element: android.view.ViewGroup
+                                resource-id: com.philo.philo:id/tile_view
+                                bounds: [700,994][1004,1080]
+
+                                Element: android.widget.ImageView
+                                  resource-id: com.philo.philo:id/background_image
+                                  bounds: [700,994][1004,1080]
+
+                                Element: android.view.View
+                                  resource-id: com.philo.philo:id/pressed_overlay
+                                  bounds: [700,994][1004,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/widget_tile_wrapper
+                            bounds: [1010,994][1320,1080]
+                            content-desc: Georgia Rule
+
+                            Element: android.widget.FrameLayout
+                              resource-id: com.philo.philo:id/tile_view_wrapper
+                              bounds: [1010,994][1320,1080]
+
+                              Element: android.view.ViewGroup
+                                resource-id: com.philo.philo:id/tile_view
+                                bounds: [1010,994][1314,1080]
+
+                                Element: android.widget.ImageView
+                                  resource-id: com.philo.philo:id/background_image
+                                  bounds: [1010,994][1314,1080]
+
+                                Element: android.view.View
+                                  resource-id: com.philo.philo:id/pressed_overlay
+                                  bounds: [1010,994][1314,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/widget_tile_wrapper
+                            bounds: [1320,994][1630,1080]
+                            content-desc: Employee of the Month
+
+                            Element: android.widget.FrameLayout
+                              resource-id: com.philo.philo:id/tile_view_wrapper
+                              bounds: [1320,994][1630,1080]
+
+                              Element: android.view.ViewGroup
+                                resource-id: com.philo.philo:id/tile_view
+                                bounds: [1320,994][1624,1080]
+
+                                Element: android.widget.ImageView
+                                  resource-id: com.philo.philo:id/background_image
+                                  bounds: [1320,994][1624,1080]
+
+                                Element: android.view.View
+                                  resource-id: com.philo.philo:id/pressed_overlay
+                                  bounds: [1320,994][1624,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/widget_tile_wrapper
+                            bounds: [1630,994][1920,1080]
+                            content-desc: Daybreakers
+
+                            Element: android.widget.FrameLayout
+                              resource-id: com.philo.philo:id/tile_view_wrapper
+                              bounds: [1630,994][1920,1080]
+
+                              Element: android.view.ViewGroup
+                                resource-id: com.philo.philo:id/tile_view
+                                bounds: [1630,994][1920,1080]
+
+                                Element: android.widget.ImageView
+                                  resource-id: com.philo.philo:id/background_image
+                                  bounds: [1630,994][1920,1080]
+
+                                Element: android.view.View
+                                  resource-id: com.philo.philo:id/pressed_overlay
+                                  bounds: [1630,994][1920,1080]
+
+              Element: android.widget.FrameLayout
+                resource-id: com.philo.philo:id/fragment_tabs
+                bounds: [0,0][1920,244]
+
+                Element: android.view.ViewGroup
+                  resource-id: com.philo.philo:id/widget_tabs
+                  bounds: [0,0][1920,244]
+
+                  Element: android.widget.FrameLayout
+                    resource-id: com.philo.philo:id/tab_bar_menu_layout
+                    bounds: [0,0][1920,244]
+
+                    Element: android.widget.FrameLayout
+                      resource-id: com.philo.philo:id/tab_bar_menu_button
+                      bounds: [895,57][1025,187]
+
+                      Element: android.widget.TextView
+                        bounds: [929,83][991,160]
+                        text: Menu
+
