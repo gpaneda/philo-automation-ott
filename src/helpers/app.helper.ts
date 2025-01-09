@@ -11,7 +11,7 @@ export class AppHelper {
                     hostname: 'localhost',
                     port: 4723,
                     logLevel: 'info',
-                    path: '/',
+                    path: '/wd/hub',
                     capabilities: fireTVCapabilities
                 });
             } catch (error) {
