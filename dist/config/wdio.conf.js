@@ -3,13 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.config = void 0;
 exports.config = {
     runner: 'local',
-    autoCompileOpts: {
-        autoCompile: true,
-        tsNodeOpts: {
-            project: './tsconfig.json',
-            transpileOnly: true
-        }
-    },
     specs: [
         './src/tests/**/*.ts'
     ],
@@ -22,9 +15,14 @@ exports.config = {
             'appium:appPackage': 'com.philo.philo',
             'appium:appActivity': 'com.philo.philo.MainActivity',
             'appium:noReset': true,
-            'appium:newCommandTimeout': 240
+            'appium:newCommandTimeout': 240,
+            // Performance optimizations
+            'appium:skipServerInstallation': true,
+            'appium:skipDeviceInitialization': true,
+            'appium:ignoreUnimportantViews': true,
+            'appium:disableWindowAnimation': true
         }],
-    logLevel: 'info',
+    logLevel: 'error',
     bail: 0,
     baseUrl: '',
     waitforTimeout: 10000,
@@ -36,18 +34,7 @@ exports.config = {
     jasmineOpts: {
         defaultTimeoutInterval: 60000,
         expectationResultHandler: function (passed, assertion) {
-        }
-    },
-    before: async function (capabilities) {
-        if (browser) {
-            await browser.setTimeout({ 'implicit': 5000 });
-        }
-    },
-    afterTest: async function (test, context, results) {
-        if (!results.passed) {
-            if (browser) {
-                await browser.takeScreenshot();
-            }
+            // Handle test results
         }
     }
 };

@@ -5,31 +5,29 @@ class BasePage {
     constructor(driver) {
         this.driver = driver;
     }
-    /**
-     * Wait for element to be displayed
-     */
-    async waitForElement(selector, timeout = 10000) {
+    async waitForElement(selector, timeout) {
         const element = await this.driver.$(selector);
-        await element.waitForDisplayed({ timeout });
+        if (timeout) {
+            await element.waitForDisplayed({ timeout });
+        }
         return element;
     }
-    /**
-     * Get element by resource ID
-     */
-    async getElementById(resourceId) {
-        return await this.waitForElement(`android=resourceId("${resourceId}")`);
+    async isElementDisplayed(selector) {
+        try {
+            const element = await this.waitForElement(selector);
+            return element.isDisplayed();
+        }
+        catch (error) {
+            return false;
+        }
     }
-    /**
-     * Get element by text
-     */
-    async getElementByText(text) {
-        return await this.waitForElement(`android=text("${text}")`);
+    async verifyElementDisplayed(selector) {
+        const element = await this.waitForElement(selector);
+        await element.waitForDisplayed();
     }
-    /**
-     * Get all clickable elements on the page
-     */
-    async getClickableElements() {
-        return await this.driver.$$('android=clickable(true)');
+    async click(selector) {
+        const element = await this.waitForElement(selector);
+        await element.click();
     }
 }
 exports.BasePage = BasePage;

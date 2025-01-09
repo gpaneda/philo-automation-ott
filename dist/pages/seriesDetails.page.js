@@ -6,22 +6,26 @@ class SeriesDetailsPage extends base_page_1.BasePage {
     constructor(driver) {
         super(driver);
         this.selectors = {
-            // Series Information
-            seriesTitle: 'android=resourceId("com.philo.philo:id/show_title").className("android.widget.TextView")',
-            seriesDescription: 'android=resourceId("com.philo.philo:id/show_description").className("android.widget.TextView")',
+            // Series Information - Using index-based selectors from XML structure
+            seriesTitle: 'android=className("android.widget.TextView").index(1)',
+            seriesDescription: 'android=className("android.widget.TextView").index(5)',
+            releaseYear: 'android=className("android.widget.TextView").index(2)',
+            seasonCount: 'android=className("android.widget.TextView").index(3)',
+            rating: 'android=className("android.widget.TextView").index(4)',
             seriesPoster: 'android=resourceId("com.philo.philo:id/big_tile_poster_image").className("android.widget.ImageView")',
-            seriesRating: 'android=resourceId("com.philo.philo:id/rating").className("android.widget.TextView")',
-            releaseDate: 'android=resourceId("com.philo.philo:id/release_date").className("android.widget.TextView")',
-            ratingAdvisories: 'android=resourceId("com.philo.philo:id/rating_advisories").className("android.widget.TextView")',
             // Channel Information
             channelLogo: 'android=resourceId("com.philo.philo:id/big_tile_channel_logo").className("android.widget.ImageView")',
             channelButton: 'android=resourceId("com.philo.philo:id/button_channel").className("android.view.ViewGroup")',
             channelName: 'android=resourceId("com.philo.philo:id/label_channel").className("android.widget.TextView")',
             // Action Buttons
-            playButton: 'android=resourceId("com.philo.philo:id/button_play").className("android.widget.LinearLayout")',
-            playLabel: 'android=resourceId("com.philo.philo:id/label_play").className("android.widget.TextView")',
-            saveButton: 'android=resourceId("com.philo.philo:id/button_save").className("android.widget.FrameLayout")',
-            saveLabel: 'android=resourceId("com.philo.philo:id/label_save").className("android.widget.TextView")',
+            playButton: 'android=className("android.view.View").descriptionContains("Play")',
+            saveButton: 'android=className("android.view.View").descriptionContains("Save")',
+            // Navigation Tabs
+            episodesTab: 'android=className("android.widget.TextView").text("Episodes")',
+            scheduleTab: 'android=className("android.widget.TextView").text("Schedule")',
+            relatedTab: 'android=className("android.widget.TextView").text("Related")',
+            extrasTab: 'android=className("android.widget.TextView").text("Extras")',
+            detailsTab: 'android=className("android.widget.TextView").text("Details")',
             // Background Elements
             backgroundImage: 'android=resourceId("com.philo.philo:id/big_tile_background_image_view").className("android.widget.ImageView")',
             backgroundVideo: 'android=resourceId("com.philo.philo:id/big_tile_background_video_view").className("android.widget.FrameLayout")',
@@ -30,12 +34,6 @@ class SeriesDetailsPage extends base_page_1.BasePage {
             detailsContainer: 'android=resourceId("com.philo.philo:id/big_tile_item_details_container").className("android.view.ViewGroup")',
             otherInfoContainer: 'android=resourceId("com.philo.philo:id/other_information_container").className("android.view.ViewGroup")',
             buttonsContainer: 'android=resourceId("com.philo.philo:id/big_tile_buttons_container").className("android.view.ViewGroup")',
-            // Navigation Tabs
-            episodesTab: 'android=className("android.widget.TextView").text("Episodes")',
-            scheduleTab: 'android=className("android.widget.TextView").text("Schedule")',
-            relatedTab: 'android=className("android.widget.TextView").text("Related")',
-            extrasTab: 'android=className("android.widget.TextView").text("Extras")',
-            detailsTab: 'android=className("android.widget.TextView").text("Details")',
             // Navigation
             dismissButton: 'android=resourceId("com.philo.philo:id/big_tile_dismiss_text")'
         };
@@ -45,36 +43,40 @@ class SeriesDetailsPage extends base_page_1.BasePage {
      * @returns Promise<string> The series title
      */
     async getSeriesTitle() {
-        return await this.getText(this.selectors.seriesTitle);
+        const element = await this.waitForElement(this.selectors.seriesTitle);
+        return element.getText();
     }
     /**
      * Gets the series description
      * @returns Promise<string> The series description
      */
     async getSeriesDescription() {
-        return await this.getText(this.selectors.seriesDescription);
+        const element = await this.waitForElement(this.selectors.seriesDescription);
+        return element.getText();
     }
     /**
      * Gets the release year
      * @returns Promise<string> The release year
      */
     async getReleaseYear() {
-        return await this.getText(this.selectors.releaseDate);
+        const element = await this.waitForElement(this.selectors.releaseYear);
+        return element.getText();
     }
     /**
      * Gets the number of seasons
      * @returns Promise<string> The season count
      */
     async getSeasonCount() {
-        const element = await this.driver.$('android=className("android.widget.TextView").text("11 Seasons")');
-        return await element.getText();
+        const element = await this.waitForElement(this.selectors.seasonCount);
+        return element.getText();
     }
     /**
      * Gets the content rating
      * @returns Promise<string> The content rating
      */
     async getContentRating() {
-        return await this.getText(this.selectors.ratingAdvisories);
+        const element = await this.waitForElement(this.selectors.rating);
+        return element.getText();
     }
     /**
      * Clicks the play button

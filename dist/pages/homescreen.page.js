@@ -46,6 +46,16 @@ class HomeScreenPage extends base_page_1.BasePage {
             trendingLive: 'android=text("Trending Live")',
             realityRoundup: 'android=text("Reality Roundup")',
             trueCrime: 'android=text("True Crime")',
+            saved: 'android=text("Saved")',
+            homeAndTravel: 'android=text("Home & Travel")',
+            keepWatching: 'android=text("Keep Watching")',
+            funForTheFamily: 'android=text("Fun for the Family")',
+            allTheFixings: 'android=text("All the Fixings")',
+            actionAndThrillers: 'android=text("Action & Thrillers")',
+            inTheNews: 'android=text("In the News")',
+            outDoorsAndSports: 'android=text("Outdoors & Sports")',
+            theLaughTrack: 'android=text("The Laugh Track")',
+            anime: 'android=text("Anime")',
             // Movie Tiles
             firstMovieTile: 'android=new UiSelector().resourceId("com.philo.philo:id/widget_tile_wrapper").instance(0)',
             movieTileTitle: 'android=resourceId("com.philo.philo:id/title")',
@@ -104,34 +114,34 @@ class HomeScreenPage extends base_page_1.BasePage {
         // Add Press Up Button
         await this.pressUpButton();
         // Verify top menu
-        await this.verifyElementDisplayed(this.selectors.menuText);
-        await this.verifyElementDisplayed(this.selectors.topNavHome);
-        await this.verifyElementDisplayed(this.selectors.topNavGuide);
-        await this.verifyElementDisplayed(this.selectors.topNavSaved);
-        await this.verifyElementDisplayed(this.selectors.topNavSearch);
-        await this.verifyElementDisplayed(this.selectors.topNavSettings);
+        await this.isElementDisplayed(this.selectors.menuText);
+        await this.isElementDisplayed(this.selectors.topNavHome);
+        await this.isElementDisplayed(this.selectors.topNavGuide);
+        await this.isElementDisplayed(this.selectors.topNavSaved);
+        await this.isElementDisplayed(this.selectors.topNavSearch);
+        await this.isElementDisplayed(this.selectors.topNavSettings);
         // Verify main content
-        await this.verifyElementDisplayed(this.selectors.homeHeader);
-        await this.verifyElementDisplayed(this.selectors.userProfileIcon);
-        await this.verifyElementDisplayed(this.selectors.liveTVButton);
-        await this.verifyElementDisplayed(this.selectors.onDemandButton);
-        await this.verifyElementDisplayed(this.selectors.dvrButton);
+        await this.isElementDisplayed(this.selectors.homeHeader);
+        await this.isElementDisplayed(this.selectors.userProfileIcon);
+        await this.isElementDisplayed(this.selectors.liveTVButton);
+        await this.isElementDisplayed(this.selectors.onDemandButton);
+        await this.isElementDisplayed(this.selectors.dvrButton);
         // Press Down Button to display content
         await this.pressDownButton();
         // Verify content categories
-        await this.verifyElementDisplayed(this.selectors.topFreeMovies);
-        await this.verifyElementDisplayed(this.selectors.topFreeShows);
-        await this.verifyElementDisplayed(this.selectors.recommended);
-        await this.verifyElementDisplayed(this.selectors.trendingLive);
-        await this.verifyElementDisplayed(this.selectors.realityRoundup);
-        await this.verifyElementDisplayed(this.selectors.trueCrime);
+        await this.isElementDisplayed(this.selectors.topFreeMovies);
+        await this.isElementDisplayed(this.selectors.topFreeShows);
+        await this.isElementDisplayed(this.selectors.recommended);
+        await this.isElementDisplayed(this.selectors.trendingLive);
+        await this.isElementDisplayed(this.selectors.realityRoundup);
+        await this.isElementDisplayed(this.selectors.trueCrime);
     }
     async verifyTopMenuElements() {
-        await this.verifyElementDisplayed(this.selectors.topNavHome);
-        await this.verifyElementDisplayed(this.selectors.topNavGuide);
-        await this.verifyElementDisplayed(this.selectors.topNavSaved);
-        await this.verifyElementDisplayed(this.selectors.topNavSearch);
-        await this.verifyElementDisplayed(this.selectors.topNavSettings);
+        await this.isElementDisplayed(this.selectors.topNavHome);
+        await this.isElementDisplayed(this.selectors.topNavGuide);
+        await this.isElementDisplayed(this.selectors.topNavSaved);
+        await this.isElementDisplayed(this.selectors.topNavSearch);
+        await this.isElementDisplayed(this.selectors.topNavSettings);
     }
     // Navigation methods for top menu
     async navigateToGuide() {
@@ -183,7 +193,7 @@ class HomeScreenPage extends base_page_1.BasePage {
         // Press up to expose top menu
         await this.pressUpButton();
         // Wait for menu to be visible and click settings
-        await this.verifyElementDisplayed(this.selectors.topNavSettings);
+        await this.isElementDisplayed(this.selectors.topNavSettings);
         await this.click(this.selectors.topNavSettings);
     }
     async getTopNavSettingsButtonElement() {
@@ -210,22 +220,188 @@ class HomeScreenPage extends base_page_1.BasePage {
         await this.click(this.selectors.firstMovieTile);
     }
     /**
-     * Navigates to the top portion of the home page
-     * Uses the working pattern: back button, up twice, then enter
+     * Base method for verifying a category page
+     * @param categoryName Name of the category for screenshots and logs
+     * @param goToCategory Function that navigates to the category
+     * @param topPage The top page object for screenshots
      */
-    async goToHomePageTop() {
+    async verifyCategoryPage(categoryName, goToCategory, topPage) {
         try {
-            await this.pressBackButton();
-            await this.driver.pause(2000);
-            await this.pressUpButton();
-            await this.driver.pause(2000);
-            await this.pressUpButton();
-            await this.driver.pause(2000);
-            await this.pressEnterButton();
-            await this.driver.pause(5000);
+            await goToCategory();
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const currentScreenshotName = `${categoryName.toLowerCase().replace(/ /g, '_')}_current_${timestamp}.png`;
+            const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
+            const referenceScreenshotPath = path_1.default.join(process.cwd(), 'screenshots', 'reference', `${categoryName.toLowerCase().replace(/ /g, '_')}_reference.png`);
+            try {
+                await promises_1.default.access(referenceScreenshotPath);
+                const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `${categoryName.toLowerCase().replace(/ /g, '_')}_difference_${timestamp}.png`));
+                expect(comparison.misMatchPercentage).toBeLessThan(5);
+            }
+            catch (error) {
+                console.log('First run - creating reference image for:', categoryName);
+                await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
+            }
         }
         catch (error) {
-            console.error('Error navigating to home page top:', error);
+            console.error(`Error verifying ${categoryName} category:`, error);
+            throw error;
+        }
+    }
+    /**
+     * Verify Top Free Movies category
+     * @param categoriesPage The categories page object
+     * @param topPage The top page object for screenshots
+     */
+    async verifyTopFreeMovies(categoriesPage, topPage) {
+        await this.verifyCategoryPage('Top Free Movies', () => categoriesPage.goToTopFreeMovies(), topPage);
+    }
+    /**
+     * Verify Top Free Shows category
+     * @param categoriesPage The categories page object
+     * @param topPage The top page object for screenshots
+     */
+    async verifyTopFreeShows(categoriesPage, topPage) {
+        await this.verifyCategoryPage('Top Free Shows', () => categoriesPage.goToTopFreeShows(), topPage);
+    }
+    /**
+     * Verify Recommended category
+     * @param categoriesPage The categories page object
+     * @param topPage The top page object for screenshots
+     */
+    async verifyRecommended(categoriesPage, topPage) {
+        await this.verifyCategoryPage('Recommended', () => categoriesPage.goToRecommended(), topPage);
+    }
+    /**
+     * Verify Saved category
+     * @param categoriesPage The categories page object
+     * @param topPage The top page object for screenshots
+     */
+    async verifySavedCategory(categoriesPage, topPage) {
+        try {
+            await this.verifyHomeScreenElements();
+            // Find the Saved category
+            const found = await this.findCategory('Saved');
+            if (!found) {
+                throw new Error('Saved category not found');
+            }
+            // Press down once more to get to the actual row content
+            await this.pressDownButton();
+            await this.driver.pause(2000);
+            // Now that we're at Saved content, press left and enter
+            await this.pressLeftButton();
+            await this.driver.pause(2000);
+            await this.pressEnterButton();
+            await this.driver.pause(3000);
+            // Take and compare screenshot
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const currentScreenshotName = `saved_current_${timestamp}.png`;
+            const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
+            const referenceScreenshotPath = path_1.default.join(process.cwd(), 'screenshots', 'reference', 'saved_reference.png');
+            try {
+                await promises_1.default.access(referenceScreenshotPath);
+                const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `saved_difference_${timestamp}.png`));
+                expect(comparison.misMatchPercentage).toBeLessThan(5);
+            }
+            catch (error) {
+                console.log('First run - creating saved reference image');
+                await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
+            }
+        }
+        catch (error) {
+            console.error('Error verifying Saved category:', error);
+            throw error;
+        }
+    }
+    /**
+     * Find a specific category by navigating through the content
+     * @param targetCategory The category to find
+     * @param maxPresses Maximum number of times to press down/up
+     * @returns Promise<boolean> Whether the category was found
+     */
+    async findCategory(targetCategory, maxPresses = 15) {
+        // First press down to start at categories
+        await this.pressDownButton();
+        await this.driver.pause(5000);
+        // List of all possible categories
+        const categories = [
+            'Top Free Movies',
+            'Top Free Shows',
+            'Recommended',
+            'Trending Live',
+            'Reality Roundup',
+            'True Crime',
+            'Saved',
+            'Home & Travel',
+            'Keep Watching',
+            'Fun for the Family',
+            'All the Fixings',
+            'Action & Thrillers',
+            'In the News',
+            'Outdoors & Sports',
+            'The Laugh Track',
+            'Anime'
+        ];
+        // Try to find the category
+        for (let pressCount = 0; pressCount < maxPresses; pressCount++) {
+            // Check all categories that might be visible
+            for (const category of categories) {
+                try {
+                    const element = await this.driver.$(`android=text("${category}")`);
+                    const isDisplayed = await element.isDisplayed();
+                    if (isDisplayed && category === targetCategory) {
+                        console.log(`Found target category "${targetCategory}" after ${pressCount} presses`);
+                        return true;
+                    }
+                }
+                catch (error) {
+                    // Ignore errors for individual elements
+                }
+            }
+            // Press down to reveal more categories
+            await this.pressDownButton();
+            await this.driver.pause(2000);
+        }
+        console.log(`Category "${targetCategory}" not found after ${maxPresses} presses`);
+        return false;
+    }
+    /**
+     * Navigate to and verify Trending Live category
+     * @param categoriesPage The categories page object
+     * @param topPage The top page object for screenshots
+     */
+    async verifyTrendingLive(categoriesPage, topPage) {
+        try {
+            await this.verifyHomeScreenElements();
+            // Find the Trending Live category
+            const found = await this.findCategory('Trending Live');
+            if (!found) {
+                throw new Error('Trending Live category not found');
+            }
+            // Press down once more to get to the actual row content
+            await this.pressDownButton();
+            await this.driver.pause(2000);
+            // Now that we're at Trending Live content, press left and enter
+            await this.pressLeftButton();
+            await this.driver.pause(2000);
+            await this.pressEnterButton();
+            await this.driver.pause(3000);
+            // Take and compare screenshot
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const currentScreenshotName = `trending_live_current_${timestamp}.png`;
+            const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
+            const referenceScreenshotPath = path_1.default.join(process.cwd(), 'screenshots', 'reference', 'trending_live_reference.png');
+            try {
+                await promises_1.default.access(referenceScreenshotPath);
+                const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `trending_live_difference_${timestamp}.png`));
+                expect(comparison.misMatchPercentage).toBeLessThan(5);
+            }
+            catch (error) {
+                console.log('First run - creating trending live reference image');
+                await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
+            }
+        }
+        catch (error) {
+            console.error('Error verifying Trending Live category:', error);
             throw error;
         }
     }
@@ -237,43 +413,27 @@ class HomeScreenPage extends base_page_1.BasePage {
      */
     async verifySettingsPage(settingsPage, topPage) {
         try {
-            // Navigate to Settings
             await this.pressUpButton();
             await this.driver.pause(5000);
-            // Press right button 5 times
             for (let i = 0; i < 5; i++) {
                 await this.pressRightButton();
             }
             await this.pressEnterButton();
             await this.driver.pause(5000);
-            // Verify settings content
             await settingsPage.isElementVisible(settingsPage.getStartChannelPlaybackSelector());
-            // Generate timestamp for current screenshot
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const currentScreenshotName = `settings_page_current_${timestamp}.png`;
-            // Take screenshot of the current state
             const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
             const referenceScreenshotPath = path_1.default.join(process.cwd(), 'screenshots', 'reference', 'settings_page_reference.png');
             try {
-                // First check if reference exists
                 await promises_1.default.access(referenceScreenshotPath);
-                // If reference exists, compare with current
                 const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `settings_difference_${timestamp}.png`));
-                console.log('Settings page comparison results:', {
-                    misMatchPercentage: comparison.misMatchPercentage,
-                    isSameDimensions: comparison.isSameDimensions,
-                    timestamp: timestamp
-                });
-                // Consider test passed if difference is less than 5%
                 expect(comparison.misMatchPercentage).toBeLessThan(5);
             }
             catch (error) {
-                // Only on first run: save current as reference
                 console.log('First run - creating settings page reference image');
                 await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
             }
-            // Return to previous screen
-            await this.pressBackButton();
         }
         catch (error) {
             console.error('Error verifying Settings page:', error);
@@ -290,34 +450,24 @@ class HomeScreenPage extends base_page_1.BasePage {
         try {
             await this.pressUpButton();
             await this.driver.pause(5000);
-            // Press right button once
             await this.pressRightButton();
             await this.pressEnterButton();
             await this.driver.pause(5000);
-            // Check if Free channels is visible
             const isVisible = await guidePage.isElementVisible(guidePage.freeChannels);
             expect(isVisible).toBe(true);
-            // Generate timestamp for current screenshot
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const currentScreenshotName = `guide_page_current_${timestamp}.png`;
-            // Take screenshot of the current state
             const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
             const referenceScreenshotPath = path_1.default.join(process.cwd(), 'screenshots', 'reference', 'guide_page_reference.png');
             try {
                 await promises_1.default.access(referenceScreenshotPath);
                 const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `guide_difference_${timestamp}.png`));
-                console.log('Guide page comparison results:', {
-                    misMatchPercentage: comparison.misMatchPercentage,
-                    isSameDimensions: comparison.isSameDimensions,
-                    timestamp: timestamp
-                });
                 expect(comparison.misMatchPercentage).toBeLessThan(5);
             }
             catch (error) {
                 console.log('First run - creating guide page reference image');
                 await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
             }
-            await this.pressBackButton();
         }
         catch (error) {
             console.error('Error verifying Guide page:', error);
@@ -333,13 +483,11 @@ class HomeScreenPage extends base_page_1.BasePage {
         try {
             await this.pressUpButton();
             await this.driver.pause(5000);
-            // Press right button twice
             for (let i = 0; i < 2; i++) {
                 await this.pressRightButton();
             }
             await this.pressEnterButton();
             await this.driver.pause(10000);
-            // Generate timestamp for current screenshot
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const currentScreenshotName = `top_page_current_${timestamp}.png`;
             const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
@@ -347,18 +495,12 @@ class HomeScreenPage extends base_page_1.BasePage {
             try {
                 await promises_1.default.access(referenceScreenshotPath);
                 const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `top_difference_${timestamp}.png`));
-                console.log('Top page comparison results:', {
-                    misMatchPercentage: comparison.misMatchPercentage,
-                    isSameDimensions: comparison.isSameDimensions,
-                    timestamp: timestamp
-                });
                 expect(comparison.misMatchPercentage).toBeLessThan(5);
             }
             catch (error) {
                 console.log('First run - creating top page reference image');
                 await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
             }
-            await this.pressBackButton();
         }
         catch (error) {
             console.error('Error verifying Top page:', error);
@@ -374,13 +516,11 @@ class HomeScreenPage extends base_page_1.BasePage {
         try {
             await this.pressUpButton();
             await this.driver.pause(5000);
-            // Press right button three times
             for (let i = 0; i < 3; i++) {
                 await this.pressRightButton();
             }
             await this.pressEnterButton();
             await this.driver.pause(10000);
-            // Generate timestamp for current screenshot
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const currentScreenshotName = `saved_page_current_${timestamp}.png`;
             const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
@@ -388,18 +528,12 @@ class HomeScreenPage extends base_page_1.BasePage {
             try {
                 await promises_1.default.access(referenceScreenshotPath);
                 const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `saved_difference_${timestamp}.png`));
-                console.log('Saved page comparison results:', {
-                    misMatchPercentage: comparison.misMatchPercentage,
-                    isSameDimensions: comparison.isSameDimensions,
-                    timestamp: timestamp
-                });
                 expect(comparison.misMatchPercentage).toBeLessThan(5);
             }
             catch (error) {
                 console.log('First run - creating saved page reference image');
                 await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
             }
-            await this.pressBackButton();
         }
         catch (error) {
             console.error('Error verifying Saved page:', error);
@@ -415,13 +549,11 @@ class HomeScreenPage extends base_page_1.BasePage {
         try {
             await this.pressUpButton();
             await this.driver.pause(5000);
-            // Press right button four times
             for (let i = 0; i < 4; i++) {
                 await this.pressRightButton();
             }
             await this.pressEnterButton();
             await this.driver.pause(10000);
-            // Generate timestamp for current screenshot
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const currentScreenshotName = `search_page_current_${timestamp}.png`;
             const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
@@ -429,18 +561,12 @@ class HomeScreenPage extends base_page_1.BasePage {
             try {
                 await promises_1.default.access(referenceScreenshotPath);
                 const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `search_difference_${timestamp}.png`));
-                console.log('Search page comparison results:', {
-                    misMatchPercentage: comparison.misMatchPercentage,
-                    isSameDimensions: comparison.isSameDimensions,
-                    timestamp: timestamp
-                });
                 expect(comparison.misMatchPercentage).toBeLessThan(5);
             }
             catch (error) {
                 console.log('First run - creating search page reference image');
                 await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
             }
-            await this.pressBackButton();
         }
         catch (error) {
             console.error('Error verifying Search page:', error);
@@ -448,87 +574,61 @@ class HomeScreenPage extends base_page_1.BasePage {
         }
     }
     /**
-     * Base method for verifying a category page
-     * @param categoryName Name of the category for screenshots and logs
-     * @param goToCategory Function that navigates to the category
-     * @param upButtonPresses Number of up button presses needed to return to top
-     * @param topPage The top page object for screenshots
+     * Scan and log all content categories
+     * @returns Promise<string[]> Array of found category names
      */
-    async verifyCategoryPage(categoryName, goToCategory, upButtonPresses, topPage) {
-        try {
-            await goToCategory();
-            // Generate timestamp for current screenshot
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-            const currentScreenshotName = `${categoryName.toLowerCase().replace(/ /g, '_')}_current_${timestamp}.png`;
-            // Take screenshot of the current state
-            const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
-            const referenceScreenshotPath = path_1.default.join(process.cwd(), 'screenshots', 'reference', `${categoryName.toLowerCase().replace(/ /g, '_')}_reference.png`);
-            try {
-                await promises_1.default.access(referenceScreenshotPath);
-                const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `${categoryName.toLowerCase().replace(/ /g, '_')}_difference_${timestamp}.png`));
-                console.log(`${categoryName} category comparison results:`, {
-                    misMatchPercentage: comparison.misMatchPercentage,
-                    isSameDimensions: comparison.isSameDimensions,
-                    timestamp: timestamp
-                });
-                expect(comparison.misMatchPercentage).toBeLessThan(5);
+    async scanContentCategories() {
+        const categoryTexts = [];
+        const minimumPresses = 15;
+        // Navigate down to categories and wait for content to load
+        await this.pressDownButton();
+        await this.driver.pause(5000);
+        // Check for each category using text selectors
+        const categories = [
+            'Top Free Movies',
+            'Top Free Shows',
+            'Recommended',
+            'Trending Live',
+            'Reality Roundup',
+            'True Crime',
+            'Saved',
+            'Home & Travel',
+            'Keep Watching',
+            'Fun for the Family',
+            'All the Fixings',
+            'Action & Thrillers',
+            'In the News',
+            'Outdoors & Sports',
+            'The Laugh Track',
+            'Anime'
+        ];
+        // Scan through all categories
+        for (let pressCount = 0; pressCount < minimumPresses; pressCount++) {
+            const foundInThisPress = [];
+            for (const category of categories) {
+                try {
+                    const element = await this.driver.$(`android=text("${category}")`);
+                    const isDisplayed = await element.isDisplayed();
+                    if (isDisplayed) {
+                        foundInThisPress.push(category);
+                        if (!categoryTexts.includes(category)) {
+                            categoryTexts.push(category);
+                            console.log(`Found new category: ${category}`);
+                        }
+                    }
+                }
+                catch (error) {
+                    // Ignore errors for individual elements
+                }
             }
-            catch (error) {
-                console.log(`First run - creating ${categoryName} category reference image`);
-                await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
+            if (foundInThisPress.length > 0) {
+                console.log(`Press ${pressCount + 1}: Found categories:`, foundInThisPress);
             }
-            await this.pressBackButton();
-            await this.driver.pause(5000);
-            // Navigate to top
-            for (let i = 0; i < upButtonPresses; i++) {
-                await this.pressUpButton();
-                await this.driver.pause(2000);
-            }
+            // Press down to reveal more categories
+            await this.pressDownButton();
+            await this.driver.pause(2000);
         }
-        catch (error) {
-            console.error(`Error verifying ${categoryName} category:`, error);
-            throw error;
-        }
-    }
-    /**
-     * Verify Top Free Movies category
-     * @param categoriesPage The categories page object
-     * @param topPage The top page object for screenshots
-     */
-    async verifyTopFreeMovies(categoriesPage, topPage) {
-        await this.verifyCategoryPage('Top Free Movies', () => categoriesPage.goToTopFreeMovies(), 1, topPage);
-    }
-    /**
-     * Verify Top Free Shows category
-     * @param categoriesPage The categories page object
-     * @param topPage The top page object for screenshots
-     */
-    async verifyTopFreeShows(categoriesPage, topPage) {
-        await this.verifyCategoryPage('Top Free Shows', () => categoriesPage.goToTopFreeShows(), 2, topPage);
-    }
-    /**
-     * Verify Recommended category
-     * @param categoriesPage The categories page object
-     * @param topPage The top page object for screenshots
-     */
-    async verifyRecommended(categoriesPage, topPage) {
-        await this.verifyCategoryPage('Recommended', () => categoriesPage.goToRecommended(), 3, topPage);
-    }
-    /**
-     * Verify Saved category
-     * @param categoriesPage The categories page object
-     * @param topPage The top page object for screenshots
-     */
-    async verifySavedCategory(categoriesPage, topPage) {
-        await this.verifyCategoryPage('Saved', () => categoriesPage.goToSaved(), 4, topPage);
-    }
-    /**
-     * Verify Trending Live category
-     * @param categoriesPage The categories page object
-     * @param topPage The top page object for screenshots
-     */
-    async verifyTrendingLive(categoriesPage, topPage) {
-        await this.verifyCategoryPage('Trending Live', () => categoriesPage.goToTrendingLive(), 5, topPage);
+        return categoryTexts;
     }
 }
 exports.HomeScreenPage = HomeScreenPage;

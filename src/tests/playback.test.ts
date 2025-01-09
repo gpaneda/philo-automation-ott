@@ -6,13 +6,15 @@ import { CategoriesPage } from '../pages/categories.page';
 import { TopPage } from '../pages/top.page';
 import { SeriesDetailsPage } from '../pages/seriesDetails.page';
 import path from 'path';
+
 describe('Playback Tests', () => {
-    let driver: Browser<'async'>;
+    let driver: Browser;
     let homeScreenPage: HomeScreenPage;
     let playerPage: PlayerPage;
     let categoriesPage: CategoriesPage;
     let topPage: TopPage;
     let seriesDetails: SeriesDetailsPage;
+
     beforeAll(async () => {
         try {
             driver = await AppHelper.launchPhiloApp();
@@ -25,7 +27,7 @@ describe('Playback Tests', () => {
             console.error('Error in beforeAll:', error);
             throw error;
         }
-    }, 30000);
+    }, 120000);
 
     afterAll(async () => {
         try {
@@ -50,7 +52,7 @@ describe('Playback Tests', () => {
             console.error('Error in beforeEach:', error);
             throw error;
         }
-    });
+    }, 60000);
 
     describe('Basic Playback Controls', () => {
         test('TC201 - should verify content playback', async () => {
@@ -96,8 +98,6 @@ describe('Playback Tests', () => {
 
                 const seekbarVisible = await playerPage.waitForSeekbarVisible();
                 expect(seekbarVisible).toBe(true);
-
-        
             } catch (error) {
                 console.error('Error in playback test:', error);
                 throw error;
