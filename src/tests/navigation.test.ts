@@ -8,7 +8,6 @@ import path from 'path';
 import fs from 'fs/promises';
 import { CategoriesPage } from '../pages/categories.page';
 import { MoviesDetailsPage } from '../pages/moviesDetails.page';
-import { SeriesDetailsPage } from '../pages/seriesDetails.page';
 
 let driver: Browser;
 let homeScreen: HomeScreenPage;
@@ -17,7 +16,6 @@ let settingsPage: SettingsPage;
 let topPage: TopPage;
 let categoriesPage: CategoriesPage;
 let movieDetailsPage: MoviesDetailsPage;
-let seriesDetailsPage: SeriesDetailsPage;
 
 // Define screenshot directories
 const SCREENSHOT_BASE_DIR = path.join(process.cwd(), 'screenshots');
@@ -46,7 +44,6 @@ beforeAll(async () => {
         topPage = new TopPage(driver);
         categoriesPage = new CategoriesPage(driver);
         movieDetailsPage = new MoviesDetailsPage(driver);
-        seriesDetailsPage = new SeriesDetailsPage(driver);
     } catch (error) {
         console.error('Error in beforeAll:', error);
         throw error;
