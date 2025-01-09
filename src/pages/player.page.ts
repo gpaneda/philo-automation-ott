@@ -37,7 +37,7 @@ export class PlayerPage extends BasePage {
         seekbarContainer: 'android=resourceId("com.philo.philo:id/seekbar")',
 
         // Content Info Elements
-        showTitle: 'android=resourceId("com.philo.philo:id/show_title")',
+        showTitle: 'android=resourceId("com.philo.philo:id/show_title").className("android.widget.TextView")',
         episodeInfo: 'android=resourceId("com.philo.philo:id/subtitle")',
 
         // Action Buttons
