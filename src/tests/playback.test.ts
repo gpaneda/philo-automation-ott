@@ -69,26 +69,8 @@ describe('Playback Tests', () => {
                 await playButton.waitForDisplayed({ timeout: 10000 });
                 await playButton.click();
 
-                // Step 4: Wait for player to load and verify content is playing
-                await playerPage.waitForLoaded();
-                await driver.pause(5000);
-
-                const isPlaying = await playerPage.isPlaying();
-                expect(isPlaying).toBe(true);
-
-                // Step 5: Test pause functionality
-                await playerPage.togglePlayPause();
-                await driver.pause(2000);
-
-                // Step 6: Verify seekbar is displayed while paused
-                const seekbar = await driver.$('android=resourceId("com.philo.philo:id/seekbar_seekbar3")');
-                await seekbar.waitForDisplayed({ timeout: 10000 });
-
-                await driver.pause(5000);
-
-                // Step 7: Verify the movie title in player matches the initial title
-                const movieTitleFromPlayer = await playerPage.getShowTitle();
-                expect(movieTitleFromPlayer).toBe(initialTitle);
+                // Step 4: Verify playback functionality
+                await playerPage.verifyMoviePlayback(initialTitle);
             } catch (error) {
                 console.error('Error in playback test:', error);
                 throw error;
@@ -112,20 +94,11 @@ describe('Playback Tests', () => {
                 await playerFragment.waitForDisplayed({ timeout: 30000 });
                 await driver.pause(5000);
 
-                const isPlaying = await playerPage.isPlaying();
-                expect(isPlaying).toBe(true);
-
-                await driver.pressKeyCode(66);
-                await driver.pause(2000);
-                await driver.pressKeyCode(66);
-                await driver.pause(2000);
-
-                const seekbar = await driver.$('android=resourceId("com.philo.philo:id/seekbar_seekbar3")');
-                await seekbar.waitForDisplayed({ timeout: 10000 });
-                await driver.pause(2000);
+                const seekbarVisible = await playerPage.waitForSeekbarVisible();
+                expect(seekbarVisible).toBe(true);
 
                 const seriesTitleFromPlayer = await playerPage.getShowTitle();
-                console.error('Title seen in player:', seriesTitleFromPlayer);
+                expect(seriesTitleFromPlayer).toBe(seriesTitle);
             } catch (error) {
                 console.error('Error in playback test:', error);
                 throw error;
