@@ -18,7 +18,8 @@
     "test:landing": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/landingPage.test.ts",
     "test:playback": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/playback.test.ts",
     "test:series": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/seriesDetails.test.ts",
-    "test:all": "npm run test:navigation && npm run test:playback && npm run test:series"
+    "start:appium": "appium --base-path=/wd/hub",
+    "test:all": "npm run start:appium & sleep 5 && npm run test:navigation && npm run test:playback && npm run test:series"
   },
   "dependencies": {
     "@types/resemblejs": "^4.1.3",
