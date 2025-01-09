@@ -83,7 +83,7 @@ export class HomeScreenPage extends BasePage {
      */
     private async sendKeyEvent(keycode: number): Promise<void> {
         return new Promise((resolve, reject) => {
-            exec(`adb shell input keyevent ${keycode}`, (error, stdout, stderr) => {
+            exec(`adb -s 10.0.0.98:5555 shell input keyevent ${keycode}`, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`Error sending key event: ${stderr}`);
                     reject(error);
