@@ -48,7 +48,7 @@ export class PlayerPage extends BasePage {
         jumpToLiveButton: 'android=content-desc("Jump to live")',
     };
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
     }
 
@@ -73,12 +73,12 @@ export class PlayerPage extends BasePage {
     }
 
     async getCurrentTime(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.currentTime) as ChainablePromiseElement<WebdriverIO.Element>;
+        const element = (await this.waitForElement(this.selectors.currentTime)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
         return element.getText();
     }
 
     async getDuration(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.duration) as ChainablePromiseElement<WebdriverIO.Element>;
+        const element = (await this.waitForElement(this.selectors.duration)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
         return element.getText();
     }
 
@@ -100,7 +100,7 @@ export class PlayerPage extends BasePage {
 
     async startPlayback(): Promise<boolean> {
         try {
-            const playButton = await this.waitForElement(this.selectors.playButton) as ChainablePromiseElement<WebdriverIO.Element>;
+            const playButton = (await this.waitForElement(this.selectors.playButton)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
             await playButton.click();
             await this.driver.pause(5000);
             return true;
@@ -154,18 +154,18 @@ export class PlayerPage extends BasePage {
     }
 
     async getCurrentPosition(): Promise<number> {
-        const element = await this.waitForElement(this.selectors.progressBar) as ChainablePromiseElement<WebdriverIO.Element>;
+        const element = (await this.waitForElement(this.selectors.progressBar)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
         const progress = await element.getAttribute('progress');
         return parseFloat(progress || '0');
     }   
 
     async getShowTitle(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.showTitle) as ChainablePromiseElement<WebdriverIO.Element>;
+        const element = (await this.waitForElement(this.selectors.showTitle)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
         return element.getText();
     }
 
     async getEpisodeInfo(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.episodeInfo) as ChainablePromiseElement<WebdriverIO.Element>;
+        const element = (await this.waitForElement(this.selectors.episodeInfo)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
         return element.getText();
     }
 

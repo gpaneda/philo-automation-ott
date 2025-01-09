@@ -1,5 +1,4 @@
 import { Browser, ChainablePromiseElement } from 'webdriverio';
-import { config } from '@config/wdio.conf';
 
 export interface Selector {
     id: string;
@@ -12,7 +11,7 @@ export interface Selector {
 }
 
 export class BasePage {
-    constructor(protected driver: Browser<'async'>) {}
+    constructor(protected driver: Browser) {}
 
     async waitForElement(selector: string, timeout?: number): Promise<ChainablePromiseElement<WebdriverIO.Element>> {
         const element = await this.driver.$(selector);

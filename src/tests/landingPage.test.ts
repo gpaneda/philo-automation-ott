@@ -1,21 +1,18 @@
 import { Browser } from 'webdriverio';
-import { BasePage } from '../pages/base.page';
 import { HomeScreenPage } from '../pages/homescreen.page';
-import { SettingsPage } from '../pages/settings.page';
+import { LandingPage } from '../pages/landing.page';
 import { AppHelper } from '../helpers/app.helper';
 
 describe('Landing Page', () => {
-    let driver: Browser<'async'>;
-    let basePage: BasePage;
+    let driver: Browser;
+    let landingPage: LandingPage;
     let homeScreenPage: HomeScreenPage;
-    let settingsPage: SettingsPage;
 
     beforeEach(async () => {
         try {
             driver = await AppHelper.launchPhiloApp();
-            basePage = new BasePage(driver);
+            landingPage = new LandingPage(driver);
             homeScreenPage = new HomeScreenPage(driver);
-            settingsPage = new SettingsPage(driver);
         } catch (error) {
             console.error('Error in beforeAll:', error);
             throw error;
@@ -38,7 +35,7 @@ describe('Landing Page', () => {
     test('TC101 - should display landing page buttons', async () => {
         try {
             await driver.pause(15000);
-            await basePage.verifyLandingPageElements();
+            await landingPage.verifyLandingPageElements();
         } catch (error) {
             console.error('Landing page buttons were not displayed:', error);
             throw error;
@@ -49,7 +46,7 @@ describe('Landing Page', () => {
         try {
             await homeScreenPage.pressDownButton();
             await driver.pause(5000);
-            await basePage.verifyChannelsDisplayed();
+            await landingPage.verifyChannelsDisplayed();
         } catch (error) {
             console.error('TC102 failed:', error);
             throw error;
@@ -60,9 +57,9 @@ describe('Landing Page', () => {
         try {
             await homeScreenPage.pressDownButton();
             await driver.pause(5000);
-            await basePage.pressExploreFreeChannelsButton();
+            await landingPage.pressExploreFreeChannelsButton();
             await driver.pause(5000);
-            await basePage.verifyLoginScreenDisplayed();
+            await landingPage.verifyLoginScreenDisplayed();
         } catch (error) {
             console.error('TC103 failed:', error);
             throw error;
