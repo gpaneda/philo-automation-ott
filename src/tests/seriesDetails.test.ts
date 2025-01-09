@@ -4,7 +4,7 @@ import { HomeScreenPage } from '../pages/homescreen.page';
 import { CategoriesPage } from '../pages/categories.page';
 import { SeriesDetailsPage } from '../pages/seriesDetails.page';
 
-let driver: WebdriverIO.Browser;
+let driver: Browser<'async'>;
 let homeScreen: HomeScreenPage;
 let categoriesPage: CategoriesPage;
 let seriesDetailsPage: SeriesDetailsPage;
