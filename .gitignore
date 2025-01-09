@@ -31,3 +31,6 @@ screenshots/difference/
 # Logs
 *.log
 logs/
+
+# Reports
+reports/
