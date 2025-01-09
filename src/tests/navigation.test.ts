@@ -1,5 +1,5 @@
 import { AppHelper } from '../helpers/app.helper';
-import { Browser, Element } from 'webdriverio';
+import { Browser } from 'webdriverio';
 import { HomeScreenPage } from '../pages/homescreen.page';
 import { GuidePage } from '../pages/guide.page';
 import { SettingsPage } from '../pages/settings.page';
@@ -10,7 +10,7 @@ import { CategoriesPage } from '../pages/categories.page';
 import { MoviesDetailsPage } from '../pages/moviesDetails.page';
 import { SeriesDetailsPage } from '../pages/seriesDetails.page';
 
-let driver: Browser<'async'>;
+let driver: Browser;
 let homeScreen: HomeScreenPage;
 let guidePage: GuidePage;
 let settingsPage: SettingsPage;

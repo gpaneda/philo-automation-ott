@@ -1,5 +1,12 @@
+import { config } from 'dotenv';
+const result = config();
+
+if (result.error) {
+    throw result.error;
+}
+
 declare global {
-    var driver: any;
+    let driver: any;
 }
 
 jest.setTimeout(180000);

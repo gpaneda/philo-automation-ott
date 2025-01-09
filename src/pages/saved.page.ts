@@ -1,14 +1,14 @@
 export class SavedPage {
     // Define properties for each UI element based on resource IDs
-    actionBarRoot: string = 'com.philo.philo:id/action_bar_root';
-    content: string = 'android:id/content';
-    savedItemsList: string = 'com.philo.philo:id/saved_items_list';
-    emptyStateContainer: string = 'com.philo.philo:id/empty_state_container';
-    itemTitle: string = 'com.philo.philo:id/item_title';
-    itemDescription: string = 'com.philo.philo:id/item_description';
-    itemThumbnail: string = 'com.philo.philo:id/item_thumbnail';
-    removeButton: string = 'com.philo.philo:id/remove_button';
-    watchNowButton: string = 'com.philo.philo:id/watch_now_button';
+    actionBarRoot = 'com.philo.philo:id/action_bar_root';
+    content = 'android:id/content';
+    savedItemsList = 'com.philo.philo:id/saved_items_list';
+    emptyStateContainer = 'com.philo.philo:id/empty_state_container';
+    itemTitle = 'com.philo.philo:id/item_title';
+    itemDescription = 'com.philo.philo:id/item_description';
+    itemThumbnail = 'com.philo.philo:id/item_thumbnail';
+    removeButton = 'com.philo.philo:id/remove_button';
+    watchNowButton = 'com.philo.philo:id/watch_now_button';
 
     // Method to get the action bar root element
     getActionBarRootElement() {

@@ -1,12 +1,12 @@
 export class EmptySavedPage {
     // Define properties for each UI element based on resource IDs
-    actionBarRoot: string = 'com.philo.philo:id/action_bar_root';
-    content: string = 'android:id/content';
-    emptyStateContainer: string = 'com.philo.philo:id/empty_state_container';
-    messageText: string = 'com.philo.philo:id/message_text';
-    instructionText: string = 'com.philo.philo:id/instruction_text';
-    iconSave: string = 'com.philo.philo:id/icon_save';
-    findShowButton: string = 'com.philo.philo:id/find_show_button';
+    actionBarRoot = 'com.philo.philo:id/action_bar_root';
+    content = 'android:id/content';
+    emptyStateContainer = 'com.philo.philo:id/empty_state_container';
+    messageText = 'com.philo.philo:id/message_text';
+    instructionText = 'com.philo.philo:id/instruction_text';
+    iconSave = 'com.philo.philo:id/icon_save';
+    findShowButton = 'com.philo.philo:id/find_show_button';
 
     // Method to get the action bar root element
     getActionBarRootElement() {

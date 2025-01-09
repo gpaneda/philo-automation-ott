@@ -14,27 +14,27 @@ export class TopPage {
     }
 
     // Define properties for each UI element based on resource IDs
-    actionBarRoot: string = 'com.philo.philo:id/action_bar_root';
-    content: string = 'android:id/content';
-    playerFragmentHost: string = 'com.philo.philo:id/player_fragment_host';
-    modalFragmentHost: string = 'com.philo.philo:id/modal_fragment_host';
-    dialogFragmentHost: string = 'com.philo.philo:id/dialog_fragment_host';
-    fragmentHost: string = 'com.philo.philo:id/fragment_host';
-    fragmentTileGroupList: string = 'com.philo.philo:id/fragment_tile_group_list';
-    tileGroupsContainer: string = 'com.philo.philo:id/tile_groups_container';
-    tileGroups: string = 'com.philo.philo:id/tile_groups';
-    guideTileRow: string = 'com.philo.philo:id/guide_tile_row';
-    listViewBroadcasts: string = 'com.philo.philo:id/list_view_broadcasts';
-    groupHeaderLabel: string = 'com.philo.philo:id/group_header_label';
-    groupHeaderLayout: string = 'com.philo.philo:id/group_header_layout';
-    tileGroupRowHeaderBackground: string = 'com.philo.philo:id/tile_group_row_header_background';
-    tileGroupRowHeaderLayout: string = 'com.philo.philo:id/tile_group_row_header_layout';
-    buttonTileGroup: string = 'com.philo.philo:id/button_tile_group';
-    channelLogo: string = 'com.philo.philo:id/channel_logo';
-    pressedOverlay: string = 'com.philo.philo:id/pressed_overlay';
-    backgroundImage: string = 'com.philo.philo:id/background_image';
-    title: string = 'com.philo.philo:id/title';
-    description: string = 'com.philo.philo:id/description';
+    actionBarRoot = 'com.philo.philo:id/action_bar_root';
+    content = 'android:id/content';
+    playerFragmentHost = 'com.philo.philo:id/player_fragment_host';
+    modalFragmentHost = 'com.philo.philo:id/modal_fragment_host';
+    dialogFragmentHost = 'com.philo.philo:id/dialog_fragment_host';
+    fragmentHost = 'com.philo.philo:id/fragment_host';
+    fragmentTileGroupList = 'com.philo.philo:id/fragment_tile_group_list';
+    tileGroupsContainer = 'com.philo.philo:id/tile_groups_container';
+    tileGroups = 'com.philo.philo:id/tile_groups';
+    guideTileRow = 'com.philo.philo:id/guide_tile_row';
+    listViewBroadcasts = 'com.philo.philo:id/list_view_broadcasts';
+    groupHeaderLabel = 'com.philo.philo:id/group_header_label';
+    groupHeaderLayout = 'com.philo.philo:id/group_header_layout';
+    tileGroupRowHeaderBackground = 'com.philo.philo:id/tile_group_row_header_background';
+    tileGroupRowHeaderLayout = 'com.philo.philo:id/tile_group_row_header_layout';
+    buttonTileGroup = 'com.philo.philo:id/button_tile_group';
+    channelLogo = 'com.philo.philo:id/channel_logo';
+    pressedOverlay = 'com.philo.philo:id/pressed_overlay';
+    backgroundImage = 'com.philo.philo:id/background_image';
+    title = 'com.philo.philo:id/title';
+    description = 'com.philo.philo:id/description';
 
     // Method to get the action bar root element
     getActionBarRootElement() {

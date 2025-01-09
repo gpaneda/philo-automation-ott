@@ -5,7 +5,7 @@ import * as fs from 'fs/promises';
 const execAsync = promisify(exec);
 
 export class AdbHelper {
-    static async dumpUiHierarchy(outputPath: string = './src/config/ui_dump.xml'): Promise<string> {
+    static async dumpUiHierarchy(outputPath = './src/config/ui_dump.xml'): Promise<string> {
         try {
             // Dump UI hierarchy to device
             await execAsync('adb shell uiautomator dump /sdcard/ui_dump.xml');

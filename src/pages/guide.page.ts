@@ -12,32 +12,32 @@ export class GuidePage extends BasePage {
         }
     }
     // Define properties for each UI element based on resource IDs
-    actionBarRoot: string = 'com.philo.philo:id/action_bar_root';
-    content: string = 'android:id/content';
-    activityHost: string = 'com.philo.philo:id/activity_host';
-    playerFragmentHost: string = 'com.philo.philo:id/player_fragment_host';
-    modalFragmentHost: string = 'com.philo.philo:id/modal_fragment_host';
-    dialogFragmentHost: string = 'com.philo.philo:id/dialog_fragment_host';
-    fragmentHost: string = 'com.philo.philo:id/fragment_host';
-    fragmentTileGroupList: string = 'com.philo.philo:id/fragment_tile_group_list';
-    tileGroups: string = 'com.philo.philo:id/tile_groups';
-    guideTileRow: string = 'com.philo.philo:id/guide_tile_row';
-    tileGroupRowHeaderBackground: string = 'com.philo.philo:id/tile_group_row_header_background';
-    groupHeaderLayout: string = 'com.philo.philo:id/group_header_layout';
-    groupHeaderIcon: string = 'com.philo.philo:id/group_header_icon';
-    groupHeaderLabel: string = 'com.philo.philo:id/group_header_label';
-    listViewBroadcasts: string = 'com.philo.philo:id/list_view_broadcasts';
-    imageMask: string = 'com.philo.philo:id/image_mask';
-    pressedOverlay: string = 'com.philo.philo:id/pressed_overlay';
-    backgroundVideoContainer: string = 'com.philo.philo:id/background_video_container';
-    metadataContainer: string = 'com.philo.philo:id/metadata_container';
-    title: string = 'com.philo.philo:id/title';
-    description: string = 'com.philo.philo:id/description';
-    airDate: string = 'com.philo.philo:id/air_date';
-    flagLive: string = 'com.philo.philo:id/flag_live';
+    actionBarRoot = 'com.philo.philo:id/action_bar_root';
+    content = 'android:id/content';
+    activityHost = 'com.philo.philo:id/activity_host';
+    playerFragmentHost = 'com.philo.philo:id/player_fragment_host';
+    modalFragmentHost = 'com.philo.philo:id/modal_fragment_host';
+    dialogFragmentHost = 'com.philo.philo:id/dialog_fragment_host';
+    fragmentHost = 'com.philo.philo:id/fragment_host';
+    fragmentTileGroupList = 'com.philo.philo:id/fragment_tile_group_list';
+    tileGroups = 'com.philo.philo:id/tile_groups';
+    guideTileRow = 'com.philo.philo:id/guide_tile_row';
+    tileGroupRowHeaderBackground = 'com.philo.philo:id/tile_group_row_header_background';
+    groupHeaderLayout = 'com.philo.philo:id/group_header_layout';
+    groupHeaderIcon = 'com.philo.philo:id/group_header_icon';
+    groupHeaderLabel = 'com.philo.philo:id/group_header_label';
+    listViewBroadcasts = 'com.philo.philo:id/list_view_broadcasts';
+    imageMask = 'com.philo.philo:id/image_mask';
+    pressedOverlay = 'com.philo.philo:id/pressed_overlay';
+    backgroundVideoContainer = 'com.philo.philo:id/background_video_container';
+    metadataContainer = 'com.philo.philo:id/metadata_container';
+    title = 'com.philo.philo:id/title';
+    description = 'com.philo.philo:id/description';
+    airDate = 'com.philo.philo:id/air_date';
+    flagLive = 'com.philo.philo:id/flag_live';
 
     // New Selector for Free Channels
-    freeChannels: string = 'android=text("Free channels")';
+    freeChannels = 'android=text("Free channels")';
 
     constructor(driver: Browser<'async'>) {
         super(driver);

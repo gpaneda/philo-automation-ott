@@ -389,7 +389,7 @@ export class HomeScreenPage extends BasePage {
      * @param maxPresses Maximum number of times to press down/up
      * @returns Promise<boolean> Whether the category was found
      */
-    async findCategory(targetCategory: string, maxPresses: number = 15): Promise<boolean> {
+    async findCategory(targetCategory: string, maxPresses = 15): Promise<boolean> {
         // First press down to start at categories
         await this.pressDownButton();
         await this.driver.pause(5000);

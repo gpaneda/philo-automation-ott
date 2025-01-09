@@ -109,7 +109,7 @@ export class PlayerPage extends BasePage {
         }
     }
 
-    async waitForPlayback(timeout: number = 10000): Promise<void> {
+    async waitForPlayback(timeout = 10000): Promise<void> {
         await this.waitForElement(this.selectors.pauseButton, timeout);
     }
 
@@ -169,7 +169,7 @@ export class PlayerPage extends BasePage {
         return element.getText();
     }
 
-    async waitForSeekbarVisible(maxAttempts: number = 5): Promise<boolean> {
+    async waitForSeekbarVisible(maxAttempts = 5): Promise<boolean> {
         let seekbarVisible = false;
         let attempts = 0;
 
