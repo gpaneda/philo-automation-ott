@@ -17,7 +17,7 @@
     "test:navigation": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/navigation.test.ts",
     "test:landing": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/landingPage.test.ts",
     "test:playback": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/playback.test.ts",
-    "test:series": "wdio run ./dist/config/wdio.conf.js --spec ./dist/tests/seriesDetails.test.js"
+    "test:series": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/seriesDetails.test.ts"
   },
   "dependencies": {
     "@types/resemblejs": "^4.1.3",
