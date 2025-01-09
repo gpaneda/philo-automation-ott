@@ -20,17 +20,6 @@
     "test:series": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/seriesDetails.test.ts",
     "test:all": "npm run test:navigation && npm run test:playback && npm run test:series"
   },
-  "jest": {
-    "reporters": [
-      "default",
-      ["jest-html-reporter", {
-        "pageTitle": "Fire TV Test Report",
-        "outputPath": "./test-report.html",
-        "includeFailureMsg": true,
-        "includeConsoleLog": true
-      }]
-    ]
-  },
   "dependencies": {
     "@types/resemblejs": "^4.1.3",
     "@wdio/cli": "^7.30.2",

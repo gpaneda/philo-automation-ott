@@ -11,5 +11,14 @@ module.exports = {
     'ts-jest': {
       isolatedModules: true
     }
-  }
+  },
+  reporters: [
+    "default",
+    ["jest-html-reporter", {
+      "pageTitle": "Fire TV Test Report",
+      "outputPath": "./test-report.html",
+      "includeFailureMsg": true,
+      "includeConsoleLog": true
+    }]
+  ]
 }; 
