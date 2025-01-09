@@ -260,4 +260,61 @@ export class PlayerPage extends BasePage {
         const element = await this.waitForElement(this.selectors.episodeInfo);
         return element.getText();
     }
+
+    /**
+     * Waits for seekbar to become visible by pressing Enter key repeatedly
+     * @param maxAttempts Maximum number of attempts to try (default: 5)
+     * @returns Promise<boolean> True if seekbar became visible
+     */
+    async waitForSeekbarVisible(maxAttempts: number = 5): Promise<boolean> {
+        let seekbarVisible = false;
+        let attempts = 0;
+
+        while (!seekbarVisible && attempts < maxAttempts) {
+            await this.driver.pressKeyCode(66); // Enter key
+            await this.driver.pause(2000);
+            
+            try {
+                const seekbar = await this.driver.$('android=resourceId("com.philo.philo:id/seekbar_seekbar3")');
+                seekbarVisible = await seekbar.isDisplayed();
+            } catch (e) {
+                seekbarVisible = false;
+            }
+            attempts++;
+        }
+
+        return seekbarVisible;
+    }
+
+    /**
+     * Verifies movie playback functionality
+     * @param initialTitle The initial title to compare with
+     * @returns Promise<void>
+     */
+    async verifyMoviePlayback(initialTitle: string): Promise<void> {
+        try {
+            // Wait for player to load
+            await this.waitForLoaded();
+            await this.driver.pause(5000);
+
+            // Test pause functionality
+            await this.togglePlayPause();
+            await this.driver.pause(2000);
+
+            // Verify seekbar is displayed while paused
+            const seekbar = await this.driver.$('android=resourceId("com.philo.philo:id/seekbar_seekbar3")');
+            await seekbar.waitForDisplayed({ timeout: 10000 });
+
+            await this.driver.pause(5000);
+
+            // Verify the movie title matches
+            const movieTitleFromPlayer = await this.getShowTitle();
+            if (movieTitleFromPlayer !== initialTitle) {
+                throw new Error(`Title mismatch. Expected: ${initialTitle}, Got: ${movieTitleFromPlayer}`);
+            }
+        } catch (error) {
+            console.error('Error verifying movie playback:', error);
+            throw error;
+        }
+    }
 } 
