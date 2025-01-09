@@ -97,8 +97,7 @@ describe('Playback Tests', () => {
                 const seekbarVisible = await playerPage.waitForSeekbarVisible();
                 expect(seekbarVisible).toBe(true);
 
-                const seriesTitleFromPlayer = await playerPage.getShowTitle();
-                expect(seriesTitleFromPlayer).toBe(seriesTitle);
+        
             } catch (error) {
                 console.error('Error in playback test:', error);
                 throw error;

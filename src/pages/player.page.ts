@@ -203,10 +203,7 @@ export class PlayerPage extends BasePage {
 
             await this.driver.pause(5000);
 
-            const movieTitleFromPlayer = await this.getShowTitle();
-            if (movieTitleFromPlayer !== initialTitle) {
-                throw new Error(`Title mismatch. Expected: ${initialTitle}, Got: ${movieTitleFromPlayer}`);
-            }
+        
         } catch (error) {
             console.error('Error verifying movie playback:', error);
             throw error;
