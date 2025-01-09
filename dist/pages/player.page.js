@@ -93,19 +93,11 @@ class PlayerPage extends base_page_1.BasePage {
         await this.driver.pressKeyCode(66); // Enter key code
         await this.verifyPlayerControls();
     }
-    /**
-     * Checks if video is currently playing
-     * @returns Promise<boolean> True if video is playing, false if paused
-     */
-    async isPlaying() {
-        try {
-            // If pause button is visible, video is playing
-            return await this.isElementDisplayed(this.selectors.pauseButton);
-        }
-        catch (e) {
-            // If pause button is not visible, video is paused
-            return false;
-        }
+    async isPauseButtonVisible() {
+        return await this.isElementDisplayed(this.selectors.pauseButton);
+    }
+    async isProgressBarVisible() {
+        return await this.isElementDisplayed(this.selectors.progressBar);
     }
     /**
      * Waits for playback to start
