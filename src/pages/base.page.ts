@@ -39,4 +39,9 @@ export class BasePage {
         const element = await this.waitForElement(selector);
         await element.click();
     }
+
+    async getText(selector: string): Promise<string> {
+        const element = await this.waitForElement(selector);
+        return element.getText();
+    }
 } 
