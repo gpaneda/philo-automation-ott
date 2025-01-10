@@ -3,13 +3,16 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   transform: {
-    '^.+\\.tsx?$': 'ts-jest'
+    '^.+\\.tsx?$': ['ts-jest', {
+      tsconfig: 'tsconfig.json'
+    }]
   },
   setupFilesAfterEnv: ['./jest.setup.ts'],
   testTimeout: 60000,
   globals: {
     'ts-jest': {
-      isolatedModules: true
+      isolatedModules: true,
+      tsconfig: 'tsconfig.json'
     }
   },
   reporters: [
