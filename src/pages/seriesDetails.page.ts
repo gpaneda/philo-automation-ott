@@ -3,13 +3,13 @@ import { BasePage } from './base.page';
 
 export class SeriesDetailsPage extends BasePage {
     public selectors = {
-        // Series Information - Using index-based selectors from XML structure
-        seriesTitle: 'android=className("android.widget.TextView").index(1)',  // First TextView in the details
-        seriesDescription: 'android=className("android.widget.TextView").index(5)',  // Description TextView
-        releaseYear: 'android=className("android.widget.TextView").index(2)',  // Year TextView
-        seasonCount: 'android=className("android.widget.TextView").index(3)',  // Seasons TextView
-        rating: 'android=className("android.widget.TextView").index(4)',  // Rating TextView
-        seriesPoster: 'android=resourceId("com.philo.philo:id/big_tile_poster_image").className("android.widget.ImageView")',
+        // Series Information
+        seriesTitle: 'android=new UiSelector().className("android.widget.TextView").textMatches(".*")',
+        seriesYear: 'android=new UiSelector().className("android.widget.TextView").textMatches("\\d{4}")',
+        seriesSeasons: 'android=new UiSelector().className("android.widget.TextView").textMatches("\\d+ Seasons?")',
+        seriesRating: 'android=new UiSelector().className("android.widget.TextView").textMatches("TV-.*")',
+        seriesDescription: 'android=new UiSelector().className("android.widget.TextView").textMatches(".*").index(5)',
+        seriesPoster: 'android=new UiSelector().className("android.widget.ImageView").descriptionMatches(".*")',
         
         // Channel Information
         channelLogo: 'android=resourceId("com.philo.philo:id/big_tile_channel_logo").className("android.widget.ImageView")',
@@ -17,8 +17,9 @@ export class SeriesDetailsPage extends BasePage {
         channelName: 'android=resourceId("com.philo.philo:id/label_channel").className("android.widget.TextView")',
         
         // Action Buttons
-        playButton: 'android=className("android.view.View").descriptionContains("Play")',
-        saveButton: 'android=className("android.view.View").descriptionContains("Save")',
+        playButton: 'android=new UiSelector().className("android.view.View").description("Play")',
+        resumeButton: 'android=new UiSelector().className("android.widget.TextView").text("Resume")',
+        saveButton: 'android=new UiSelector().className("android.view.View").descriptionContains("Save")',
         
         // Navigation Tabs
         episodesTab: 'android=className("android.widget.TextView").text("Episodes")',
@@ -54,47 +55,33 @@ export class SeriesDetailsPage extends BasePage {
         return element.getText();
     }
 
-    /**
-     * Gets the series description
-     * @returns Promise<string> The series description
-     */
-    async getSeriesDescription(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.seriesDescription);
-        return element.getText();
+    async findPlayableSeries(maxAttempts: number = 5): Promise<boolean> {
+        console.log('Looking for a series with Play or Resume button...');
+        return await this.findPlayableTitle(maxAttempts);
     }
 
-    /**
-     * Gets the release year
-     * @returns Promise<string> The release year
-     */
-    async getReleaseYear(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.releaseYear);
-        return element.getText();
-    }
-
-    /**
-     * Gets the number of seasons
-     * @returns Promise<string> The season count
-     */
-    async getSeasonCount(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.seasonCount);
-        return element.getText();
-    }
-
-    /**
-     * Gets the content rating
-     * @returns Promise<string> The content rating
-     */
-    async getContentRating(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.rating);
-        return element.getText();
-    }
-
-    /**
-     * Clicks the play button
-     */
     async clickPlay(): Promise<void> {
-        await this.click(this.selectors.playButton);
+        try {
+            // First try to click Resume if it exists
+            const resumeExists = await this.isElementDisplayed(this.selectors.resumeButton);
+            if (resumeExists) {
+                await this.click(this.selectors.resumeButton);
+                return;
+            }
+        } catch (error) {
+            // If Resume doesn't exist, try Play button
+            try {
+                await this.click(this.selectors.playButton);
+            } catch (playError) {
+                // If neither button works, try to find a playable series
+                const found = await this.findPlayableSeries();
+                if (!found) {
+                    throw new Error('Could not find a playable series');
+                }
+                // Try clicking play again on the new series
+                await this.clickPlay();
+            }
+        }
     }
 
     /**
@@ -165,5 +152,17 @@ export class SeriesDetailsPage extends BasePage {
      */
     async clickOnSeries(): Promise<void> {
         await this.click(this.selectors.seriesPoster);
+    }
+
+    /**
+     * Checks if the Extras tab is present
+     * @returns Promise<boolean> True if the Extras tab is present
+     */
+    async isExtrasTabPresent(): Promise<boolean> {
+        try {
+            return await this.isElementDisplayed(this.selectors.extrasTab);
+        } catch (error) {
+            return false;
+        }
     }
 } 

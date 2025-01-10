@@ -17,10 +17,11 @@ export class MoviesDetailsPage extends BasePage {
         channelName: 'android=resourceId("com.philo.philo:id/label_channel").className("android.widget.TextView")',
         
         // Action Buttons
-        playButton: 'android=resourceId("com.philo.philo:id/button_play").className("android.widget.LinearLayout")',
-        playLabel: 'android=resourceId("com.philo.philo:id/label_play").className("android.widget.TextView")',
-        saveButton: 'android=resourceId("com.philo.philo:id/button_save").className("android.widget.FrameLayout")',
-        saveLabel: 'android=resourceId("com.philo.philo:id/label_save").className("android.widget.TextView")',
+        playButton: 'android=new UiSelector().description("Play")',
+        resumeButton: 'android=new UiSelector().text("Resume")',
+        saveButton: 'android=new UiSelector().description("Save")',
+        moreInfoButton: 'android=new UiSelector().description("More info")',
+       
         
         // Background Elements
         backgroundImage: 'android=resourceId("com.philo.philo:id/big_tile_background_image_view").className("android.widget.ImageView")',
@@ -92,7 +93,27 @@ export class MoviesDetailsPage extends BasePage {
      * Clicks the play button to start the movie
      */
     async clickPlay(): Promise<void> {
-        await this.click(this.selectors.playButton);
+        try {
+            // First try to click Resume if it exists
+            const resumeExists = await this.isElementDisplayed(this.selectors.resumeButton);
+            if (resumeExists) {
+                await this.click(this.selectors.resumeButton);
+                return;
+            }
+        } catch (error) {
+            // If Resume doesn't exist, try Play button
+            try {
+                await this.click(this.selectors.playButton);
+            } catch (playError) {
+                // If neither button works, try to find a playable movie
+                const found = await this.findPlayableMovie();
+                if (!found) {
+                    throw new Error('Could not find a playable movie');
+                }
+                // Try clicking play again on the new movie
+                await this.clickPlay();
+            }
+        }
     }
 
     /**
@@ -144,5 +165,10 @@ export class MoviesDetailsPage extends BasePage {
      */
     async waitForShowTitle(): Promise<void> {
         await this.waitForElement(this.selectors.movieTitle);
+    }
+
+    async findPlayableMovie(maxAttempts: number = 5): Promise<boolean> {
+        console.log('Looking for a movie with Play or Resume button...');
+        return await this.findPlayableTitle(maxAttempts);
     }
 } 

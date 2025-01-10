@@ -36,7 +36,7 @@ export class CategoriesPage extends HomeScreenPage {
     // Override selectors to include both parent and category selectors
     public selectors!: CategorySelectors & typeof HomeScreenPage.prototype.selectors;
 
-    constructor(driver: Browser) {
+    constructor(driver: Browser<'async'>) {
         super(driver);
         // Merge the selectors
         this.selectors = {

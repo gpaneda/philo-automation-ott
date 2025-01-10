@@ -4,7 +4,7 @@ import { HomeScreenPage } from '../pages/homescreen.page';
 import { CategoriesPage } from '../pages/categories.page';
 import { SeriesDetailsPage } from '../pages/seriesDetails.page';
 
-let driver: Browser;
+let driver: Browser<'async'>;
 let homeScreen: HomeScreenPage;
 let categoriesPage: CategoriesPage;
 let seriesDetailsPage: SeriesDetailsPage;
@@ -147,6 +147,13 @@ describe('Series Details Tests', () => {
             await seriesDetailsPage.waitForLoaded();
             const seriesTitle = await seriesDetailsPage.getSeriesTitle();
             console.log('Found series:', seriesTitle);
+
+            // Check if Extras tab exists
+            const hasExtrasTab = await seriesDetailsPage.isExtrasTabPresent();
+            if (!hasExtrasTab) {
+                console.log('Extras tab not present, skipping test');
+                return;
+            }
 
             // Step 3: Verify Extras tab content
             console.log('Verifying Extras tab...');

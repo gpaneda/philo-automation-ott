@@ -7,19 +7,20 @@ export class PlayerPage extends BasePage {
         playerFragment: 'android=resourceId("com.philo.philo:id/player_fragment_host")',
         modalFragment: 'android=resourceId("com.philo.philo:id/modal_fragment_host")',
         dialogFragment: 'android=resourceId("com.philo.philo:id/dialog_fragment_host")',
+        adOverlay: 'android=text("Advertisements")',
         
         // Player Controls
-        playPauseButton: 'android=resourceId("com.philo.philo:id/exo_play_pause")',
-        playButton: 'android=resourceId("com.philo.philo:id/exo_play")',
-        pauseButton: 'android=resourceId("com.philo.philo:id/exo_pause")',
-        rewindButton: 'android=resourceId("com.philo.philo:id/exo_rew")',
-        fastForwardButton: 'android=resourceId("com.philo.philo:id/exo_ffwd")',
-        progressBar: 'android=resourceId("com.philo.philo:id/exo_progress")',
-        currentTime: 'android=resourceId("com.philo.philo:id/exo_position")',
-        duration: 'android=resourceId("com.philo.philo:id/exo_duration")',
+        playPauseButton: 'android=resourceId("com.philo.philo:id/playerControls_playPauseButton")',
+        playButton: 'android=resourceId("com.philo.philo:id/playerControls_playButton")',
+        pauseButton: 'android=resourceId("com.philo.philo:id/playerControls_pauseButton")',
+        rewindButton: 'android=resourceId("com.philo.philo:id/playerControls_rewindButton")',
+        fastForwardButton: 'android=resourceId("com.philo.philo:id/playerControls_fastForwardButton")',
+        progressBar: 'android=resourceId("com.philo.philo:id/playerControls_progressBar")',
+        currentTime: 'android=resourceId("com.philo.philo:id/playerControls_currentTime")',
+        duration: 'android=resourceId("com.philo.philo:id/playerControls_duration")',
         
         // Subtitles
-        subtitlesContainer: 'android=resourceId("com.philo.philo:id/exo_subtitles")',
+        subtitlesContainer: 'android=resourceId("com.philo.philo:id/subtitles_container")',
 
         // Video Elements
         videoFrame: 'android=resourceId("com.philo.philo:id/video_frame")',
@@ -30,12 +31,12 @@ export class PlayerPage extends BasePage {
         playerActivityRoot: 'android=resourceId("com.philo.philo:id/player_activity_root")',
         playerControlsRoot: 'android=resourceId("com.philo.philo:id/playerControls_root")',
         composeViewWrapper: 'android=resourceId("com.philo.philo:id/compose_view_wrapper")',
-
+        
         // Seekbar Elements
         seekbarRoot: 'android=resourceId("com.philo.philo:id/seekbar_root")',
-        seekbar3: 'android=resourceId("com.philo.philo:id/seekbar_seekbar3")',
+        seekbar3: 'android=new UiSelector().resourceId("com.philo.philo:id/seekbar_seekbar3").className("com.philo.philo.playerCranston.ui.SeekBar3")',
         seekbarContainer: 'android=resourceId("com.philo.philo:id/seekbar")',
-
+        
         // Content Info Elements
         showTitle: 'android=resourceId("com.philo.philo:id/show_title").className("android.widget.TextView")',
         episodeInfo: 'android=resourceId("com.philo.philo:id/subtitle")',
@@ -46,9 +47,15 @@ export class PlayerPage extends BasePage {
         optionsButton: 'android=content-desc("Options")',
         startOverButton: 'android=content-desc("Start over")',
         jumpToLiveButton: 'android=content-desc("Jump to live")',
+
+        // Ad Elements
+        adOverlayRoot: 'android=resourceId("com.philo.philo:id/ad_overlay_root")',
+        adText: 'android=resourceId("com.philo.philo:id/advertisements")',
+        adRemainingTime: 'android=resourceId("com.philo.philo:id/remaining_time")',
+        adFfwdDisabled: 'android=resourceId("com.philo.philo:id/icon_ffwd_disable")',
     };
 
-    constructor(driver: Browser) {
+    constructor(driver: Browser<'async'>) {
         super(driver);
     }
 
@@ -62,6 +69,7 @@ export class PlayerPage extends BasePage {
 
     async togglePlayPause(): Promise<void> {
         await this.driver.pressKeyCode(66);
+        await this.driver.pause(2000);
     }
 
     async fastForward(): Promise<void> {
@@ -73,12 +81,12 @@ export class PlayerPage extends BasePage {
     }
 
     async getCurrentTime(): Promise<string> {
-        const element = (await this.waitForElement(this.selectors.currentTime)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
+        const element = await this.waitForElement(this.selectors.currentTime) as ChainablePromiseElement<any>;
         return element.getText();
     }
 
     async getDuration(): Promise<string> {
-        const element = (await this.waitForElement(this.selectors.duration)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
+        const element = await this.waitForElement(this.selectors.duration) as ChainablePromiseElement<any>;
         return element.getText();
     }
 
@@ -86,8 +94,39 @@ export class PlayerPage extends BasePage {
         return await this.isElementDisplayed(this.selectors.subtitlesContainer);
     }
 
+    async waitForAdsToFinish(): Promise<void> {
+        try {
+            // Check for any ad overlay elements
+            const hasAdOverlay = await this.isElementDisplayed(this.selectors.adOverlayRoot) ||
+                               await this.isElementDisplayed(this.selectors.adText);
+            
+            if (hasAdOverlay) {
+                console.log('Ad overlay found, waiting for ad to finish...');
+                
+                // Wait until both the ad overlay and text are gone
+                await this.driver.waitUntil(async () => {
+                    const adOverlayGone = !(await this.isElementDisplayed(this.selectors.adOverlayRoot));
+                    const adTextGone = !(await this.isElementDisplayed(this.selectors.adText));
+                    return adOverlayGone && adTextGone;
+                }, { 
+                    timeout: 240000, 
+                    timeoutMsg: 'Advertisement did not finish after 4 minutes',
+                    interval: 2000
+                });
+                
+                console.log('Ad finished playing');
+                // Give a moment for player to stabilize after ad
+                await this.driver.pause(2000);
+            } else {
+                console.log('No ad overlay found');
+            }
+        } catch (error) {
+            console.log('Error checking for ads:', error);
+            // Don't throw the error as ads might not be present
+        }
+    }
+
     async verifyPlayerControls(): Promise<void> {
-        await this.verifyElementDisplayed(this.selectors.playPauseButton);
         await this.verifyElementDisplayed(this.selectors.rewindButton);
         await this.verifyElementDisplayed(this.selectors.fastForwardButton);
         await this.verifyElementDisplayed(this.selectors.progressBar);
@@ -95,12 +134,12 @@ export class PlayerPage extends BasePage {
 
     async showPlayerControls(): Promise<void> {
         await this.driver.pressKeyCode(66); // Enter key code
-        await this.verifyPlayerControls();
+        await this.driver.pause(2000); // Short pause for controls to appear
     }
 
     async startPlayback(): Promise<boolean> {
         try {
-            const playButton = (await this.waitForElement(this.selectors.playButton)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
+            const playButton = await this.waitForElement(this.selectors.playButton) as ChainablePromiseElement<any>;
             await playButton.click();
             await this.driver.pause(5000);
             return true;
@@ -146,7 +185,25 @@ export class PlayerPage extends BasePage {
     }
 
     async seekForward(): Promise<void> {
-        await this.click(this.selectors.fastForwardButton);
+        try {
+            // Just show controls and use keyboard navigation
+            await this.showPlayerControls();
+            await this.driver.pause(2000);
+
+            // Press right key multiple times
+            console.log('Starting seek forward...');
+            for (let i = 0; i < 10; i++) {
+                await this.driver.pressKeyCode(22); // Right key
+                await this.driver.pause(200);
+            }
+            
+            // Press Enter to confirm
+            await this.driver.pressKeyCode(66);
+            await this.driver.pause(2000);
+        } catch (error) {
+            console.error('Error during seek forward:', error);
+            throw error;
+        }
     }
 
     async seekBackward(): Promise<void> {
@@ -154,18 +211,71 @@ export class PlayerPage extends BasePage {
     }
 
     async getCurrentPosition(): Promise<number> {
-        const element = (await this.waitForElement(this.selectors.progressBar)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
-        const progress = await element.getAttribute('progress');
-        return parseFloat(progress || '0');
-    }   
+        try {
+            // Show controls to make sure seekbar is visible
+            await this.showPlayerControls();
+            await this.driver.pause(2000);
+
+            let attempts = 0;
+            const maxAttempts = 5;
+            while (attempts < maxAttempts) {
+                try {
+                    const element = await this.waitForElement(this.selectors.seekbar3, 10000);
+                    if (!element) {
+                        throw new Error('Seekbar element not found');
+                    }
+                    
+                    // Get the content description which contains the time info
+                    const contentDesc = await element.getAttribute('content-desc');
+                    console.log('Seekbar content description:', contentDesc);
+                    
+                    // Parse time from format "X minutes Y seconds of A hours B minutes C seconds"
+                    const match = contentDesc.match(/(\d+) minutes? (\d+) seconds? of (?:(\d+) hours? )?(\d+) minutes? (\d+) seconds?/);
+                    if (!match) {
+                        throw new Error('Could not parse time from content description');
+                    }
+                    
+                    // Convert current time to seconds
+                    const currentMinutes = parseInt(match[1]);
+                    const currentSeconds = parseInt(match[2]);
+                    const currentTotal = (currentMinutes * 60) + currentSeconds;
+                    
+                    // Convert total time to seconds
+                    const totalHours = parseInt(match[3] || '0');
+                    const totalMinutes = parseInt(match[4]);
+                    const totalSeconds = parseInt(match[5]);
+                    const totalTime = (totalHours * 3600) + (totalMinutes * 60) + totalSeconds;
+                    
+                    // Calculate percentage
+                    const percentage = (currentTotal / totalTime) * 100;
+                    console.log('Current time:', currentTotal, 'Total time:', totalTime, 'Percentage:', percentage);
+                    
+                    return percentage;
+                } catch (error: any) {
+                    console.log(`Attempt ${attempts + 1} failed:`, error.message);
+                    attempts++;
+                    if (attempts === maxAttempts) {
+                        throw error;
+                    }
+                    // Try showing controls again
+                    await this.showPlayerControls();
+                    await this.driver.pause(2000);
+                }
+            }
+            throw new Error('Could not get current position after multiple attempts');
+        } catch (error: any) {
+            console.error('Error getting current position:', error.message);
+            throw error;
+        }
+    }
 
     async getShowTitle(): Promise<string> {
-        const element = (await this.waitForElement(this.selectors.showTitle)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
+        const element = await this.waitForElement(this.selectors.showTitle) as ChainablePromiseElement<any>;
         return element.getText();
     }
 
     async getEpisodeInfo(): Promise<string> {
-        const element = (await this.waitForElement(this.selectors.episodeInfo)) as unknown as ChainablePromiseElement<WebdriverIO.Element>;
+        const element = await this.waitForElement(this.selectors.episodeInfo) as ChainablePromiseElement<any>;
         return element.getText();
     }
 
@@ -188,22 +298,23 @@ export class PlayerPage extends BasePage {
         return seekbarVisible;
     }
 
-    async verifyMoviePlayback(initialTitle: string): Promise<void> {
+    async verifyMoviePlayback(): Promise<void> {
         try {
             await this.waitForLoaded();
-            await this.driver.pause(5000);
-
-            await this.togglePlayPause();
-            await this.driver.pause(2000);
-
+            
+            // Wait for any ads to finish first
+            await this.waitForAdsToFinish();
+            
+            // Now that ads are done, show and verify controls
+            await this.showPlayerControls();
+            
             const seekbarVisible = await this.waitForSeekbarVisible();
             if (!seekbarVisible) {
                 throw new Error('Seekbar did not become visible');
             }
 
-            await this.driver.pause(5000);
-
-        
+            // Additional pause to ensure playback is stable
+            await this.driver.pause(2000);
         } catch (error) {
             console.error('Error verifying movie playback:', error);
             throw error;

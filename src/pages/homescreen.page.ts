@@ -3,7 +3,6 @@ import { BasePage } from './base.page';
 import { exec } from 'child_process';
 import path from 'path';
 import fs from 'fs/promises';
-
 export class HomeScreenPage extends BasePage {
     
 
@@ -34,12 +33,6 @@ export class HomeScreenPage extends BasePage {
         onDemandButton: 'android=resourceId("com.philo.philo:id/on_demand_button")',
         dvrButton: 'android=resourceId("com.philo.philo:id/dvr_button")',
         
-        // Content Actions
-        playButton: 'android=text("Play")',
-        playIcon: 'android=resourceId("com.philo.philo:id/icon_play_radial")',
-        moreInfoButton: 'android=text("More info")',
-        tileTitle: 'android=resourceId("com.philo.philo:id/title")',
-        
         // Content Categories
         topFreeMovies: 'android=text("Top Free Movies")',
         topFreeShows: 'android=text("Top Free Shows")',
@@ -59,7 +52,7 @@ export class HomeScreenPage extends BasePage {
         anime: 'android=text("Anime")',
 
         // Movie Tiles
-        firstMovieTile: 'android=new UiSelector().resourceId("com.philo.philo:id/widget_tile_wrapper").instance(0)',
+        firstMovieTile: 'android=new UiSelector().resourceId("com.philo.philo:id/list_view_broadcasts").childSelector(new UiSelector().className("android.view.ViewGroup").instance(0))',
         movieTileTitle: 'android=resourceId("com.philo.philo:id/title")',
         
         // Series Tiles
@@ -203,20 +196,6 @@ export class HomeScreenPage extends BasePage {
     }
 
     /**
-     * Click Play button
-     */
-    async clickPlay(): Promise<void> {
-        await this.click(this.selectors.playButton);
-    }
-
-    /**
-     * Click More Info button
-     */
-    async clickMoreInfo(): Promise<void> {
-        await this.click(this.selectors.moreInfoButton);
-    }
-
-    /**
      * Navigate to settings from home screen
      */
     async navigateToSettingsFromHome(): Promise<void> {
@@ -251,10 +230,23 @@ export class HomeScreenPage extends BasePage {
      * Clicks on the first movie tile in the Top Free Movies row
      */
     async clickFirstMovie(): Promise<void> {
-        await this.waitForElement(this.selectors.topFreeMovies);
-        await this.click(this.selectors.firstMovieTile);
+        try {
+            // One down press to focus
+            await this.pressDownButton();
+            await this.driver.pause(2000);
+            await this.pressLeftButton();
+            await this.driver.pause(2000);
+            await this.pressEnterButton();
+            await this.verifyTopFreeMoviesHeaderDisplayed();
+        } catch (error) {
+            console.error('Error navigating to Top Free Movies:', error);
+            throw error;
+        } // Add a pause to let the details page load
     }
 
+    async verifyTopFreeMoviesHeaderDisplayed(): Promise<void> {
+        await this.waitForElement(this.selectors.topFreeMovies);
+    }
 
     /**
      * Base method for verifying a category page
