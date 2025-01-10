@@ -104,7 +104,7 @@ describe('Playback Tests', () => {
             }
         }, 180000);
 
-        test.only('TC203 - should verify forward playback works', async () => {
+        test('TC203 - should verify forward playback works', async () => {
             try {
                 // Step 1: Click on the first movie from the home screen
                 await homeScreenPage.clickFirstMovie();
@@ -151,5 +151,73 @@ describe('Playback Tests', () => {
                 throw error;
             }
         }, 120000);
+
+        test.only('TC204 - should verify rewind playback works', async () => {
+            try {
+                // Validate session is active
+                if (!await driver.sessionId) {
+                    throw new Error('No active session found');
+                }
+
+                // Step 1: Click on the first movie from the home screen
+                await homeScreenPage.clickFirstMovie();
+                await driver.pause(5000);  // Increased from 3000
+
+                // Step 2: Enter the details page    
+                await homeScreenPage.pressEnterButton();
+                await driver.pause(5000);  // Increased from 2000
+
+                // Step 3: Press Play
+                await moviesDetails.clickPlay();
+                await driver.pause(5000);  // Increased from 2000
+
+                // Step 4: Verify playback functionality
+                await playerPage.verifyMoviePlayback();
+                await driver.pause(10000); // Increased from 6000 to match TC203
+
+                // Step 5: Seek forward first to have room to rewind
+                console.log('Starting seek forward...');
+                await playerPage.seekForward();
+                await driver.pause(5000);  // Increased from 3000
+
+                // Validate session is still active before getting position
+                if (!await driver.sessionId) {
+                    throw new Error('Session terminated before getting initial position');
+                }
+
+                // Step 6: Get initial position after seeking forward
+                await playerPage.showPlayerControls();
+                await driver.pause(2000);
+
+                const initialPosition = await playerPage.getCurrentPosition();
+                console.log('Initial position (%):', initialPosition);
+                expect(initialPosition).toBeGreaterThan(0);
+                expect(initialPosition).toBeLessThanOrEqual(100);
+
+                // Step 7: Seek rewind
+                console.log('Starting seek rewind...');
+                await playerPage.seekRewind();
+                await driver.pause(5000);
+
+                // Validate session is still active before final check
+                if (!await driver.sessionId) {
+                    throw new Error('Session terminated before getting final position');
+                }
+
+                // Step 8: Get final position
+                await playerPage.showPlayerControls();
+                await driver.pause(2000);
+
+                const finalPosition = await playerPage.getCurrentPosition();
+                console.log('Final position (%):', finalPosition);
+                expect(finalPosition).toBeLessThan(initialPosition);
+                expect(finalPosition).toBeGreaterThanOrEqual(0);
+
+                console.log('Position change:', finalPosition - initialPosition);
+            } catch (error) {
+                console.error('Error in playback test:', error);
+                throw error;
+            }
+        }, 180000);  // Increased timeout to match TC202
     });
 }); 

@@ -73,11 +73,47 @@ export class PlayerPage extends BasePage {
     }
 
     async fastForward(): Promise<void> {
-        await this.click(this.selectors.fastForwardButton);
+        try {
+            // Just show controls and use keyboard navigation
+            await this.showPlayerControls();
+            await this.driver.pause(2000);
+
+            // Press right key multiple times
+            console.log('Starting fast forward...');
+            for (let i = 0; i < 10; i++) {
+                await this.driver.pressKeyCode(22); // Right key
+                await this.driver.pause(200);
+            }
+            
+            // Press Enter to confirm
+            await this.driver.pressKeyCode(66);
+            await this.driver.pause(2000);
+        } catch (error) {
+            console.error('Error during fast forward:', error);
+            throw error;
+        }
     }
 
     async rewind(): Promise<void> {
-        await this.click(this.selectors.rewindButton);
+        try {
+            // Just show controls and use keyboard navigation
+            await this.showPlayerControls();
+            await this.driver.pause(2000);
+
+            // Press left key multiple times
+            console.log('Starting rewind...');
+            for (let i = 0; i < 10; i++) {
+                await this.driver.pressKeyCode(21); // Left key
+                await this.driver.pause(200);
+            }
+            
+            // Press Enter to confirm
+            await this.driver.pressKeyCode(66);
+            await this.driver.pause(2000);
+        } catch (error) {
+            console.error('Error during rewind:', error);
+            throw error;
+        }
     }
 
     async getCurrentTime(): Promise<string> {
@@ -317,6 +353,28 @@ export class PlayerPage extends BasePage {
             await this.driver.pause(2000);
         } catch (error) {
             console.error('Error verifying movie playback:', error);
+            throw error;
+        }
+    }
+
+    async seekRewind(): Promise<void> {
+        try {
+            // Just show controls and use keyboard navigation
+            await this.showPlayerControls();
+            await this.driver.pause(2000);
+
+            // Press left key multiple times
+            console.log('Starting seek rewind...');
+            for (let i = 0; i < 10; i++) {
+                await this.driver.pressKeyCode(21); // Left key
+                await this.driver.pause(200);
+            }
+            
+            // Press Enter to confirm
+            await this.driver.pressKeyCode(66);
+            await this.driver.pause(2000);
+        } catch (error) {
+            console.error('Error during seek rewind:', error);
             throw error;
         }
     }
