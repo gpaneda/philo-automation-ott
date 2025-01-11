@@ -145,5 +145,21 @@ For support, please:
 2. Review documentation
 3. Create a new issue with detailed information
 
+## Testing 🧪
+
+To run individual test suites:
+```bash
+npm test src/tests/navigation.test.ts
+npm test src/tests/playback.test.ts
+npm test src/tests/seriesDetails.test.ts
+```
+
+To run all test suites sequentially with a pause between each suite:
+```bash
+npm test src/tests/navigation.test.ts --reporters=jest-html-reporter; sleep 10; npm test src/tests/playback.test.ts --reporters=jest-html-reporter; sleep 10; npm test src/tests/seriesDetails.test.ts --reporters=jest-html-reporter
+```
+
+Each test run will generate an HTML report in the `reports` directory.
+
 ---
 *Note: This framework is designed for testing purposes only and should not be used for any unauthorized automation of the Philo app.* 

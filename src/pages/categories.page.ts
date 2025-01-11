@@ -486,20 +486,23 @@ export class CategoriesPage extends HomeScreenPage {
     }
 
     /**
-     * Verifies a movie title matches between category view and details page
-     * @param movieNumber The number of the movie (for logging purposes)
+     * Verifies the title of a movie in both category and details pages
+     * @param movieNumber The number of the movie being verified
      * @param movieDetailsPage The movie details page object
-     * @returns Promise<{categoryTitle: string, detailsTitle: string}> The titles that were compared
+     * @returns Promise<{categoryTitle: string, detailsTitle: string}> The titles from both pages
      */
     async verifyMovieTitle(movieNumber: number, movieDetailsPage: any): Promise<{ categoryTitle: string, detailsTitle: string }> {
         try {
-            // Get and verify movie
+            // Get title from category page
             const categoryTitle = await this.getMovieTitle();
-            console.log(`Movie ${movieNumber} title in Top Free Movies:`, `"${categoryTitle}"`);
+            console.log(`Movie ${movieNumber} title in Category Page:`, `"${categoryTitle}"`);
 
+            // Click on movie and wait for details page
             await this.clickOnMovie();
-            await this.driver.pause(2000);
+            await this.driver.pause(3000); // Increased pause time
+            await movieDetailsPage.waitForLoaded(); // Wait for details page to load
 
+            // Get title from details page
             const detailsTitle = await movieDetailsPage.getMovieTitle();
             console.log(`Movie ${movieNumber} title in Movie Details Page:`, `"${detailsTitle}"`);
 

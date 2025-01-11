@@ -18,7 +18,7 @@ export class MoviesDetailsPage extends BasePage {
         
         // Action Buttons
         playButton: 'android=new UiSelector().description("Play")',
-        resumeButton: 'android=new UiSelector().text("Resume")',
+        resumeButton: 'android=resourceId("com.philo.philo:id/resume_button")',
         saveButton: 'android=new UiSelector().description("Save")',
         moreInfoButton: 'android=new UiSelector().description("More info")',
        
@@ -170,5 +170,13 @@ export class MoviesDetailsPage extends BasePage {
     async findPlayableMovie(maxAttempts: number = 5): Promise<boolean> {
         console.log('Looking for a movie with Play or Resume button...');
         return await this.findPlayableTitle(maxAttempts);
+    }
+
+    async isResumeButtonVisible(): Promise<boolean> {
+        return await this.isElementDisplayed(this.selectors.resumeButton);
+    }
+
+    async clickResume(): Promise<void> {
+        await this.click(this.selectors.resumeButton);
     }
 } 
