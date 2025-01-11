@@ -240,5 +240,43 @@ describe('Playback Tests', () => {
                 throw error;
             }
         }, 180000);
+
+        test.only('TC205 - should verify ads trigger with multiple right keypresses', async () => {
+            try {
+                // Start movie playback using helper function
+                await startMoviePlayback();
+
+                // Check for ads during initial playback
+                let adFound = await playerPage.isAdPlaying();
+                if (!adFound) {
+                    console.log('No ads during initial playback, will try right keypresses');
+                    
+                    // Try up to 3 times to trigger an ad with right keypresses
+                    for (let i = 1; i <= 3; i++) {
+                        console.log(`Attempt ${i} to trigger ad with right keypresses`);
+                        
+                        // Press right button 10 times
+                        for (let j = 0; j < 10; j++) {
+                            await playerPage.pressRightButton();
+                            await playerPage.wait(1);
+                        }
+
+                        // Resume playback after seeking
+                        await playerPage.resumePlayback();
+                        await playerPage.wait(5);
+
+                        // Check if ad is playing
+                        adFound = await playerPage.isAdPlaying();
+                        if (adFound) break;
+                    }
+                }
+
+                // Verify that an ad was found
+                expect(adFound).toBe(true);
+            } catch (error) {
+                console.error('Error in TC205:', error);
+                throw error;
+            }
+        }, 300000);
     });
 }); 

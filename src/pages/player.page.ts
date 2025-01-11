@@ -378,4 +378,50 @@ export class PlayerPage extends BasePage {
             throw error;
         }
     }
+
+    /**
+     * Checks if an ad is currently playing
+     * @returns {Promise<boolean>} True if ad is playing, false otherwise
+     */
+    async isAdPlaying(): Promise<boolean> {
+        try {
+            // Check for ad text element
+            const adTextPresent = await this.isElementDisplayed(this.selectors.adText);
+            if (adTextPresent) {
+                console.log('Ad detected via ad text element');
+                return true;
+            }
+
+            // Check for ad overlay
+            const adOverlayPresent = await this.isElementDisplayed(this.selectors.adOverlay);
+            if (adOverlayPresent) {
+                console.log('Ad detected via ad overlay element');
+                return true;
+            }
+
+            // Check for ad remaining time element
+            const adRemainingPresent = await this.isElementDisplayed(this.selectors.adRemainingTime);
+            if (adRemainingPresent) {
+                console.log('Ad detected via remaining time element');
+                return true;
+            }
+
+            return false;
+        } catch (error) {
+            console.log('Error checking for ad:', error);
+            return false;
+        }
+    }
+
+    async pressRightButton() {
+        await this.driver.pressKeyCode(22); // 22 is the keycode for KEYCODE_DPAD_RIGHT
+    }
+
+    async wait(seconds: number) {
+        await this.driver.pause(seconds * 1000);
+    }
+
+    async resumePlayback() {
+        await this.driver.pressKeyCode(66); // 66 is the keycode for KEYCODE_ENTER
+    }
 } 
