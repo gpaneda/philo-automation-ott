@@ -1,7 +1,6 @@
 import { GmailHelper } from '../helpers/gmail.helper';
 import dotenv from 'dotenv';
 import { gmail_v1 } from 'googleapis';
-import { TestReporter } from '../utils/TestReporter';
 
 // Load environment variables
 dotenv.config();
@@ -9,7 +8,6 @@ dotenv.config();
 describe('Gmail Helper Tests', () => {
     beforeAll(async () => {
         try {
-            await TestReporter.init();
             // Verify required environment variables are present
             const requiredEnvVars = [
                 'GMAIL_CLIENT_ID',
@@ -41,10 +39,7 @@ describe('Gmail Helper Tests', () => {
             } else {
                 console.log('ℹ️ No sign-in email to process');
             }
-            
-            await TestReporter.logTestResult('Gmail_ProcessSignIn', 'pass');
         } catch (error) {
-            await TestReporter.logTestResult('Gmail_ProcessSignIn', 'fail', error as Error);
             console.error('❌ Sign-in process failed:', error);
             throw error;
         }
@@ -58,10 +53,7 @@ describe('Gmail Helper Tests', () => {
             const success = await GmailHelper.processSignInEmail();
             expect(success).toBe(false);
             console.log('✅ Properly handled missing email case');
-            
-            await TestReporter.logTestResult('Gmail_HandleMissingEmails', 'pass');
         } catch (error) {
-            await TestReporter.logTestResult('Gmail_HandleMissingEmails', 'fail', error as Error);
             console.error('❌ Error handling test failed:', error);
             throw error;
         }

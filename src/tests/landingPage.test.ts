@@ -4,7 +4,7 @@ import { LandingPage } from '../pages/landing.page';
 import { AppHelper } from '../helpers/app.helper';
 
 describe('Landing Page', () => {
-    let driver: Browser;
+    let driver: Browser<'async'>;
     let landingPage: LandingPage;
     let homeScreenPage: HomeScreenPage;
 
