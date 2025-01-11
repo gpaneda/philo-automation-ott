@@ -9,7 +9,7 @@ import fs from 'fs/promises';
 import { CategoriesPage } from '../pages/categories.page';
 import { MoviesDetailsPage } from '../pages/moviesDetails.page';
 
-let driver: Browser;
+let driver: Browser<'async'>;
 let homeScreen: HomeScreenPage;
 let guidePage: GuidePage;
 let settingsPage: SettingsPage;
@@ -78,7 +78,8 @@ afterAll(async () => {
 describe('Navigation Tests', () => {
     test('TC106 - should display the Settings Page', async () => {
         try {
-            // 1. Navigate to and verify Settings page
+            // Step 1: Navigate to and verify Settings page
+            console.log('Step 1: Navigating to and verifying Settings page');
             await homeScreen.verifySettingsPage(settingsPage, topPage);
         } catch (error) {
             console.error('Settings page was not displayed:', error);
@@ -88,7 +89,8 @@ describe('Navigation Tests', () => {
 
     test('TC107 - should display the Guide Page', async () => {
         try {
-            // 1. Navigate to and verify Guide page
+            // Step 1: Navigate to and verify Guide page
+            console.log('Step 1: Navigating to and verifying Guide page');
             await homeScreen.navigateAndVerifyGuidePage(guidePage, topPage);
         } catch (error) {
             console.error('Error in TC107:', error);
@@ -98,7 +100,8 @@ describe('Navigation Tests', () => {
 
     test('TC108 - should display the Top Page', async () => {
         try {
-            // 1. Navigate to and verify Top page
+            // Step 1: Navigate to and verify Top page
+            console.log('Step 1: Navigating to and verifying Top page');
             await homeScreen.verifyTopPage(topPage);
         } catch (error) {
             console.error('Error in TC108:', error);
@@ -108,7 +111,8 @@ describe('Navigation Tests', () => {
 
     test('TC109 - should display the Saved Page', async () => {
         try {
-            // 1. Navigate to and verify Saved page
+            // Step 1: Navigate to and verify Saved page
+            console.log('Step 1: Navigating to and verifying Saved page');
             await homeScreen.verifySavedPage(topPage);
         } catch (error) {
             console.error('Error in TC109:', error);
@@ -118,7 +122,8 @@ describe('Navigation Tests', () => {
 
     test('TC110 - should display the Search Page', async () => {
         try {
-            // 1. Navigate to and verify Search page
+            // Step 1: Navigate to and verify Search page
+            console.log('Step 1: Navigating to and verifying Search page');
             await homeScreen.verifySearchPage(topPage);
         } catch (error) {
             console.error('Search page was not displayed:', error);
@@ -128,7 +133,8 @@ describe('Navigation Tests', () => {
 
     test('TC111 - should display the Top Free Movies category', async () => {
         try {
-            // 1. Navigate to and verify Top Free Movies category
+            // Step 1: Navigate to and verify Top Free Movies category
+            console.log('Step 1: Navigating to and verifying Top Free Movies category');
             await homeScreen.verifyTopFreeMovies(categoriesPage, topPage);
         } catch (error) {
             console.error('Top Free Movies category was not displayed:', error);
@@ -138,7 +144,8 @@ describe('Navigation Tests', () => {
 
     test('TC112 - should display the Top Free Shows category', async () => {
         try {
-            // 1. Navigate to and verify Top Free Shows category
+            // Step 1: Navigate to and verify Top Free Shows category
+            console.log('Step 1: Navigating to and verifying Top Free Shows category');
             await homeScreen.verifyTopFreeShows(categoriesPage, topPage);
         } catch (error) {
             console.error('Top Free Shows category was not displayed:', error);
@@ -148,7 +155,8 @@ describe('Navigation Tests', () => {
 
     test('TC113 - should display the Recommended category', async () => {
         try {
-            // 1. Navigate to and verify Recommended category
+            // Step 1: Navigate to and verify Recommended category
+            console.log('Step 1: Navigating to and verifying Recommended category');
             await homeScreen.verifyRecommended(categoriesPage, topPage);
         } catch (error) {
             console.error('Recommended category was not displayed:', error);
@@ -158,7 +166,8 @@ describe('Navigation Tests', () => {
 
     test('TC115 - should display the Saved category', async () => {
         try {
-            // 1. Navigate to and verify Saved category
+            // Step 1: Navigate to and verify Saved category
+            console.log('Step 1: Navigating to and verifying Saved category');
             await homeScreen.verifySavedCategory(categoriesPage, topPage);
         } catch (error) {
             console.error('Saved category was not displayed:', error);
@@ -168,7 +177,8 @@ describe('Navigation Tests', () => {
 
     test('TC114 - should display the Trending Live category', async () => {
         try {
-            // 1. Navigate to and verify Trending Live category
+            // Step 1: Navigate to and verify Trending Live category
+            console.log('Step 1: Navigating to and verifying Trending Live category');
             await homeScreen.verifyTrendingLive(categoriesPage, topPage);
         } catch (error) {
             console.error('Trending Live category was not displayed:', error);
@@ -178,13 +188,16 @@ describe('Navigation Tests', () => {
 
     test('TC116 - should display the Movie Details Page', async () => {
         try {
-            // 1. Verify multiple movies and their details
+            // Step 1: Verify multiple movies and their details
+            console.log('Step 1: Verifying multiple movies and their details');
             const verifiedTitles = await categoriesPage.verifyMultipleMovies(3, movieDetailsPage);
             
-            // 2. Verify the number of movies checked
+            // Step 2: Verify the number of movies checked
+            console.log('Step 2: Verifying number of movies checked');
             expect(verifiedTitles.length).toBe(3);
             
-            // 3. Verify titles match between category and details pages
+            // Step 3: Verify titles match between category and details pages
+            console.log('Step 3: Verifying title matches');
             verifiedTitles.forEach(({categoryTitle, detailsTitle}) => {
                 expect(categoryTitle).toBe(detailsTitle);
             });
@@ -196,31 +209,27 @@ describe('Navigation Tests', () => {
 
     test('TC117 - should log all category rows', async () => {
         try {
-            // 1. Verify home screen is open
+            // Step 1: Verify home screen is open
+            console.log('Step 1: Verifying home screen is open');
             await homeScreen.verifyHomeScreenElements();
 
-            // Create log file
+            // Step 2: Create log file
+            console.log('Step 2: Creating log file');
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const logPath = path.join(process.cwd(), 'logs');
             await fs.mkdir(logPath, { recursive: true });
             const logFile = path.join(logPath, `categories_${timestamp}.log`);
-
-            // Write initial timestamp
             await fs.writeFile(logFile, `Starting category scan at ${timestamp}\n\n`);
 
-            // Scan all categories
+            // Step 3: Scan all categories
+            console.log('Step 3: Scanning all categories');
             const foundCategories = await homeScreen.scanContentCategories();
 
-            // Log final summary
-            const summary = `\n=== Scan Complete ===
-Total categories found: ${foundCategories.length}
-
-All Categories found:
-${foundCategories.join('\n')}`;
-            
+            // Step 4: Log final summary
+            console.log('Step 4: Logging final summary');
+            const summary = `\n=== Scan Complete ===\nTotal categories found: ${foundCategories.length}\n\nAll Categories found:\n${foundCategories.join('\n')}`;
             await fs.appendFile(logFile, summary);
             console.log('Scan complete. Found', foundCategories.length, 'categories');
-
         } catch (error) {
             console.error('Error logging categories:', error);
             throw error;
@@ -229,44 +238,44 @@ ${foundCategories.join('\n')}`;
 
     test('TC118 - should log all movie titles in Top Free Movies row', async () => {
         try {
-            // 1. Verify home screen is open
+            // Step 1: Verify home screen is open
+            console.log('Step 1: Verifying home screen is open');
             await homeScreen.verifyHomeScreenElements();
 
-            // Create log file
+            // Step 2: Create log file
+            console.log('Step 2: Creating log file');
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const logPath = path.join(process.cwd(), 'logs');
             await fs.mkdir(logPath, { recursive: true });
             const logFile = path.join(logPath, `movie_titles_${timestamp}.log`);
-
-            // Write initial timestamp
             await fs.writeFile(logFile, `Starting movie title scan at ${timestamp}\n\n`);
 
-            // Navigate to Top Free Movies row
+            // Step 3: Navigate to Top Free Movies row
+            console.log('Step 3: Navigating to Top Free Movies row');
             const found = await homeScreen.findCategory('Top Free Movies');
             if (!found) {
                 throw new Error('Top Free Movies category not found');
             }
 
-            // Press down to get to the actual row content
+            // Step 4: Position at start of row
+            console.log('Step 4: Positioning at start of row');
             await homeScreen.pressDownButton();
             await driver.pause(2000);
             await homeScreen.pressUpButton();
             await driver.pause(2000);
-
-            // Press left to ensure we're at the start of the row
             for (let i = 0; i < 5; i++) {
                 await homeScreen.pressLeftButton();
                 await driver.pause(1000);
             }
 
+            // Step 5: Scan through row and collect titles
+            console.log('Step 5: Scanning through row and collecting titles');
             const movieTitles: string[] = [];
             let previousTitle = '';
             let samePositionCount = 0;
             const maxAttempts = 30;
 
-            // Navigate through the row
             for (let attempt = 0; attempt < maxAttempts; attempt++) {
-                // Get the current focused movie title
                 const focusedElement = await driver.$('android=focused(true)');
                 const title = await focusedElement.getAttribute('content-desc');
 
@@ -278,7 +287,6 @@ ${foundCategories.join('\n')}`;
                         await fs.appendFile(logFile, `*** New movie added to list ***\n`);
                     }
 
-                    // Check if we've reached the end of the row
                     if (title === previousTitle) {
                         samePositionCount++;
                         if (samePositionCount >= 3) {
@@ -291,21 +299,15 @@ ${foundCategories.join('\n')}`;
                     previousTitle = title;
                 }
 
-                // Press right to move to next movie
                 await homeScreen.pressRightButton();
                 await driver.pause(1500);
             }
 
-            // Log final summary
-            const summary = `\n=== Scan Complete ===
-Total unique movies found: ${movieTitles.length}
-
-All Movies in order of discovery:
-${movieTitles.join('\n')}`;
-            
+            // Step 6: Log final summary
+            console.log('Step 6: Logging final summary');
+            const summary = `\n=== Scan Complete ===\nTotal unique movies found: ${movieTitles.length}\n\nAll Movies in order of discovery:\n${movieTitles.join('\n')}`;
             await fs.appendFile(logFile, summary);
             console.log('Scan complete. Found', movieTitles.length, 'movies');
-
         } catch (error) {
             console.error('Error scanning movie titles:', error);
             throw error;
