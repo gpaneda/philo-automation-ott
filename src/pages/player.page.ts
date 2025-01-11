@@ -265,8 +265,8 @@ export class PlayerPage extends BasePage {
                     const contentDesc = await element.getAttribute('content-desc');
                     console.log('Seekbar content description:', contentDesc);
                     
-                    // Parse time from format "X minutes Y seconds of A hours B minutes C seconds"
-                    const match = contentDesc.match(/(\d+) minutes? (\d+) seconds? of (?:(\d+) hours? )?(\d+) minutes? (\d+) seconds?/);
+                    // Parse time from format "X minutes Y seconds of A hours B minutes [C seconds]"
+                    const match = contentDesc.match(/(\d+) minutes? (\d+) seconds? of (?:(\d+) hours? )?(\d+) minutes?(?: (\d+) seconds?)?/);
                     if (!match) {
                         throw new Error('Could not parse time from content description');
                     }
@@ -279,7 +279,7 @@ export class PlayerPage extends BasePage {
                     // Convert total time to seconds
                     const totalHours = parseInt(match[3] || '0');
                     const totalMinutes = parseInt(match[4]);
-                    const totalSeconds = parseInt(match[5]);
+                    const totalSeconds = parseInt(match[5] || '0'); // Default to 0 if not present
                     const totalTime = (totalHours * 3600) + (totalMinutes * 60) + totalSeconds;
                     
                     // Calculate percentage
