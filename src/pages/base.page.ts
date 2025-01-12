@@ -19,7 +19,7 @@ export class BasePage {
         await this.driver.pause(ms);
     }
 
-    async waitForElement(selector: string, timeout?: number): Promise<ChainablePromiseElement<Element<'async'>>> {
+    async waitForElement(selector: string, timeout?: number): Promise<ChainablePromiseElement<any>> {
         const element = await this.driver.$(selector);
         await element.waitForDisplayed({ timeout: timeout || this.DEFAULT_TIMEOUT });
         return element;

@@ -306,7 +306,7 @@ export class PlayerPage extends BasePage {
     }
 
     async getShowTitle(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.showTitle) as ChainablePromiseElement<any>;
+        const element = await this.waitForElement(this.selectors.showTitle);
         return element.getText();
     }
 
