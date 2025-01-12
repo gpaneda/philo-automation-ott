@@ -15,6 +15,15 @@ export class HomeScreenPage extends BasePage {
         throw new Error('Method not implemented.');
     }
     public selectors = {
+        // Profile Selection Screen
+        profilesTitle: 'android=resourceId("com.philo.philo:id/profiles_title")',
+        profilesRecyclerView: 'android=resourceId("com.philo.philo:id/recycler_view")',
+        profileAvatar: 'android=resourceId("com.philo.philo:id/avatar")',
+        profileLabel: 'android=resourceId("com.philo.philo:id/label")',
+        addNewProfile: 'android=text("Add new profile")',
+        holdToEditText: 'android=resourceId("com.philo.philo:id/tv_hold_to_edit")',
+        philoLogo: 'android=resourceId("com.philo.philo:id/logo")',
+
         // Header
         homeHeader: 'android=resourceId("com.philo.philo:id/home_header")',
         userProfileIcon: 'android=resourceId("com.philo.philo:id/user_profile_icon")',

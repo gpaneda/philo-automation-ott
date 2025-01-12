@@ -13,6 +13,10 @@ export interface Selector {
 export class BasePage {
     constructor(protected driver: Browser) {}
 
+    async pause(ms: number): Promise<void> {
+        await this.driver.pause(ms);
+    }
+
     async waitForElement(selector: string, timeout?: number): Promise<ChainablePromiseElement<WebdriverIO.Element>> {
         const element = await this.driver.$(selector);
         if (timeout) {
