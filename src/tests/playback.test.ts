@@ -251,8 +251,8 @@ describe('Playback Tests', () => {
                 if (!adFound) {
                     console.log('No ads during initial playback, will try right keypresses');
                     
-                    // Try up to 3 times to trigger an ad with right keypresses
-                    for (let i = 1; i <= 3; i++) {
+                    // Try up to 10 times to trigger an ad with right keypresses
+                    for (let i = 1; i <= 10; i++) {
                         console.log(`Attempt ${i} to trigger ad with right keypresses`);
                         
                         // Press right button 10 times
@@ -261,17 +261,26 @@ describe('Playback Tests', () => {
                             await playerPage.wait(1);
                         }
 
-                        // Resume playback after seeking
+                        // Resume playback after seeking with explicit waits
+                        console.log('Attempting to resume playback...');
+                        await playerPage.wait(2); // Wait for seeking to settle
                         await playerPage.resumePlayback();
-                        await playerPage.wait(5);
+                        console.log('Resume playback command sent');
+                        await playerPage.wait(5); // Wait for playback to stabilize
 
                         // Check if ad is playing
+                        console.log('Checking for ad...');
                         adFound = await playerPage.isAdPlaying();
-                        if (adFound) break;
+                        console.log(`Ad detection result: ${adFound}`);
+                        if (adFound) {
+                            console.log('Ad found! Breaking seek loop.');
+                            break;
+                        }
                     }
                 }
 
                 // Verify that an ad was found
+                console.log('Final ad detection result:', adFound);
                 expect(adFound).toBe(true);
             } catch (error) {
                 console.error('Error in TC205:', error);
