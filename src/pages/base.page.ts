@@ -1,4 +1,4 @@
-import { Browser, ChainablePromiseElement } from 'webdriverio';
+import { Browser, ChainablePromiseElement, Element } from 'webdriverio';
 
 export interface Selector {
     id: string;
@@ -11,17 +11,17 @@ export interface Selector {
 }
 
 export class BasePage {
-    constructor(protected driver: Browser) {}
+    protected readonly DEFAULT_TIMEOUT = 30000;
+
+    constructor(protected driver: Browser<'async'>) {}
 
     async pause(ms: number): Promise<void> {
         await this.driver.pause(ms);
     }
 
-    async waitForElement(selector: string, timeout?: number): Promise<ChainablePromiseElement<WebdriverIO.Element>> {
+    async waitForElement(selector: string, timeout?: number): Promise<ChainablePromiseElement<Element<'async'>>> {
         const element = await this.driver.$(selector);
-        if (timeout) {
-            await element.waitForDisplayed({ timeout });
-        }
+        await element.waitForDisplayed({ timeout: timeout || this.DEFAULT_TIMEOUT });
         return element;
     }
 
@@ -36,7 +36,7 @@ export class BasePage {
 
     async verifyElementDisplayed(selector: string): Promise<void> {
         const element = await this.waitForElement(selector);
-        await element.waitForDisplayed();
+        await element.waitForDisplayed({ timeout: this.DEFAULT_TIMEOUT });
     }
 
     async click(selector: string): Promise<void> {

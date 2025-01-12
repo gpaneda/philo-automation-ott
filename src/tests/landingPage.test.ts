@@ -3,13 +3,19 @@ import { HomeScreenPage } from '../pages/homescreen.page';
 import { LandingPage } from '../pages/landing.page';
 import { AppHelper } from '../helpers/app.helper';
 
-describe('Landing Page', () => {
+describe('Landing Page Tests', () => {
     let driver: Browser<'async'>;
     let landingPage: LandingPage;
     let homeScreenPage: HomeScreenPage;
 
-    beforeEach(async () => {
+    beforeAll(async () => {
         try {
+            // Clear app data before starting tests
+            console.log('Clearing app data before tests...');
+            await AppHelper.clearAppData();
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Initialize driver and page objects
             driver = await AppHelper.launchPhiloApp();
             landingPage = new LandingPage(driver);
             homeScreenPage = new HomeScreenPage(driver);
@@ -17,10 +23,14 @@ describe('Landing Page', () => {
             console.error('Error in beforeAll:', error);
             throw error;
         }
-    }, 30000);
+    }, 120000);
 
-    afterEach(async () => {
+    afterAll(async () => {
         try {
+            // Clean up app data after all tests
+            console.log('Clearing app data after tests...');
+            await AppHelper.clearAppData();
+
             if (driver) {
                 await driver.terminateApp('com.philo.philo');
                 await driver.pause(2000);
@@ -32,37 +42,36 @@ describe('Landing Page', () => {
         }
     });
 
-    test('TC101 - should display landing page buttons', async () => {
+    beforeEach(async () => {
         try {
-            await driver.pause(15000);
-            await landingPage.verifyLandingPageElements();
+            await driver.terminateApp('com.philo.philo');
+            await driver.pause(2000);
+            await driver.activateApp('com.philo.philo');
+            await driver.pause(20000); // Longer wait for app to fully load
         } catch (error) {
-            console.error('Landing page buttons were not displayed:', error);
+            console.error('Error in beforeEach:', error);
             throw error;
         }
-    });
+    }, 60000);
 
-    test('TC102 - should display channels after pressing the down button once', async () => {
-        try {
-            await homeScreenPage.pressDownButton();
-            await driver.pause(5000);
-            await landingPage.verifyChannelsDisplayed();
-        } catch (error) {
-            console.error('TC102 failed:', error);
-            throw error;
-        }
-    });
+    test('TC101 - should display landing page buttons', async () => {
+        await landingPage.verifyLandingPageElements();
+    }, 60000);
+
+    test('TC102 - should display channels after pressing the down button', async () => {
+        await landingPage.verifyLandingPageElements();
+        await homeScreenPage.pressDownButton();
+        await driver.pause(3000);
+        await landingPage.verifyChannelsDisplayed();
+    }, 60000);
 
     test('TC103 - should display login screen after pressing the Explore Free Channels button', async () => {
-        try {
-            await homeScreenPage.pressDownButton();
-            await driver.pause(5000);
-            await landingPage.pressExploreFreeChannelsButton();
-            await driver.pause(5000);
-            await landingPage.verifyLoginScreenDisplayed();
-        } catch (error) {
-            console.error('TC103 failed:', error);
-            throw error;
-        }
-    });
+        await landingPage.verifyLandingPageElements();
+        await homeScreenPage.pressDownButton();
+        await driver.pause(3000);
+        await homeScreenPage.pressRightButton();
+        await homeScreenPage.pressEnterButton();
+        await driver.pause(3000);
+        await landingPage.verifyLoginScreenDisplayed();
+    }, 60000);
 }); 
