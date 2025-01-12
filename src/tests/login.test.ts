@@ -27,6 +27,12 @@ describe('Open Philo App', () => {
         await new Promise(resolve => setTimeout(resolve, 2000));
     });
 
+    afterAll(async () => {
+        // Clean up app data after test
+        console.log('Clearing app data after test...');
+        await AppHelper.clearAppData();
+    });
+
     test('TC103 - should complete email sign in flow', async () => {
         const success = await AppHelper.loginToPhilo();
         expect(success).toBe(true);
