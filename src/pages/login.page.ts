@@ -66,20 +66,20 @@ export class LoginPage extends BasePage {
      */
     async verifyLoginPageElements(): Promise<void> {
         // Verify title and instructions
-        await this.verifyElementDisplayed(this.selectors.title, 'Enter your email address');
-        await this.verifyElementDisplayed(this.selectors.subtitle, "We'll send you a link.");
+        await this.verifyElementWithText(this.selectors.title, 'Enter your email address');
+        await this.verifyElementWithText(this.selectors.subtitle, "We'll send you a link.");
         
         // Verify input field
         await this.verifyElementDisplayed(this.selectors.emailInput);
         
         // Verify buttons
         await this.verifyElementDisplayed(this.selectors.submitButton);
-        await this.verifyElementDisplayed(this.selectors.switchToMobileButton, 'Switch to mobile number');
+        await this.verifyElementWithText(this.selectors.switchToMobileButton, 'Switch to mobile number');
         
         // Verify keyboard shortcuts
-        await this.verifyElementDisplayed(this.selectors.gmailShortcut, '@gmail.com');
-        await this.verifyElementDisplayed(this.selectors.yahooShortcut, '@yahoo.com');
-        await this.verifyElementDisplayed(this.selectors.comShortcut, '.com');
+        await this.verifyElementWithText(this.selectors.gmailShortcut, '@gmail.com');
+        await this.verifyElementWithText(this.selectors.yahooShortcut, '@yahoo.com');
+        await this.verifyElementWithText(this.selectors.comShortcut, '.com');
     }
 
     /**

@@ -39,6 +39,15 @@ export class BasePage {
         await element.waitForDisplayed({ timeout: this.DEFAULT_TIMEOUT });
     }
 
+    async verifyElementWithText(selector: string, expectedText: string): Promise<void> {
+        const element = await this.waitForElement(selector);
+        await element.waitForDisplayed({ timeout: this.DEFAULT_TIMEOUT });
+        const actualText = await element.getText();
+        if (actualText !== expectedText) {
+            throw new Error(`Expected text "${expectedText}" but found "${actualText}"`);
+        }
+    }
+
     async click(selector: string): Promise<void> {
         const element = await this.waitForElement(selector);
         await element.click();
