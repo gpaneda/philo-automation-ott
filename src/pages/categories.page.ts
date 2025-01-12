@@ -442,13 +442,45 @@ export class CategoriesPage extends HomeScreenPage {
         }
     }
 
+    /**
+     * Clicks on the currently focused movie
+     */
     async clickOnMovie(): Promise<void> {
         try {
-            // Add initial pause to ensure the page has loaded
-            await this.driver.pause(2000);
-
-            // Instead of clicking, press enter since the element is already focused
+            console.log('Attempting to click on movie...');
+            
+            // Get the focused element
+            const focusedElement = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
+            const isDisplayed = await focusedElement.isDisplayed();
+            console.log('Is focused element displayed:', isDisplayed);
+            
+            if (!isDisplayed) {
+                throw new Error('No focused movie element found');
+            }
+            
+            // Get the title before clicking
+            const title = await focusedElement.getAttribute('content-desc');
+            console.log('Clicking on movie:', title);
+            
+            // Press enter to click
             await this.pressEnterButton();
+            console.log('Enter button pressed');
+            
+            // Wait for transition
+            await this.driver.pause(5000);
+            console.log('Waited for transition');
+            
+            // Try to find any visible text elements to help with debugging
+            const textElements = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+            console.log('Found text elements:', textElements.length);
+            
+            for (const element of textElements) {
+                if (await element.isDisplayed()) {
+                    const text = await element.getText();
+                    console.log('Visible text element:', text);
+                }
+            }
+            
         } catch (error) {
             console.error('Error clicking on movie:', error);
             throw error;
@@ -493,21 +525,44 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifyMovieTitle(movieNumber: number, movieDetailsPage: any): Promise<{ categoryTitle: string, detailsTitle: string }> {
         try {
+            console.log(`Starting verification for movie ${movieNumber}...`);
+            
             // Get title from category page
             const categoryTitle = await this.getMovieTitle();
             console.log(`Movie ${movieNumber} title in Category Page:`, `"${categoryTitle}"`);
 
             // Click on movie and wait for details page
+            console.log('Clicking on movie...');
             await this.clickOnMovie();
-            await this.driver.pause(3000); // Increased pause time
-            await movieDetailsPage.waitForLoaded(); // Wait for details page to load
+            
+            // Add longer pause for transition
+            console.log('Waiting for transition...');
+            await this.driver.pause(5000);
+            
+            // Wait for details page and verify it's loaded
+            console.log('Waiting for details page to load...');
+            await movieDetailsPage.waitForLoaded();
+            
+            // Verify we're on the details page
+            const isOnDetailsPage = await movieDetailsPage.isDisplayed();
+            console.log('Is on details page:', isOnDetailsPage);
+            
+            if (!isOnDetailsPage) {
+                throw new Error('Failed to navigate to movie details page');
+            }
 
             // Get title from details page
+            console.log('Getting movie title from details page...');
             const detailsTitle = await movieDetailsPage.getMovieTitle();
             console.log(`Movie ${movieNumber} title in Movie Details Page:`, `"${detailsTitle}"`);
 
+            // Compare titles
+            console.log('Comparing titles...');
             expect(categoryTitle).toEqual(detailsTitle);
+            
+            // Wait before returning
             await this.driver.pause(2000);
+            console.log('Title verification completed successfully');
 
             return { categoryTitle, detailsTitle };
         } catch (error) {

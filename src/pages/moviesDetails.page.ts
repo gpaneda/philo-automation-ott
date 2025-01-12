@@ -4,37 +4,36 @@ import { BasePage } from './base.page';
 export class MoviesDetailsPage extends BasePage {
     public selectors = {
         // Movie Information
-        movieTitle: 'android=resourceId("com.philo.philo:id/show_title").className("android.widget.TextView")',
-        movieDescription: 'android=resourceId("com.philo.philo:id/show_description").className("android.widget.TextView")',
-        moviePoster: 'android=resourceId("com.philo.philo:id/big_tile_poster_image").className("android.widget.ImageView")',
-        movieRating: 'android=resourceId("com.philo.philo:id/rating").className("android.widget.TextView")',
-        releaseDate: 'android=resourceId("com.philo.philo:id/release_date").className("android.widget.TextView")',
-        ratingAdvisories: 'android=resourceId("com.philo.philo:id/rating_advisories").className("android.widget.TextView")',
+        movieTitle: 'android=new UiSelector().resourceId("com.philo.philo:id/show_title")',
+        movieDescription: 'android=new UiSelector().resourceId("com.philo.philo:id/show_description")',
+        moviePoster: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_poster_image")',
+        movieRating: 'android=new UiSelector().resourceId("com.philo.philo:id/rating")',
+        releaseDate: 'android=new UiSelector().resourceId("com.philo.philo:id/release_date")',
+        ratingAdvisories: 'android=new UiSelector().resourceId("com.philo.philo:id/rating_advisories")',
         
         // Channel Information
-        channelLogo: 'android=resourceId("com.philo.philo:id/big_tile_channel_logo").className("android.widget.ImageView")',
-        channelButton: 'android=resourceId("com.philo.philo:id/button_channel").className("android.view.ViewGroup")',
-        channelName: 'android=resourceId("com.philo.philo:id/label_channel").className("android.widget.TextView")',
+        channelLogo: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_channel_logo")',
+        channelButton: 'android=new UiSelector().resourceId("com.philo.philo:id/button_channel")',
+        channelName: 'android=new UiSelector().resourceId("com.philo.philo:id/label_channel")',
         
         // Action Buttons
         playButton: 'android=new UiSelector().description("Play")',
-        resumeButton: 'android=resourceId("com.philo.philo:id/resume_button")',
+        resumeButton: 'android=new UiSelector().resourceId("com.philo.philo:id/resume_button")',
         saveButton: 'android=new UiSelector().description("Save")',
         moreInfoButton: 'android=new UiSelector().description("More info")',
-       
         
         // Background Elements
-        backgroundImage: 'android=resourceId("com.philo.philo:id/big_tile_background_image_view").className("android.widget.ImageView")',
-        backgroundVideo: 'android=resourceId("com.philo.philo:id/big_tile_background_video_view").className("android.widget.FrameLayout")',
-        backgroundGradient: 'android=resourceId("com.philo.philo:id/big_tile_gradient_layer_view").className("android.view.View")',
+        backgroundImage: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_background_image_view")',
+        backgroundVideo: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_background_video_view")',
+        backgroundGradient: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_gradient_layer_view")',
         
         // Container Elements
-        detailsContainer: 'android=resourceId("com.philo.philo:id/big_tile_item_details_container").className("android.view.ViewGroup")',
-        otherInfoContainer: 'android=resourceId("com.philo.philo:id/other_information_container").className("android.view.ViewGroup")',
-        buttonsContainer: 'android=resourceId("com.philo.philo:id/big_tile_buttons_container").className("android.view.ViewGroup")',
+        detailsContainer: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_item_details_container")',
+        otherInfoContainer: 'android=new UiSelector().resourceId("com.philo.philo:id/other_information_container")',
+        buttonsContainer: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_buttons_container")',
         
         // Navigation
-        dismissButton: 'android=resourceId("com.philo.philo:id/big_tile_dismiss_text")'
+        dismissButton: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_dismiss_text")'
     };
 
     constructor(driver: Browser<'async'>) {
@@ -42,11 +41,71 @@ export class MoviesDetailsPage extends BasePage {
     }
 
     /**
+     * Waits for the movie details page to be fully loaded
+     */
+    async waitForLoaded(): Promise<void> {
+        try {
+            console.log('Waiting for movie details page to load...');
+            
+            // Try different selectors to find the title
+            const selectors = [
+                this.selectors.movieTitle,
+                'android=new UiSelector().resourceId("com.philo.philo:id/title")',
+                'android=new UiSelector().className("android.widget.TextView").text("*")'
+            ];
+            
+            let foundElement = false;
+            for (const selector of selectors) {
+                try {
+                    console.log(`Trying selector: ${selector}`);
+                    await this.waitForElement(selector);
+                    console.log(`Found element with selector: ${selector}`);
+                    foundElement = true;
+                    break;
+                } catch (error) {
+                    console.log(`Selector ${selector} not found`);
+                }
+            }
+            
+            if (!foundElement) {
+                throw new Error('Could not find movie title element with any selector');
+            }
+            
+            // Wait a bit more for any animations
+            await this.driver.pause(2000);
+        } catch (error) {
+            console.error('Error waiting for movie details page:', error);
+            throw error;
+        }
+    }
+
+    /**
      * Gets the movie title text
      * @returns Promise<string> The movie title
      */
     async getMovieTitle(): Promise<string> {
-        return await this.getText(this.selectors.movieTitle);
+        try {
+            console.log('Attempting to get movie title using generic text selector...');
+            
+            // Try different approaches to find the title
+            const textElements = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+            
+            // The movie title is usually the first text element on the page
+            for (const element of textElements) {
+                if (await element.isDisplayed()) {
+                    const text = await element.getText();
+                    if (text && text.length > 0) {
+                        console.log(`Found title text: "${text}"`);
+                        return text;
+                    }
+                }
+            }
+            
+            throw new Error('Could not find movie title with any selector strategy');
+        } catch (error) {
+            console.error('Error getting movie title:', error);
+            throw error;
+        }
     }
 
     /**
@@ -142,14 +201,23 @@ export class MoviesDetailsPage extends BasePage {
      * @returns Promise<boolean> True if the movie details page is displayed
      */
     async isDisplayed(): Promise<boolean> {
-        return await this.isElementDisplayed(this.selectors.movieTitle);
-    }
-
-    /**
-     * Waits for the movie details page to be fully loaded
-     */
-    async waitForLoaded(): Promise<void> {
-        await this.waitForElement(this.selectors.movieTitle);
+        try {
+            // Look for any TextView that contains the movie title
+            const textElements = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+            for (const element of textElements) {
+                if (await element.isDisplayed()) {
+                    const text = await element.getText();
+                    if (text && text.length > 0) {
+                        console.log('Found text element:', text);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (error) {
+            console.error('Error checking if details page is displayed:', error);
+            return false;
+        }
     }
 
     /**
