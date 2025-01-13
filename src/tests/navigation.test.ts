@@ -36,8 +36,33 @@ async function ensureDirectories() {
 
 beforeAll(async () => {
     try {
+
+        const requiredEnvVars = [
+            'GMAIL_CLIENT_ID',
+            'GMAIL_CLIENT_SECRET',
+            'GMAIL_REDIRECT_URI',
+            'GMAIL_REFRESH_TOKEN',
+            'PHILO_EMAIL'
+        ];
+
+        requiredEnvVars.forEach(envVar => {
+            if (!process.env[envVar]) {
+                throw new Error(`Missing required environment variable: ${envVar}`);
+            }
+        });
+
+        // Clear app data before starting test
+        console.log('Clearing app data before test...');
+        await AppHelper.clearAppData();
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
+        // Use the Apphelper to login to philo
+        await AppHelper.loginToPhilo();
+
+        // Use the Apphelper to launch the app
         await ensureDirectories();
-        driver = await AppHelper.launchPhiloApp();
+        //driver = await AppHelper.launchPhiloApp();
+        driver = await AppHelper.initializeDriver();
         homeScreen = new HomeScreenPage(driver);
         guidePage = new GuidePage(driver);
         settingsPage = new SettingsPage(driver);
@@ -63,24 +88,19 @@ beforeEach(async () => {
 });
 
 afterAll(async () => {
-    try {
-        if (driver) {
-            await driver.terminateApp('com.philo.philo');
-            await driver.pause(2000);
-            await driver.deleteSession();
-            await new Promise(resolve => setTimeout(resolve, 10000));
-        }
-    } catch (error) {
-        console.error('Error in afterAll:', error);
-    }
-}, 30000);
+    // Clean up app data after test
+    console.log('Clearing app data after test...');
+    await AppHelper.clearAppData();
+});
 
 describe('Navigation Tests', () => {
     test('TC106 - should display the Settings Page', async () => {
         try {
             // Step 1: Navigate to and verify Settings page
-            console.log('Step 1: Navigating to and verifying Settings page');
-            await homeScreen.verifySettingsPage(settingsPage, topPage);
+            await homeScreen.pressUpButton();
+            await driver.pause(3000);
+            await homeScreen.navigateToSettings();
+            expect(await settingsPage.isSignInInformationDisplayed()).toBe(true);
         } catch (error) {
             console.error('Settings page was not displayed:', error);
             throw error;
@@ -89,11 +109,15 @@ describe('Navigation Tests', () => {
 
     test('TC107 - should display the Guide Page', async () => {
         try {
+            await homeScreen.pressUpButton();
+            await driver.pause(3000);
+            await homeScreen.navigateToGuide();
+            expect(await guidePage.isFreeChannelsDisplayed()).toBe(true);
             // Step 1: Navigate to and verify Guide page
-            console.log('Step 1: Navigating to and verifying Guide page');
-            await homeScreen.navigateAndVerifyGuidePage(guidePage, topPage);
+            //console.log('Step 1: Navigating to and verifying Guide page');
+            //await homeScreen.navigateAndVerifyGuidePage(guidePage, topPage);
         } catch (error) {
-            console.error('Error in TC107:', error);
+            console.error('Guide page was not displayed:', error);
             throw error;
         }
     }, 180000);
@@ -111,11 +135,12 @@ describe('Navigation Tests', () => {
 
     test('TC109 - should display the Saved Page', async () => {
         try {
-            // Step 1: Navigate to and verify Saved page
-            console.log('Step 1: Navigating to and verifying Saved page');
-            await homeScreen.verifySavedPage(topPage);
+            await homeScreen.pressUpButton();
+            await driver.pause(3000);
+            await homeScreen.navigateToSaved();
+            expect(await homeScreen.isElementDisplayed(homeScreen.selectors.topNavSaved)).toBe(true);
         } catch (error) {
-            console.error('Error in TC109:', error);
+            console.error('Saved page was not displayed:', error);
             throw error;
         }
     }, 180000);
@@ -123,8 +148,12 @@ describe('Navigation Tests', () => {
     test('TC110 - should display the Search Page', async () => {
         try {
             // Step 1: Navigate to and verify Search page
-            console.log('Step 1: Navigating to and verifying Search page');
-            await homeScreen.verifySearchPage(topPage);
+            //console.log('Step 1: Navigating to and verifying Search page');
+            //await homeScreen.verifySearchPage(topPage);
+            await homeScreen.pressUpButton();
+            await driver.pause(3000);
+            await homeScreen.navigateToSearch();
+            expect(await homeScreen.isElementDisplayed(homeScreen.selectors.topNavSearch)).toBe(true);
         } catch (error) {
             console.error('Search page was not displayed:', error);
             throw error;
