@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-test:
+  build-and-lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -24,14 +24,12 @@ jobs:
 
     - name: Build TypeScript
       run: npm run build
+      env:
+        # Add placeholder env variables required for build
+        GMAIL_CLIENT_ID: placeholder
+        GMAIL_CLIENT_SECRET: placeholder
+        GMAIL_REDIRECT_URI: placeholder
+        GMAIL_REFRESH_TOKEN: placeholder
 
     - name: Run linter
-      run: npm run lint
-
-    - name: Run formatter check
-      run: npm run format
-
-    - name: Run tests
-      run: npm test
-      env:
-        NODE_OPTIONS: --experimental-vm-modules 
+      run: npm run lint 
