@@ -22,10 +22,12 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
+    - name: Install TypeScript
+      run: npm install -g typescript@4.9.5
+
     - name: Build TypeScript
       run: |
-        npm list typescript || true
-        ./node_modules/.bin/tsc --version
+        tsc --version
         npm run build
       env:
         # Add placeholder env variables required for build
