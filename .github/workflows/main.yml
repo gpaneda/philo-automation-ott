@@ -22,21 +22,9 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
-    - name: Debug TypeScript
-      run: |
-        echo "Local TypeScript version:"
-        ./node_modules/.bin/tsc --version
-        echo "TypeScript config:"
-        cat tsconfig.json
-        echo "Contents of gmail.helper.ts:"
-        cat src/helpers/gmail.helper.ts
-        echo "Contents of testGmailHelper.ts:"
-        cat src/scripts/testGmailHelper.ts
-
     - name: Build TypeScript
       run: |
-        ./node_modules/.bin/tsc --project tsconfig.json --listFiles
-        npm run build
+        ./node_modules/.bin/tsc --project tsconfig.build.json
       env:
         # Add placeholder env variables required for build
         GMAIL_CLIENT_ID: placeholder
