@@ -1,4 +1,8 @@
 import { Browser, ChainablePromiseElement, Element } from 'webdriverio';
+import { exec } from 'child_process';
+import fs from 'fs';
+import PNG from 'pngjs';
+import pixelmatch from 'pixelmatch';
 
 export interface Selector {
     id: string;
@@ -11,51 +15,82 @@ export interface Selector {
 }
 
 export class BasePage {
-    protected readonly DEFAULT_TIMEOUT = 30000;
+    protected driver: Browser<'async'>;
+    protected defaultTimeout = 5000; // Reduced from default 10000
 
-    constructor(protected driver: Browser<'async'>) {}
-
-    async pause(ms: number): Promise<void> {
-        await this.driver.pause(ms);
+    constructor(driver: Browser<'async'>) {
+        this.driver = driver;
     }
 
-    async waitForElement(selector: string, timeout?: number): Promise<ChainablePromiseElement<any>> {
+    /**
+     * Wait for an element to be present
+     * @param selector The element selector
+     * @param timeout Optional timeout in milliseconds
+     * @returns The element when found
+     */
+    async waitForElement(selector: string, timeout: number = this.defaultTimeout) {
         const element = await this.driver.$(selector);
-        await element.waitForDisplayed({ timeout: timeout || this.DEFAULT_TIMEOUT });
+        await element.waitForExist({ timeout });
         return element;
     }
 
+    /**
+     * Check if an element is displayed
+     * @param selector The element selector
+     * @returns True if the element is displayed
+     */
     async isElementDisplayed(selector: string): Promise<boolean> {
         try {
-            const element = await this.waitForElement(selector);
-            return element.isDisplayed();
+            const element = await this.driver.$(selector);
+            return await element.isDisplayed();
         } catch (error) {
             return false;
         }
     }
 
-    async verifyElementDisplayed(selector: string): Promise<void> {
-        const element = await this.waitForElement(selector);
-        await element.waitForDisplayed({ timeout: this.DEFAULT_TIMEOUT });
-    }
-
-    async verifyElementWithText(selector: string, expectedText: string): Promise<void> {
-        const element = await this.waitForElement(selector);
-        await element.waitForDisplayed({ timeout: this.DEFAULT_TIMEOUT });
-        const actualText = await element.getText();
-        if (actualText !== expectedText) {
-            throw new Error(`Expected text "${expectedText}" but found "${actualText}"`);
-        }
-    }
-
+    /**
+     * Click on an element
+     * @param selector The element selector
+     */
     async click(selector: string): Promise<void> {
         const element = await this.waitForElement(selector);
         await element.click();
     }
 
+    /**
+     * Get text from an element
+     * @param selector The element selector
+     * @returns The element text
+     */
     async getText(selector: string): Promise<string> {
         const element = await this.waitForElement(selector);
-        return element.getText();
+        return await element.getText();
+    }
+
+    /**
+     * Wait for a specific amount of time
+     * @param seconds Number of seconds to wait
+     */
+    async wait(seconds: number): Promise<void> {
+        await this.driver.pause(seconds * 1000);
+    }
+
+    async pause(ms: number): Promise<void> {
+        await this.driver.pause(ms);
+    }
+
+    async verifyElementDisplayed(selector: string): Promise<void> {
+        const element = await this.waitForElement(selector);
+        await element.waitForDisplayed({ timeout: this.defaultTimeout });
+    }
+
+    async verifyElementWithText(selector: string, expectedText: string): Promise<void> {
+        const element = await this.waitForElement(selector);
+        await element.waitForDisplayed({ timeout: this.defaultTimeout });
+        const actualText = await element.getText();
+        if (actualText !== expectedText) {
+            throw new Error(`Expected text "${expectedText}" but found "${actualText}"`);
+        }
     }
 
     async findPlayableTitle(maxAttempts: number = 5): Promise<boolean> {

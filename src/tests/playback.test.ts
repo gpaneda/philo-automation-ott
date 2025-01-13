@@ -140,43 +140,101 @@ describe('Playback Tests', () => {
 
     beforeAll(async () => {
         try {
-            driver = await AppHelper.launchPhiloApp();
-            homeScreenPage = new HomeScreenPage(driver);
-            playerPage = new PlayerPage(driver);
-            categoriesPage = new CategoriesPage(driver);
-            topPage = new TopPage(driver);
-            seriesDetails = new SeriesDetailsPage(driver);
-            moviesDetails = new MoviesDetailsPage(driver);
+            const requiredEnvVars = [
+                'GMAIL_CLIENT_ID',
+                'GMAIL_CLIENT_SECRET',
+                'GMAIL_REDIRECT_URI',
+                'GMAIL_REFRESH_TOKEN',
+                'PHILO_EMAIL'
+            ];
+
+            requiredEnvVars.forEach(envVar => {
+                if (!process.env[envVar]) {
+                    throw new Error(`Missing required environment variable: ${envVar}`);
+                }
+            });
+
+            // Clear app data before starting test
+            console.log('Clearing app data before test...');
+            await AppHelper.clearAppData();
+            await new Promise(resolve => setTimeout(resolve, 5000));
+
+            // Use the Apphelper to login to philo
+            await AppHelper.loginToPhilo();
+            await new Promise(resolve => setTimeout(resolve, 5000));
+
+            // Initialize driver and page objects with retry logic
+            let retryCount = 0;
+            const maxRetries = 3;
+            
+            while (retryCount < maxRetries) {
+                try {
+                    driver = await AppHelper.initializeDriver();
+                    // Verify driver connection
+                    if (!driver.sessionId) {
+                        throw new Error('No session ID found');
+                    }
+                    
+                    // Initialize page objects
+                    homeScreenPage = new HomeScreenPage(driver);
+                    playerPage = new PlayerPage(driver);
+                    categoriesPage = new CategoriesPage(driver);
+                    topPage = new TopPage(driver);
+                    seriesDetails = new SeriesDetailsPage(driver);
+                    moviesDetails = new MoviesDetailsPage(driver);
+                    
+                    // Wait for app to be fully loaded
+                    await new Promise(resolve => setTimeout(resolve, 10000));
+                    break;
+                } catch (error) {
+                    retryCount++;
+                    console.error(`Driver initialization attempt ${retryCount} failed:`, error);
+                    if (retryCount === maxRetries) {
+                        throw new Error(`Failed to initialize driver after ${maxRetries} attempts`);
+                    }
+                    // Wait before retrying
+                    await new Promise(resolve => setTimeout(resolve, 5000));
+                }
+            }
         } catch (error) {
             console.error('Error in beforeAll:', error);
             throw error;
         }
     }, 120000);
 
-    afterAll(async () => {
-        try {
-            if (driver) {
-                await driver.terminateApp('com.philo.philo');
-                await driver.pause(2000);
-                await driver.deleteSession();
-                await new Promise(resolve => setTimeout(resolve, 10000));
-            }
-        } catch (error) {
-            console.error('Error in afterAll:', error);
-        }
-    });
-
     beforeEach(async () => {
         try {
+            console.log('Terminating app...');
             await driver.terminateApp('com.philo.philo');
-            await driver.pause(2000);
+            await new Promise(resolve => setTimeout(resolve, 5000));
+            
+            console.log('Activating app...');
             await driver.activateApp('com.philo.philo');
-            await driver.pause(5000);
+            await new Promise(resolve => setTimeout(resolve, 10000));
+            
+            // Verify driver connection is still active
+            if (!driver.sessionId) {
+                throw new Error('Lost driver session');
+            }
         } catch (error) {
             console.error('Error in beforeEach:', error);
-            throw error;
+            // Try to recover the session
+            try {
+                await driver.deleteSession();
+                driver = await AppHelper.initializeDriver();
+                await new Promise(resolve => setTimeout(resolve, 5000));
+            } catch (recoveryError) {
+                console.error('Failed to recover session:', recoveryError);
+                throw error;
+            }
         }
-    }, 60000);
+    }, 120000);
+
+    afterAll(async () => {
+        // Clean up app data after test
+        console.log('Clearing app data after test...');
+        await AppHelper.clearAppData();
+    });
 
     describe('Basic Playback Controls', () => {
         test('TC201 - should verify content playback', async () => {

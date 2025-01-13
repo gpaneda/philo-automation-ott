@@ -17,7 +17,9 @@ export class MoviesDetailsPage extends BasePage {
         channelName: 'android=new UiSelector().resourceId("com.philo.philo:id/label_channel")',
         
         // Action Buttons
-        playButton: 'android=new UiSelector().description("Play")',
+        playButton: 'android=new UiSelector().resourceId("com.philo.philo:id/button_play")',
+        playButtonByDesc: 'android=new UiSelector().description("Play")',
+        playButtonByText: 'android=new UiSelector().text("Play")',
         resumeButton: 'android=new UiSelector().resourceId("com.philo.philo:id/resume_button")',
         saveButton: 'android=new UiSelector().description("Save")',
         moreInfoButton: 'android=new UiSelector().description("More info")',
@@ -153,25 +155,50 @@ export class MoviesDetailsPage extends BasePage {
      */
     async clickPlay(): Promise<void> {
         try {
-            // First try to click Resume if it exists
-            const resumeExists = await this.isElementDisplayed(this.selectors.resumeButton);
-            if (resumeExists) {
-                await this.click(this.selectors.resumeButton);
-                return;
-            }
-        } catch (error) {
-            // If Resume doesn't exist, try Play button
-            try {
-                await this.click(this.selectors.playButton);
-            } catch (playError) {
-                // If neither button works, try to find a playable movie
-                const found = await this.findPlayableMovie();
-                if (!found) {
-                    throw new Error('Could not find a playable movie');
+            console.log('Attempting to click play button...');
+            
+            // Try different play button selectors first
+            const playSelectors = [
+                this.selectors.playButton,
+                this.selectors.playButtonByDesc,
+                this.selectors.playButtonByText
+            ];
+
+            for (const selector of playSelectors) {
+                try {
+                    console.log(`Trying play button selector: ${selector}`);
+                    const element = await this.driver.$(selector);
+                    const exists = await element.isDisplayed();
+                    if (exists) {
+                        console.log(`Found play button with selector: ${selector}`);
+                        await element.click();
+                        return;
+                    }
+                } catch (error) {
+                    console.log(`Selector ${selector} not found or not clickable`);
                 }
-                // Try clicking play again on the new movie
-                await this.clickPlay();
             }
+
+            // If play button not found, try resume as fallback
+            try {
+                console.log('Checking for resume button...');
+                const resumeElement = await this.driver.$(this.selectors.resumeButton);
+                const resumeExists = await resumeElement.isDisplayed();
+                if (resumeExists) {
+                    console.log('Resume button found, clicking it...');
+                    await resumeElement.click();
+                    return;
+                }
+            } catch (error) {
+                console.log('No resume button found');
+            }
+
+            // If we get here, no playable button was found
+            throw new Error('Could not find any playable button');
+            
+        } catch (error) {
+            console.error('Error clicking play:', error);
+            throw error;
         }
     }
 
