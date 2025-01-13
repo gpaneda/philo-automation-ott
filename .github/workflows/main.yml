@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-and-lint:
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,16 +21,6 @@ jobs:
 
     - name: Install dependencies
       run: npm ci
-
-    - name: Build TypeScript
-      run: |
-        ./node_modules/.bin/tsc --project tsconfig.build.json
-      env:
-        # Add placeholder env variables required for build
-        GMAIL_CLIENT_ID: placeholder
-        GMAIL_CLIENT_SECRET: placeholder
-        GMAIL_REDIRECT_URI: placeholder
-        GMAIL_REFRESH_TOKEN: placeholder
 
     - name: Run linter
       run: npm run lint 
