@@ -23,7 +23,10 @@ jobs:
       run: npm ci
 
     - name: Build TypeScript
-      run: npm run build
+      run: |
+        npm list typescript || true
+        ./node_modules/.bin/tsc --version
+        npm run build
       env:
         # Add placeholder env variables required for build
         GMAIL_CLIENT_ID: placeholder
