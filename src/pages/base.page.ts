@@ -1,8 +1,6 @@
 import { Browser, ChainablePromiseElement, Element } from 'webdriverio';
 import { exec } from 'child_process';
 import fs from 'fs';
-import PNG from 'pngjs';
-import pixelmatch from 'pixelmatch';
 
 export interface Selector {
     id: string;
