@@ -134,6 +134,42 @@ Additional documentation can be found in the `docs/` directory:
 - List any known issues or limitations
 - Workarounds if available
 
+## 🤖 GitHub Actions Setup
+
+1. **Basic Workflow Setup**
+   - Automated linting on code changes
+   - Runs on push to main branch
+   - Manual trigger option available
+
+2. **Environment Setup**
+   Required secrets in GitHub:
+   - `FIRE_TV_IP`: Fire TV device IP address
+   - `FIRE_TV_PORT`: ADB port (usually 5555)
+   - `APPIUM_HOST`: Appium server host
+   - `APPIUM_PORT`: Appium server port
+   - `APP_PACKAGE`: Philo app package name
+   - `APP_ACTIVITY`: Main activity name
+   - `PHILO_EMAIL`: Philo account email
+   - `GMAIL_CLIENT_ID`: Gmail API client ID
+   - `GMAIL_CLIENT_SECRET`: Gmail API client secret
+   - `GMAIL_REFRESH_TOKEN`: Gmail refresh token
+   - `GMAIL_ACCESS_TOKEN`: Gmail access token
+   - `GMAIL_REDIRECT_URI`: OAuth redirect URI
+   - `DEFAULT_TIMEOUT`: Default timeout value
+   - `RETRY_ATTEMPTS`: Number of retry attempts
+
+3. **Adding Secrets**
+   - Go to repository Settings
+   - Navigate to Secrets and Variables > Actions
+   - Click "New repository secret"
+   - Add each required secret
+
+4. **Future Enhancements**
+   - Fire TV emulator setup for CI/CD
+   - Automated test runs
+   - Test result reporting
+   - Device/emulator management
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
