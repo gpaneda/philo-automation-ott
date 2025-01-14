@@ -1,7 +1,14 @@
 name: Basic Setup Test
 
 on:
-  workflow_dispatch:  # This means we can trigger it manually first
+  workflow_dispatch:  # Manual trigger
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'package*.json'
+      - '.eslintrc*'
+      - 'tsconfig.json'
 
 jobs:
   test-setup:
