@@ -36,7 +36,7 @@ export class AppHelper {
             console.log('Starting Philo activity...');
             await driver.startActivity('com.philo.philo', 'com.philo.philo.app.activity.MainActivity');
             console.log('Waiting for app to launch...');
-            await new Promise(resolve => setTimeout(resolve, 5000)); // Increased wait time to 5 seconds
+            await new Promise(resolve => setTimeout(resolve, 10000)); // Increased wait time to 10 seconds
             console.log('App launch completed');
             return driver;
         } catch (error) {

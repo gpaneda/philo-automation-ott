@@ -13,6 +13,21 @@ on:
 jobs:
   test-setup:
     runs-on: ubuntu-22.04
+    env:
+      FIRE_TV_IP: ${{ secrets.FIRE_TV_IP }}
+      FIRE_TV_PORT: ${{ secrets.FIRE_TV_PORT }}
+      APPIUM_HOST: ${{ secrets.APPIUM_HOST }}
+      APPIUM_PORT: ${{ secrets.APPIUM_PORT }}
+      DEFAULT_TIMEOUT: ${{ secrets.DEFAULT_TIMEOUT }}
+      RETRY_ATTEMPTS: ${{ secrets.RETRY_ATTEMPTS }}
+      APP_PACKAGE: ${{ secrets.APP_PACKAGE }}
+      APP_ACTIVITY: ${{ secrets.APP_ACTIVITY }}
+      PHILO_EMAIL: ${{ secrets.PHILO_EMAIL }}
+      GMAIL_CLIENT_ID: ${{ secrets.GMAIL_CLIENT_ID }}
+      GMAIL_CLIENT_SECRET: ${{ secrets.GMAIL_CLIENT_SECRET }}
+      GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
+      GMAIL_ACCESS_TOKEN: ${{ secrets.GMAIL_ACCESS_TOKEN }}
+      GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
     
     steps:
     - uses: actions/checkout@v3

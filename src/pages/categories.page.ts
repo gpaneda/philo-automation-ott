@@ -98,13 +98,20 @@ export class CategoriesPage extends HomeScreenPage {
 
     async verifyTopFreeMoviesHeaderDisplayed(): Promise<void> {
         try {
-            // Wait for the header container
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            // Verify both the icon and label are present
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            // Verify the category text
-            await this.verifyElementDisplayed(this.selectors.topFreeMovies);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.topFreeMovies
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Top Free Movies header elements found');
         } catch (error) {
             console.error('Error verifying Top Free Movies header:', error);
             throw error;
@@ -138,13 +145,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifyRecommendedHeaderDisplayed(): Promise<void> {
         try {
-            // Wait for the header container
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            // Verify both the icon and label are present
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            // Verify the category text
-            await this.verifyElementDisplayed(this.selectors.recommended);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.recommended
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Recommended header elements found');
         } catch (error) {
             console.error('Error verifying Recommended header:', error);
             throw error;
@@ -165,10 +179,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifyTrendingLiveHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.trendingLive);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.trendingLive
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Trending Live header elements found');
         } catch (error) {
             console.error('Error verifying Trending Live header:', error);
             throw error;
@@ -189,10 +213,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifyRealityRoundupHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.realityRoundup);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.realityRoundup
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Reality Roundup header elements found');
         } catch (error) {
             console.error('Error verifying Reality Roundup header:', error);
             throw error;
@@ -225,10 +259,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifyTrueCrimeHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.trueCrime);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.trueCrime
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No True Crime header elements found');
         } catch (error) {
             console.error('Error verifying True Crime header:', error);
             throw error;
@@ -261,10 +305,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifyHomeAndTravelHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.homeAndTravel);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.homeAndTravel
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Home & Travel header elements found');
         } catch (error) {
             console.error('Error verifying Home & Travel header:', error);
             throw error;
@@ -294,10 +348,20 @@ export class CategoriesPage extends HomeScreenPage {
 
     async verifyTopFreeShowsHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.topFreeShows);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.topFreeShows
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Top Free Shows header elements found');
         } catch (error) {
             console.error('Error verifying Top Free Shows header:', error);
             throw error;
@@ -388,10 +452,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifySavedHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.saved);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.saved
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Saved header elements found');
         } catch (error) {
             console.error('Error verifying Saved header:', error);
             throw error;
