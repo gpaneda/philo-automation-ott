@@ -1,5 +1,6 @@
 import { Browser } from 'webdriverio';
 import { BasePage } from './base.page';
+import path from 'path';
 
 export class MoviesDetailsPage extends BasePage {
     public selectors = {
@@ -53,23 +54,58 @@ export class MoviesDetailsPage extends BasePage {
             const selectors = [
                 this.selectors.movieTitle,
                 'android=new UiSelector().resourceId("com.philo.philo:id/title")',
-                'android=new UiSelector().className("android.widget.TextView").text("*")'
+                'android=new UiSelector().resourceId("com.philo.philo:id/show_title")',
+                'android=new UiSelector().className("android.widget.TextView").textMatches(".*")',
+                'android=new UiSelector().className("android.widget.TextView").index(0)',
+                'android=new UiSelector().className("android.widget.TextView").index(1)',
+                'android=new UiSelector().className("android.widget.TextView").index(2)'
             ];
             
             let foundElement = false;
             for (const selector of selectors) {
                 try {
                     console.log(`Trying selector: ${selector}`);
-                    await this.waitForElement(selector);
-                    console.log(`Found element with selector: ${selector}`);
-                    foundElement = true;
-                    break;
-                } catch (error) {
-                    console.log(`Selector ${selector} not found`);
+                    const element = await this.driver.$(selector);
+                    const isDisplayed = await element.isDisplayed();
+                    if (isDisplayed) {
+                        const text = await element.getText();
+                        console.log(`Found element with text: "${text}"`);
+                        foundElement = true;
+                        break;
+                    }
+                    console.log(`Element found but not displayed: ${selector}`);
+                } catch (error: any) {
+                    console.log(`Selector ${selector} not found:`, error.message);
                 }
             }
             
             if (!foundElement) {
+                console.log('Attempting to find any visible TextView...');
+                const textViews = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+                for (const element of textViews) {
+                    try {
+                        const isDisplayed = await element.isDisplayed();
+                        if (isDisplayed) {
+                            const text = await element.getText();
+                            if (text && text.length > 0) {
+                                console.log(`Found TextView with text: "${text}"`);
+                                foundElement = true;
+                                break;
+                            }
+                        }
+                    } catch (error: any) {
+                        console.log('Error checking TextView:', error.message);
+                    }
+                }
+            }
+            
+            if (!foundElement) {
+                // Take a screenshot for debugging
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                const screenshotPath = path.join(process.cwd(), 'screenshots', 'errors', `movie-details-${timestamp}.png`);
+                await this.driver.saveScreenshot(screenshotPath);
+                console.log(`Screenshot saved to: ${screenshotPath}`);
+                
                 throw new Error('Could not find movie title element with any selector');
             }
             

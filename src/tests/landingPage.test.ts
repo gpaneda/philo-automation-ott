@@ -61,7 +61,9 @@ describe('Landing Page Tests', () => {
     test('TC102 - should display channels after pressing the down button', async () => {
         await landingPage.verifyLandingPageElements();
         await homeScreenPage.pressDownButton();
-        await driver.pause(3000);
+        await driver.pause(5000);
+        await landingPage.verifyLandingPage2Elements();
+        await driver.pause(2000);
         await landingPage.verifyChannelsDisplayed();
     }, 60000);
 

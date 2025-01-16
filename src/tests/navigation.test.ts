@@ -36,32 +36,31 @@ async function ensureDirectories() {
 
 beforeAll(async () => {
     try {
-
         const requiredEnvVars = [
+            'FIRE_TV_IP',
+            'FIRE_TV_PORT',
+            'PHILO_EMAIL',
             'GMAIL_CLIENT_ID',
             'GMAIL_CLIENT_SECRET',
-            'GMAIL_REDIRECT_URI',
             'GMAIL_REFRESH_TOKEN',
-            'PHILO_EMAIL'
+            'GMAIL_ACCESS_TOKEN'
         ];
 
-        requiredEnvVars.forEach(envVar => {
+        // Verify all required environment variables are set
+        for (const envVar of requiredEnvVars) {
             if (!process.env[envVar]) {
                 throw new Error(`Missing required environment variable: ${envVar}`);
             }
-        });
+        }
 
-        // Clear app data before starting test
-        console.log('Clearing app data before test...');
+        // Clear app data and login to Philo
         await AppHelper.clearAppData();
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        const loginSuccess = await AppHelper.loginToPhilo();
+        if (!loginSuccess) {
+            throw new Error('Failed to login to Philo');
+        }
 
-        // Use the Apphelper to login to philo
-        await AppHelper.loginToPhilo();
-
-        // Use the Apphelper to launch the app
-        await ensureDirectories();
-        //driver = await AppHelper.launchPhiloApp();
+        // Initialize driver and page objects
         driver = await AppHelper.initializeDriver();
         homeScreen = new HomeScreenPage(driver);
         guidePage = new GuidePage(driver);
@@ -69,11 +68,12 @@ beforeAll(async () => {
         topPage = new TopPage(driver);
         categoriesPage = new CategoriesPage(driver);
         movieDetailsPage = new MoviesDetailsPage(driver);
+
     } catch (error) {
         console.error('Error in beforeAll:', error);
         throw error;
     }
-}, 60000);
+}, 120000);
 
 beforeEach(async () => {
     try {

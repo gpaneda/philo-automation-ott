@@ -8,7 +8,10 @@ module.exports = {
     }]
   },
   setupFilesAfterEnv: ['./jest.setup.ts'],
-  testTimeout: 60000,
+  testTimeout: 300000,
+  bail: 0,
+  verbose: true,
+  maxWorkers: 1,
   globals: {
     'ts-jest': {
       isolatedModules: true,

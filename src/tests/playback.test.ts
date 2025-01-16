@@ -299,7 +299,7 @@ describe('Playback Tests', () => {
             }
         }, 180000);
 
-        test.only('TC205 - should verify ads trigger with multiple right keypresses', async () => {
+        test('TC205 - should verify ads trigger with multiple right keypresses', async () => {
             try {
                 // Start movie playback using helper function
                 await startMoviePlayback();

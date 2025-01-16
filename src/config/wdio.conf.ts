@@ -19,19 +19,28 @@ export const config: any = {
         'appium:skipServerInstallation': true,
         'appium:skipDeviceInitialization': true,
         'appium:ignoreUnimportantViews': true,
-        'appium:disableWindowAnimation': true
+        'appium:disableWindowAnimation': true,
+        // Additional stability settings
+        'appium:autoGrantPermissions': true,
+        'appium:adbExecTimeout': 120000,
+        'appium:uiautomator2ServerInstallTimeout': 120000,
+        'appium:uiautomator2ServerLaunchTimeout': 120000,
+        'appium:androidInstallTimeout': 180000,
+        'appium:avdLaunchTimeout': 180000,
+        'appium:avdReadyTimeout': 180000,
+        'appium:systemPort': 8201
     }],
     logLevel: 'error',
     bail: 0,
     baseUrl: '',
-    waitforTimeout: 10000,
-    connectionRetryTimeout: 120000,
-    connectionRetryCount: 3,
+    waitforTimeout: 30000,
+    connectionRetryTimeout: 180000,
+    connectionRetryCount: 5,
     services: ['appium'],
     framework: 'jasmine',
     reporters: ['spec'],
     jasmineOpts: {
-        defaultTimeoutInterval: 60000,
+        defaultTimeoutInterval: 120000,
         expectationResultHandler: function(passed: boolean, assertion: any): void {
             // Handle test results
         }

@@ -19,7 +19,9 @@
     "test:playback": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/playback.test.ts",
     "test:series": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/seriesDetails.test.ts",
     "test:elementId": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/elementId.helper.test.ts",
-    "start:appium": "appium --base-path=/wd/hub"
+    "start:appium": "appium --base-path=/wd/hub",
+    "test:all": "ts-node src/scripts/runAllTests.ts",
+    "consolidate-reports": "ts-node src/scripts/consolidateReports.ts"
   },
   "dependencies": {
     "@appium/base-driver": "^9.15.0",
@@ -46,10 +48,12 @@
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "@wdio/types": "^7.30.2",
+    "cheerio": "^1.0.0",
     "eslint": "^8.0.0",
     "jest": "^29.0.0",
     "jest-html-reporter": "^3.10.2",
     "jest-html-reporters": "^3.1.7",
+    "jest-silent-reporter": "^0.6.0",
     "prettier": "^2.0.0",
     "ts-jest": "^29.0.0",
     "ts-node": "^10.9.2",

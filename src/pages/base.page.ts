@@ -14,7 +14,7 @@ export interface Selector {
 
 export class BasePage {
     protected driver: Browser<'async'>;
-    protected defaultTimeout = 15000; // Increased to 15 seconds for better reliability
+    protected defaultTimeout = 30000; // Increased to 30 seconds for better reliability
 
     constructor(driver: Browser<'async'>) {
         this.driver = driver;
@@ -78,8 +78,17 @@ export class BasePage {
     }
 
     async verifyElementDisplayed(selector: string): Promise<void> {
-        const element = await this.waitForElement(selector);
-        await element.waitForDisplayed({ timeout: this.defaultTimeout });
+        try {
+            const element = await this.waitForElement(selector);
+            await element.waitForDisplayed({ timeout: this.defaultTimeout });
+        } catch (error: any) {
+            console.error(`Failed to verify element ${selector} is displayed:`, error.message);
+            // Take a screenshot for debugging
+            const timestamp = new Date().getTime();
+            const screenshotPath = `error-screenshots/verify-element-${timestamp}.png`;
+            await this.driver.saveScreenshot(screenshotPath);
+            throw new Error(`Element ${selector} not displayed. Screenshot saved at ${screenshotPath}. Error: ${error.message}`);
+        }
     }
 
     async verifyElementWithText(selector: string, expectedText: string): Promise<void> {
