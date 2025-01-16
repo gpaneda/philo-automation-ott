@@ -4,39 +4,25 @@ import path from 'path';
 
 export class MoviesDetailsPage extends BasePage {
     public selectors = {
-        // Movie Information
-        movieTitle: 'android=new UiSelector().resourceId("com.philo.philo:id/show_title")',
-        movieDescription: 'android=new UiSelector().resourceId("com.philo.philo:id/show_description")',
-        moviePoster: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_poster_image")',
-        movieRating: 'android=new UiSelector().resourceId("com.philo.philo:id/rating")',
-        releaseDate: 'android=new UiSelector().resourceId("com.philo.philo:id/release_date")',
-        ratingAdvisories: 'android=new UiSelector().resourceId("com.philo.philo:id/rating_advisories")',
+        movieTitle: 'android=new UiSelector().className("android.widget.TextView").index(1)',
+        movieDescription: 'android=new UiSelector().className("android.widget.TextView").clickable(true)',
+        movieRating: 'android=new UiSelector().className("android.widget.TextView").text("R")',
+        movieRatingAdvisories: 'android=new UiSelector().className("android.widget.TextView").index(8)',
+        movieDuration: 'android=new UiSelector().className("android.widget.TextView").index(3)',
+        movieReleaseYear: 'android=new UiSelector().className("android.widget.TextView").index(6)',
+        movieChannelName: 'android=new UiSelector().className("android.widget.TextView").index(5)',
         
-        // Channel Information
-        channelLogo: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_channel_logo")',
-        channelButton: 'android=new UiSelector().resourceId("com.philo.philo:id/button_channel")',
-        channelName: 'android=new UiSelector().resourceId("com.philo.philo:id/label_channel")',
-        
-        // Action Buttons
-        playButton: 'android=new UiSelector().resourceId("com.philo.philo:id/button_play")',
+        playButton: 'android=new UiSelector().description("Play")',
         playButtonByDesc: 'android=new UiSelector().description("Play")',
         playButtonByText: 'android=new UiSelector().text("Play")',
-        resumeButton: 'android=new UiSelector().resourceId("com.philo.philo:id/resume_button")',
+        resumeButton: 'android=new UiSelector().text("Resume")',
         saveButton: 'android=new UiSelector().description("Save")',
-        moreInfoButton: 'android=new UiSelector().description("More info")',
+        channelButton: 'android=new UiSelector().description("View Christmas Plus page")',
+        dismissButton: 'android=new UiSelector().text("Back")',
         
-        // Background Elements
-        backgroundImage: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_background_image_view")',
-        backgroundVideo: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_background_video_view")',
-        backgroundGradient: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_gradient_layer_view")',
-        
-        // Container Elements
-        detailsContainer: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_item_details_container")',
-        otherInfoContainer: 'android=new UiSelector().resourceId("com.philo.philo:id/other_information_container")',
-        buttonsContainer: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_buttons_container")',
-        
-        // Navigation
-        dismissButton: 'android=new UiSelector().resourceId("com.philo.philo:id/big_tile_dismiss_text")'
+        releaseDate: 'android=new UiSelector().className("android.widget.TextView").index(6)',
+        ratingAdvisories: 'android=new UiSelector().className("android.widget.TextView").index(8)',
+        channelName: 'android=new UiSelector().className("android.widget.TextView").index(5)'
     };
 
     constructor(driver: Browser<'async'>) {
