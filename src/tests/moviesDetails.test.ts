@@ -5,6 +5,7 @@ import { CategoriesPage } from '../pages/categories.page';
 import { MoviesDetailsPage } from '../pages/moviesDetails.page';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
@@ -16,6 +17,10 @@ let moviesDetailsPage: MoviesDetailsPage;
 
 beforeAll(async () => {
     try {
+        // Create screenshots directory if it doesn't exist
+        const screenshotsDir = path.join(process.cwd(), 'screenshots', 'debug');
+        fs.mkdirSync(screenshotsDir, { recursive: true });
+
         // First verify required environment variables
         const requiredEnvVars = [
             'FIRE_TV_IP',
@@ -89,29 +94,29 @@ describe('Movies Details Page', () => {
     test('TC124 - Verify that user can click on a movie and see its details', async () => {
         await categoriesPage.goToTopFreeMovies();
         await categoriesPage.waitForMovieTilesLoaded();
-        
+
         // Get all visible movie titles
-        const titles = await categoriesPage.getVisibleMovieTitles();
+        const titles = await categoriesPage.getAllVisibleMovieTitles();
         console.log('Available titles:', titles);
-        
+
         // Get the first movie title
         const titleBeforeClick = titles[0];
         console.log('Title before click:', titleBeforeClick);
-        
+
         // Click on the movie tile
         await categoriesPage.clickMovieTile();
-        
+
         // Wait for movie details page to load and get the title
         await moviesDetailsPage.waitForLoaded();
         const titleAfterClick = await moviesDetailsPage.getMovieTitle();
         console.log('Title after click:', titleAfterClick);
-        
+
         expect(titleAfterClick).toBe(titleBeforeClick);
     });
 
     test('TC125 - should get the movie description, rating, rating advisories, release date, and channel name', async () => {
         await categoriesPage.goToTopFreeMovies();
-        await driver.pause(2000); // Wait for content to load
+        await categoriesPage.waitForMovieTilesLoaded();
 
         // Move focus to the desired movie tile
         await homeScreen.pressRightButton();
@@ -123,19 +128,47 @@ describe('Movies Details Page', () => {
 
         // Click on the movie
         await homeScreen.clickMovieTile();
-        await driver.pause(2000); // Wait for details page to load
+        
+        // Add longer wait for movie details page to load and animations to complete
+        await driver.pause(10000);
+        
+        // Wait for movie details page to load
+        await moviesDetailsPage.waitForLoaded();
 
-        // Get movie details
-        const description = await moviesDetailsPage.getMovieDescription();
-        console.log(`Description of the movie: ${description}`);
-        //Get rating
-        const rating = await moviesDetailsPage.getMovieRating();
-        console.log(`Rating of the movie: ${rating}`);
-        //Get rating advisories
-        const ratingAdvisories = await moviesDetailsPage.getRatingAdvisories();
-        console.log(`Rating advisories of the movie: ${ratingAdvisories}`);
-        //Get release date
-        const releaseDate = await moviesDetailsPage.getReleaseDate();
-        console.log(`Release date of the movie: ${releaseDate}`);
+        // Get movie details with retries
+        let description, rating, ratingAdvisories, releaseDate;
+        
+        for (let i = 0; i < 3; i++) {
+            try {
+                if (!description) description = await moviesDetailsPage.getMovieDescription();
+                if (!rating) rating = await moviesDetailsPage.getMovieRating();
+                if (!ratingAdvisories) ratingAdvisories = await moviesDetailsPage.getRatingAdvisories();
+                if (!releaseDate) releaseDate = await moviesDetailsPage.getReleaseDate();
+                
+                // If we got all values, break the loop
+                if (description && rating && ratingAdvisories && releaseDate) break;
+                
+                // Wait before retrying
+                await driver.pause(2000);
+            } catch (error) {
+                console.log(`Attempt ${i + 1} failed:`, error);
+                if (i === 2) throw error; // Throw on last attempt
+                await driver.pause(2000); // Wait before retry
+            }
+        }
+
+        // Log all found values
+        console.log('Found movie details:', {
+            description,
+            rating,
+            ratingAdvisories,
+            releaseDate
+        });
+
+        // Verify that we got all the details
+        expect(description).toBeTruthy();
+        expect(rating).toBeTruthy();
+        expect(ratingAdvisories).toBeTruthy();
+        expect(releaseDate).toBeTruthy();
     });
 });

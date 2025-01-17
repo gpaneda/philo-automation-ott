@@ -622,4 +622,22 @@ export class HomeScreenPage extends BasePage {
         return categoryTexts;
     }
 
+    /**
+     * Gets the title of the second movie in the grid
+     * @returns Promise<string> The title of the second movie
+     */
+    async getSecondMovieTitle(): Promise<string> {
+        const selector = 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).focusable(true).instance(1)';
+        const element = await this.driver.$(selector);
+        const title = await element.getAttribute('content-desc');
+        return title;
+    }
+
+    /**
+     * Clicks the currently focused movie tile
+     */
+    async clickMovieTile(): Promise<void> {
+        await this.pressEnterButton();
+    }
+
 } 

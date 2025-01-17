@@ -681,4 +681,23 @@ export class CategoriesPage extends HomeScreenPage {
             throw error;
         }
     }
+
+    /**
+     * Wait for movie tiles to be loaded
+     */
+    async waitForMovieTilesLoaded(): Promise<void> {
+        await this.driver.$(this.selectors.movieTileWrapper).waitForDisplayed({ timeout: 10000 });
+    }
+
+    /**
+     * Click on the first movie tile in the grid
+     */
+    async clickMovieTile(): Promise<void> {
+        const movieTiles = await this.driver.$$(this.selectors.movieTileWrapper);
+        if (movieTiles.length > 0) {
+            await movieTiles[0].click();
+        } else {
+            throw new Error('No movie tiles found to click');
+        }
+    }
 } 

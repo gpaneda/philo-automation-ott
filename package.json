@@ -18,6 +18,7 @@
     "test:landing": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/landingPage.test.ts",
     "test:playback": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/playback.test.ts",
     "test:series": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/seriesDetails.test.ts",
+    "test:movies": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/moviesDetails.test.ts",
     "test:elementId": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/elementId.helper.test.ts",
     "start:appium": "appium --base-path=/wd/hub",
     "test:all": "ts-node src/scripts/runAllTests.ts",
