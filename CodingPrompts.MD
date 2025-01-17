@@ -160,4 +160,64 @@ Analyze and optimize this code for:
 5. Network calls
 ```
 
+## CI/CD Pipeline Design
+```
+Help me design a CI/CD pipeline that:
+1. Automates build and deployment processes
+2. Implements proper testing stages
+3. Includes security scanning
+4. Manages environment configurations
+5. Handles rollback procedures
+```
+
+### Infrastructure as Code
+```
+Generate infrastructure code that:
+1. Is cloud provider agnostic
+2. Implements security best practices
+3. Includes proper resource tagging
+4. Handles state management
+5. Provides disaster recovery options
+```
+
+## Code Migration Strategies
+```
+Help me plan a code migration from [source] to [target] that:
+1. Minimizes downtime
+2. Preserves data integrity
+3. Includes rollback plans
+4. Validates functionality
+5. Maintains performance levels
+```
+
+## Troubleshooting Patterns
+```
+Help me create a troubleshooting plan for:
+1. System performance issues
+2. Integration failures
+3. Data inconsistencies
+4. Network connectivity problems
+5. Resource utilization spikes
+```
+
+### Monitoring and Alerting
+```
+Design a monitoring solution that:
+1. Tracks key performance metrics
+2. Implements meaningful alerts
+3. Provides detailed logging
+4. Enables quick problem identification
+5. Includes dashboard visualization
+```
+
+## Mobile Development
+```
+Create a mobile app component that:
+1. Handles different screen sizes
+2. Manages battery usage efficiently
+3. Implements offline functionality
+4. Handles device-specific features
+5. Follows platform guidelines
+```
+
 Remember to adapt these prompts based on your specific needs and context. The key is to be clear, specific, and comprehensive in your requirements. 
