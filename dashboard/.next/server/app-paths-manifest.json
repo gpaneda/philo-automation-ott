@@ -1,0 +1,8 @@
+{
+  "/page": "app/page.js",
+  "/api/tests/route": "app/api/tests/route.js",
+  "/test-history/page": "app/test-history/page.js",
+  "/test/[id]/page": "app/test/[id]/page.js",
+  "/test-dry-run/page": "app/test-dry-run/page.js",
+  "/reports/page": "app/reports/page.js"
+}
