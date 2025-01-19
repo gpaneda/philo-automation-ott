@@ -13,39 +13,89 @@ const TEST_SUITES = [
 ];
 
 function formatTestOutput(data: any) {
-  if (!data) return '';
+  if (!data) return { text: '', counts: { total: 0, passed: 0, failed: 0 } };
   
   try {
     const result = typeof data === 'string' ? JSON.parse(data) : data;
     const timestamp = result.timestamp ? `\nTimestamp: ${new Date(result.timestamp).toLocaleString()}` : '';
     
-    // Filter the output to show only essential information
+    // Count test cases and filter output
     let filteredOutput = '';
+    const counts = { total: 0, passed: 0, failed: 0 };
+    
     if (result.output) {
-      const lines = result.output.split('\n');
-      const essentialLines = lines.filter((line: string) => 
-        line.includes('console.log') && (
-          line.includes('Clearing app data') ||
-          line.includes('App data cleared') ||
-          line.includes('Attempting to launch') ||
-          line.includes('App launch completed') ||
-          line.includes('Test completed')
+      // First get raw lines for test counting
+      const rawLines = result.output.split('\n');
+      console.log('Raw test output:', rawLines);
+      
+      // Look for test summary line first
+      const summaryLine = rawLines.find((line: string) => 
+        line.includes('Tests:') && line.includes('total')
+      );
+      
+      if (summaryLine) {
+        console.log('Found summary line:', summaryLine);
+        const totalMatch = summaryLine.match(/(\d+)\s+total/);
+        if (totalMatch) counts.total = parseInt(totalMatch[1]);
+        
+        const passedMatch = summaryLine.match(/(\d+)\s+passed/);
+        if (passedMatch) counts.passed = parseInt(passedMatch[1]);
+        
+        const failedMatch = summaryLine.match(/(\d+)\s+failed/);
+        if (failedMatch) counts.failed = parseInt(failedMatch[1]);
+      } else {
+        // Count individual test cases
+        const testCases = rawLines.filter((line: string) => 
+          (line.includes('PASS') || line.includes('FAIL')) && 
+          line.includes('src/tests/series.test.ts')
+        );
+        console.log('Found test cases:', testCases);
+        
+        counts.total = testCases.length;
+        counts.passed = testCases.filter((line: string) => line.includes('PASS')).length;
+        counts.failed = counts.total - counts.passed;
+      }
+      
+      // Now filter for display
+      const essentialLines = rawLines
+        .filter((line: string) => 
+          !line.includes('at ') &&
+          (
+            line.includes('Test completed') ||
+            line.includes('✅') ||
+            line.includes('❌') ||
+            line.includes('Step') ||
+            line.includes('Verifying') ||
+            (line.includes('PASS') && line.includes('series.test.ts')) ||
+            (line.includes('FAIL') && line.includes('series.test.ts'))
+          )
         )
-      ).map((line: string) => line.split('console.log')[1].trim());
+        .map((line: string) => {
+          if (line.includes('console.log')) {
+            const parts = line.split('console.log');
+            return parts[1]?.trim().replace(/^["']|["']$/g, '') || line;
+          }
+          return line;
+        });
       
       if (essentialLines.length > 0) {
-        filteredOutput = `\nKey Events:\n${essentialLines.join('\n')}`;
+        filteredOutput = `\nResults:\n${essentialLines.join('\n')}`;
       }
     }
 
-    return `Test Execution Summary:
+    return {
+      text: `Test Execution Summary:
 Command: ${result.command}
 Status: ${result.message}${timestamp}${filteredOutput}
-${result.error ? `\nErrors:\n${result.error}` : ''}
-${result.stderr ? `\nStandard Error:\n${result.stderr}` : ''}`
-      .trim();
+${result.error ? `\nErrors:\n${result.error}` : ''}`.trim(),
+      counts
+    };
   } catch (e) {
-    return JSON.stringify(data, null, 2);
+    console.error('Error formatting test output:', e);
+    return { 
+      text: JSON.stringify(data, null, 2),
+      counts: { total: 0, passed: 0, failed: 0 }
+    };
   }
 }
 
@@ -54,53 +104,75 @@ export default function TestRunner() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const [selectedSuite, setSelectedSuite] = useState(TEST_SUITES[0].id);
-  const [isDryRun, setIsDryRun] = useState(true);
+  const [isDryRun, setIsDryRun] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [output, setOutput] = useState<string | { text: string; counts: { total: number; passed: number; failed: number } }>('');
 
   const runTest = async () => {
-    if (isRunning && !isDryRun) {
-      setError('A test is already running. Please wait for it to complete.');
-      return;
-    }
-
-    setLoading(true);
+    setIsLoading(true);
+    setIsRunning(true);
+    setOutput('');
     setError('');
-    if (!isDryRun) {
-      setIsRunning(true);
-    }
+    
+    // Set up timeout
+    const timeoutId = setTimeout(() => {
+      setIsRunning(false);
+      setOutput('UI timeout reached (5 minutes). Note: The test might still be running in the background. Please check the test history for final results.');
+    }, 300000); // 5 minutes
 
     try {
+      // First check if Appium is running
+      const appiumResponse = await fetch('/api/tests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'status',
+          options: { suite: selectedSuite }
+        })
+      });
+
+      const appiumStatus = await appiumResponse.json();
+      
+      if (!isDryRun && appiumStatus.error?.includes('ECONNREFUSED')) {
+        setError('Appium server is not running. Please start Appium before running tests.');
+        setIsRunning(false);
+        setIsLoading(false);
+        clearTimeout(timeoutId);
+        return;
+      }
+
+      // Proceed with test execution
       const response = await fetch('/api/tests', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           action: 'run',
-          options: {
-            suite: selectedSuite
-          },
+          options: { suite: selectedSuite },
           dryRun: isDryRun
         })
       });
 
       const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to run test');
-      }
+      
+      // Get formatted output and test counts
+      const { text: formattedOutput, counts: testResults } = formatTestOutput(data);
 
-      setResult(JSON.stringify(data, null, 2));
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setError(error.message);
-      } else {
-        setError('An unknown error occurred');
-      }
+      // Set the output with test counts
+      setOutput(`Command: ${data.command}
+Status: ${data.message}
+Timestamp: ${new Date().toLocaleString()}
+Results: ${testResults.passed}/${testResults.total} tests passed${testResults.failed > 0 ? ` (${testResults.failed} failed)` : ''}
+
+${formattedOutput}`);
+      
+      clearTimeout(timeoutId);
+    } catch (err) {
+      setOutput(`Error: ${err instanceof Error ? err.message : 'An unknown error occurred'}`);
+      clearTimeout(timeoutId);
     } finally {
-      setLoading(false);
-      if (!isDryRun) {
-        setIsRunning(false);
-      }
+      setIsLoading(false);
+      setIsRunning(false);
     }
   };
 
@@ -182,13 +254,13 @@ export default function TestRunner() {
           </div>
         )}
 
-        {result && (
+        {output && (
           <div className="p-4 bg-gray-50 rounded-md">
             <h3 className="text-sm font-medium text-gray-900">
               {isDryRun ? 'Command Preview' : 'Test Results'}
             </h3>
             <pre className="mt-2 text-sm text-gray-700 whitespace-pre-wrap font-mono bg-gray-100 p-4 rounded">
-              {formatTestOutput(result)}
+              {typeof output === 'string' ? output : output.text}
             </pre>
           </div>
         )}
