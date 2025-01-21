@@ -15,7 +15,7 @@ import {
 import Link from 'next/link';
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: HomeIcon },
+  { name: 'Home', href: '/', icon: HomeIcon },
   { name: 'Test Suites', href: '/test-suites', icon: BeakerIcon },
   { name: 'Test History', href: '/test-history', icon: ClockIcon },
   { name: 'Reports', href: '/reports', icon: DocumentChartBarIcon },
@@ -40,10 +40,10 @@ export function Sidebar() {
   };
 
   return (
-    <div className="flex flex-col w-64 bg-white border-r border-gray-200">
+    <div className="flex flex-col w-64 bg-gray-950 border-r border-gray-800">
       {/* Logo */}
-      <div className="flex items-center h-16 px-4 border-b border-gray-200">
-        <span className="text-xl font-semibold text-gray-800">Test Dashboard</span>
+      <div className="flex items-center h-16 px-4 border-b border-gray-800">
+        <span className="text-xl font-semibold text-white">Test Automation</span>
       </div>
 
       {/* Main Navigation */}
@@ -56,13 +56,13 @@ export function Sidebar() {
               href={item.href}
               className={`flex items-center px-2 py-2 text-sm font-medium rounded-md group ${
                 active
-                  ? 'bg-gray-100 text-gray-900'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  ? 'bg-gray-900 text-white'
+                  : 'text-gray-400 hover:bg-gray-900 hover:text-white'
               }`}
             >
               <item.icon
                 className={`mr-3 h-5 w-5 ${
-                  active ? 'text-gray-500' : 'text-gray-400 group-hover:text-gray-500'
+                  active ? 'text-white' : 'text-gray-400 group-hover:text-white'
                 }`}
                 aria-hidden="true"
               />
@@ -73,8 +73,8 @@ export function Sidebar() {
       </nav>
 
       {/* Quick Filters */}
-      <div className="px-4 py-4 border-t border-gray-200">
-        <h3 className="px-2 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+      <div className="px-4 py-4 border-t border-gray-800">
+        <h3 className="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
           Quick Filters
         </h3>
         <div className="mt-3 space-y-1">
@@ -82,7 +82,7 @@ export function Sidebar() {
             <Link
               key={filter.name}
               href={filter.href}
-              className="flex items-center justify-between px-2 py-2 text-sm font-medium text-gray-600 rounded-md hover:bg-gray-50 hover:text-gray-900"
+              className="flex items-center justify-between px-2 py-2 text-sm font-medium text-gray-400 rounded-md hover:bg-gray-900 hover:text-white"
             >
               <div className="flex items-center">
                 <filter.icon
@@ -92,7 +92,7 @@ export function Sidebar() {
                 {filter.name}
               </div>
               {filter.count > 0 && (
-                <span className={`px-2 py-1 text-xs rounded-full bg-gray-100 ${filter.color}`}>
+                <span className={`px-2 py-1 text-xs rounded-full bg-gray-900 ${filter.color}`}>
                   {filter.count}
                 </span>
               )}
@@ -102,13 +102,13 @@ export function Sidebar() {
       </div>
 
       {/* User Section */}
-      <div className="flex items-center px-4 py-3 border-t border-gray-200">
+      <div className="flex items-center px-4 py-3 border-t border-gray-800">
         <div className="flex-shrink-0">
-          <div className="h-8 w-8 rounded-full bg-gray-300" />
+          <div className="h-8 w-8 rounded-full bg-gray-700" />
         </div>
         <div className="ml-3">
-          <p className="text-sm font-medium text-gray-700">Test Admin</p>
-          <p className="text-xs text-gray-500">View Profile</p>
+          <p className="text-sm font-medium text-white">Test Admin</p>
+          <p className="text-xs text-gray-400">View Profile</p>
         </div>
       </div>
     </div>
