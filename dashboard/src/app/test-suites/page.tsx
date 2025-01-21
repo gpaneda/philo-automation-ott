@@ -45,7 +45,7 @@ const devices: Device[] = [
 
 const testSuites: TestSuite[] = [
   {
-    id: 'landing',
+    id: 'test:landing',
     name: 'Landing Page Tests',
     description: 'Verify landing page functionality',
     testCases: [
@@ -76,7 +76,7 @@ const testSuites: TestSuite[] = [
     ],
   },
   {
-    id: 'navigation',
+    id: 'test:navigation',
     name: 'Navigation Tests',
     description: 'Verify navigation and menu functionality',
     testCases: [
@@ -187,7 +187,7 @@ const testSuites: TestSuite[] = [
     ],
   },
   {
-    id: 'login',
+    id: 'test:login',
     name: 'Login Tests',
     description: 'Verify login functionality',
     testCases: [
@@ -202,7 +202,7 @@ const testSuites: TestSuite[] = [
     ],
   },
   {
-    id: 'series',
+    id: 'test:series',
     name: 'Series Details Tests',
     description: 'Verify series details page functionality',
     testCases: [
@@ -249,7 +249,7 @@ const testSuites: TestSuite[] = [
     ],
   },
   {
-    id: 'playback',
+    id: 'test:playback',
     name: 'Playback Tests',
     description: 'Verify video playback functionality',
     testCases: [
@@ -296,7 +296,7 @@ const testSuites: TestSuite[] = [
     ],
   },
   {
-    id: 'movies',
+    id: 'test:movies',
     name: 'Movies Details Tests',
     description: 'Verify movies details page functionality',
     testCases: [
@@ -693,10 +693,15 @@ export default function TestSuitesPage() {
 
           const statusData = await statusResponse.json();
           console.log('Status update:', statusData); // Debug log
+          console.log('Raw output:', statusData.output); // Added debug log
 
           if (!statusData.isRunning) {
             // Clear the interval first
             clearInterval(pollInterval);
+
+            // Log the final output
+            console.log('Final test output:', statusData.output); // Added debug log
+            console.log('Contains checkmark:', statusData.output?.includes('✅')); // Added debug log
 
             // Update test case status based on completion
             setSuites(prevSuites =>
@@ -708,9 +713,9 @@ export default function TestSuitesPage() {
                         test.id === testId
                           ? {
                               ...test,
-                              status: statusData.code === 0 ? 'passed' : 'failed',
+                              status: statusData.output?.includes('✅') ? 'passed' : 'failed',
                               lastRun: new Date().toISOString(),
-                              duration: statusData.duration / 1000, // Convert ms to seconds
+                              duration: (Date.now() - new Date(statusData.startTime).getTime()) / 1000,
                               logContent: statusData.output || statusData.error || 'Test completed.'
                             }
                           : test
