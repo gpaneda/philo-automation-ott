@@ -63,7 +63,7 @@ export function TestExecutionTable({ sessions, onSessionClick }: TestExecutionTa
   const SortHeader = ({ field, label }: { field: SortField; label: string }) => (
     <th
       scope="col"
-      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:bg-gray-100"
+      className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider cursor-pointer hover:bg-gray-800"
       onClick={() => handleSort(field)}
     >
       <div className="flex items-center space-x-1">
@@ -77,50 +77,58 @@ export function TestExecutionTable({ sessions, onSessionClick }: TestExecutionTa
   );
 
   return (
-    <div className="bg-white shadow-sm rounded-lg">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr className="bg-gray-50">
-              <SortHeader field="status" label="Status" />
-              <SortHeader field="name" label="Test Name" />
-              <SortHeader field="results" label="Results" />
-              <SortHeader field="duration" label="Duration" />
-              <SortHeader field="startTime" label="Started" />
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-800">
+        <thead>
+          <tr>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+              Test Suite
+            </th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+              Status
+            </th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+              Start Time
+            </th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+              Duration
+            </th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+              Tests
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-800">
+          {sessions.map((session) => (
+            <tr 
+              key={session.id}
+              onClick={() => onSessionClick(session.id)}
+              className="hover:bg-gray-800 cursor-pointer"
+            >
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                {session.name}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm">
+                <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full
+                  ${session.status === 'passed' ? 'bg-blue-900 text-blue-200' : 
+                    session.status === 'failed' ? 'bg-pink-900 text-pink-200' : 
+                    'bg-purple-900 text-purple-200'}`}>
+                  {session.status}
+                </span>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                {formatDistanceToNow(new Date(session.startTime), { addSuffix: true })}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                {formatDuration(session.duration)}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                {session.passedTests}/{session.totalTests}
+              </td>
             </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {sortedSessions.map((session) => (
-              <tr
-                key={session.id}
-                onClick={() => onSessionClick(session.id)}
-                className="hover:bg-gray-50 cursor-pointer"
-              >
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="flex items-center">
-                    <div className={`h-2.5 w-2.5 rounded-full ${statusColors[session.status]} mr-2`} />
-                    <span className="text-sm text-gray-900 capitalize">{session.status}</span>
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">{session.name}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-900">
-                    {session.passedTests}/{session.totalTests} passed
-                  </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {formatDuration(session.duration)}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {formatDistanceToNow(new Date(session.startTime), { addSuffix: true })}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 } 

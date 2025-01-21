@@ -96,7 +96,58 @@ export default function Home() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-black text-white">
+      {/* Landing Section */}
+      <div className="bg-gray-900 border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="flex items-center justify-between mb-12">
+            <div>
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+                GP QA Testing, LLC
+              </h1>
+              <p className="mt-2 text-xl text-gray-400">
+                Advanced Test Automation Framework
+              </p>
+            </div>
+            {/* Logo */}
+            <div className="h-20 w-20 rounded-lg bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center">
+              <span className="text-3xl font-bold text-white">GP</span>
+            </div>
+          </div>
+
+          {/* Tech Stack Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-gray-800/50 rounded-lg p-6 backdrop-blur-sm border border-gray-700">
+              <h3 className="text-lg font-semibold text-blue-400 mb-3">Core Technologies</h3>
+              <ul className="space-y-2 text-gray-300">
+                <li>• Node.js & TypeScript</li>
+                <li>• Appium for Device Control</li>
+                <li>• WebdriverIO Test Runner</li>
+                <li>• Jest Testing Framework</li>
+              </ul>
+            </div>
+            <div className="bg-gray-800/50 rounded-lg p-6 backdrop-blur-sm border border-gray-700">
+              <h3 className="text-lg font-semibold text-purple-400 mb-3">Dashboard Stack</h3>
+              <ul className="space-y-2 text-gray-300">
+                <li>• Next.js 13 App Router</li>
+                <li>• React with TypeScript</li>
+                <li>• Tailwind CSS</li>
+                <li>• Chart.js for Analytics</li>
+              </ul>
+            </div>
+            <div className="bg-gray-800/50 rounded-lg p-6 backdrop-blur-sm border border-gray-700">
+              <h3 className="text-lg font-semibold text-pink-400 mb-3">Testing Features</h3>
+              <ul className="space-y-2 text-gray-300">
+                <li>• Parallel Test Execution</li>
+                <li>• Real-time Test Monitoring</li>
+                <li>• Detailed Test Reports</li>
+                <li>• CI/CD Integration</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <FilterBar />
       <StatsStrip
         totalTests={totalTests}
@@ -111,9 +162,9 @@ export default function Home() {
           <div className="grid grid-cols-12 gap-6">
             {/* Test execution table */}
             <div className="col-span-12 lg:col-span-8">
-              <div className="bg-white rounded-lg shadow">
-                <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-                  <h3 className="text-lg font-medium leading-6 text-gray-900">
+              <div className="bg-gray-900 rounded-lg shadow">
+                <div className="px-4 py-5 sm:px-6 border-b border-gray-800">
+                  <h3 className="text-lg font-medium leading-6 text-white">
                     Test Executions
                   </h3>
                 </div>
@@ -133,6 +184,7 @@ export default function Home() {
                 failed={totalFailedTests}
                 running={totalRunningTests}
                 title="Test Status Distribution"
+                darkMode={true}
               />
             </div>
           </div>

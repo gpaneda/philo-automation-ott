@@ -43,235 +43,118 @@ export default function Settings() {
   const [jiraUrl, setJiraUrl] = useState('https://jira.example.com');
 
   return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
-        <p className="mt-1 text-sm text-gray-500">
-          Configure your test automation dashboard preferences
-        </p>
-      </div>
-
-      <div className="space-y-6">
-        {/* Notification Settings */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex items-center mb-4">
-            <BellIcon className="h-6 w-6 text-blue-500 mr-2" />
-            <h2 className="text-lg font-medium text-gray-900">Notification Settings</h2>
-          </div>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="font-medium text-gray-700">Email Notifications</label>
-                <p className="text-sm text-gray-500">Receive test results via email</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={emailNotifications}
-                  onChange={(e) => setEmailNotifications(e.target.checked)}
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="font-medium text-gray-700">Slack Notifications</label>
-                <p className="text-sm text-gray-500">Send updates to Slack channel</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={slackNotifications}
-                  onChange={(e) => setSlackNotifications(e.target.checked)}
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="font-medium text-gray-700">Daily Digest</label>
-                <p className="text-sm text-gray-500">Daily summary of all test runs</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={dailyDigest}
-                  onChange={(e) => setDailyDigest(e.target.checked)}
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-          </div>
+    <div className="min-h-screen bg-black text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold">
+            <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">Settings</span>
+          </h1>
+          <p className="mt-2 text-gray-400">
+            Configure your test automation environment and preferences
+          </p>
         </div>
 
-        {/* Test Configuration */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex items-center mb-4">
-            <CogIcon className="h-6 w-6 text-purple-500 mr-2" />
-            <h2 className="text-lg font-medium text-gray-900">Test Configuration</h2>
-          </div>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Max Retries</label>
-                <input
-                  type="number"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                  value={maxRetries}
-                  onChange={(e) => setMaxRetries(Number(e.target.value))}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Max Parallel Tests</label>
-                <input
-                  type="number"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                  value={maxParallelTests}
-                  onChange={(e) => setMaxParallelTests(Number(e.target.value))}
-                />
-              </div>
+        {/* Settings Sections */}
+        <div className="space-y-8">
+          {/* Device Configuration */}
+          <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
+            <div className="px-4 py-5 sm:px-6 border-b border-gray-800">
+              <h3 className="text-lg font-medium text-white">Device Configuration</h3>
+              <p className="mt-1 text-sm text-gray-400">Manage your test devices and their settings.</p>
             </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="font-medium text-gray-700">Auto-retry Failed Tests</label>
-                <p className="text-sm text-gray-500">Automatically retry failed test cases</p>
+            <div className="px-4 py-5 sm:p-6">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Default Device</label>
+                  <select className="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option>Fire TV Stick 4K</option>
+                    <option>Fire TV Cube</option>
+                    <option>Fire TV Stick Lite</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Device Location</label>
+                  <select className="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option>US-East</option>
+                    <option>US-West</option>
+                    <option>EU-Central</option>
+                  </select>
+                </div>
               </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={autoRetry}
-                  onChange={(e) => setAutoRetry(e.target.checked)}
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="font-medium text-gray-700">Screenshot on Failure</label>
-                <p className="text-sm text-gray-500">Capture screenshot when tests fail</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={screenshotOnFailure}
-                  onChange={(e) => setScreenshotOnFailure(e.target.checked)}
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="font-medium text-gray-700">Video Recording</label>
-                <p className="text-sm text-gray-500">Record video for test execution</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={videoRecording}
-                  onChange={(e) => setVideoRecording(e.target.checked)}
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
             </div>
           </div>
-        </div>
 
-        {/* Device Management */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex items-center mb-4">
-            <DevicePhoneMobileIcon className="h-6 w-6 text-green-500 mr-2" />
-            <h2 className="text-lg font-medium text-gray-900">Device Management</h2>
-          </div>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Device Timeout (minutes)</label>
-                <input
-                  type="number"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                  value={deviceTimeout}
-                  onChange={(e) => setDeviceTimeout(Number(e.target.value))}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Health Check Interval (minutes)</label>
-                <input
-                  type="number"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                  value={healthCheckInterval}
-                  onChange={(e) => setHealthCheckInterval(Number(e.target.value))}
-                />
+          {/* Test Configuration */}
+          <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
+            <div className="px-4 py-5 sm:px-6 border-b border-gray-800">
+              <h3 className="text-lg font-medium text-white">Test Configuration</h3>
+              <p className="mt-1 text-sm text-gray-400">Configure test execution parameters.</p>
+            </div>
+            <div className="px-4 py-5 sm:p-6">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Default Test Environment</label>
+                  <select className="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <option>Production</option>
+                    <option>Staging</option>
+                    <option>Development</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Parallel Test Execution</label>
+                  <div className="mt-2">
+                    <label className="inline-flex items-center">
+                      <input type="checkbox" className="rounded bg-gray-800 border-gray-700 text-blue-500 focus:ring-blue-500" />
+                      <span className="ml-2 text-sm text-gray-300">Enable parallel test execution</span>
+                    </label>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Max Parallel Tests</label>
+                  <input type="number" min="1" max="10" className="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" defaultValue="3" />
+                </div>
               </div>
             </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <label className="font-medium text-gray-700">Auto-reboot on Failure</label>
-                <p className="text-sm text-gray-500">Automatically reboot device after critical failures</p>
-              </div>
-              <label className="relative inline-flex items-center cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="sr-only peer"
-                  checked={autoReboot}
-                  onChange={(e) => setAutoReboot(e.target.checked)}
-                />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-              </label>
-            </div>
           </div>
-        </div>
 
-        {/* Integration Settings */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <div className="flex items-center mb-4">
-            <CloudIcon className="h-6 w-6 text-indigo-500 mr-2" />
-            <h2 className="text-lg font-medium text-gray-900">Integration Settings</h2>
-          </div>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Jenkins URL</label>
-              <input
-                type="url"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                value={jenkinsUrl}
-                onChange={(e) => setJenkinsUrl(e.target.value)}
-              />
+          {/* Notification Settings */}
+          <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
+            <div className="px-4 py-5 sm:px-6 border-b border-gray-800">
+              <h3 className="text-lg font-medium text-white">Notification Settings</h3>
+              <p className="mt-1 text-sm text-gray-400">Configure how you want to receive test notifications.</p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Slack Webhook URL</label>
-              <input
-                type="url"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                value={slackWebhook}
-                onChange={(e) => setSlackWebhook(e.target.value)}
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Jira URL</label>
-              <input
-                type="url"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-                value={jiraUrl}
-                onChange={(e) => setJiraUrl(e.target.value)}
-              />
+            <div className="px-4 py-5 sm:p-6">
+              <div className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Email Notifications</label>
+                  <div className="mt-2 space-y-2">
+                    <label className="inline-flex items-center">
+                      <input type="checkbox" className="rounded bg-gray-800 border-gray-700 text-blue-500 focus:ring-blue-500" />
+                      <span className="ml-2 text-sm text-gray-300">Test failures</span>
+                    </label>
+                    <div className="block">
+                      <label className="inline-flex items-center">
+                        <input type="checkbox" className="rounded bg-gray-800 border-gray-700 text-blue-500 focus:ring-blue-500" />
+                        <span className="ml-2 text-sm text-gray-300">Test completion</span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300">Email Recipients</label>
+                  <input type="text" className="mt-1 block w-full rounded-md bg-gray-800 border-gray-700 text-white shadow-sm focus:border-blue-500 focus:ring-blue-500" placeholder="Enter email addresses (comma-separated)" />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Save Button */}
-        <div className="flex justify-end">
-          <button
-            type="button"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-          >
-            Save Changes
-          </button>
+          {/* Save Button */}
+          <div className="flex justify-end">
+            <button className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900">
+              Save Settings
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -10,23 +10,24 @@ interface TestStatusPieChartProps {
   failed: number;
   running: number;
   title: string;
+  darkMode?: boolean;
 }
 
-export function TestStatusPieChart({ passed, failed, running, title }: TestStatusPieChartProps) {
+export function TestStatusPieChart({ passed, failed, running, title, darkMode = false }: TestStatusPieChartProps) {
   const data = {
     labels: ['Passed', 'Failed', 'Running'],
     datasets: [
       {
         data: [passed, failed, running],
         backgroundColor: [
-          'rgba(34, 197, 94, 0.2)',  // green
-          'rgba(239, 68, 68, 0.2)',  // red
-          'rgba(234, 179, 8, 0.2)',  // yellow
+          'rgba(88, 80, 236, 0.2)',
+          'rgba(219, 39, 119, 0.2)',
+          'rgba(168, 85, 247, 0.2)'
         ],
         borderColor: [
-          'rgb(34, 197, 94)',
-          'rgb(239, 68, 68)',
-          'rgb(234, 179, 8)',
+          'rgb(88, 80, 236)',
+          'rgb(219, 39, 119)',
+          'rgb(168, 85, 247)'
         ],
         borderWidth: 1,
       },
@@ -34,23 +35,23 @@ export function TestStatusPieChart({ passed, failed, running, title }: TestStatu
   };
 
   const options = {
-    responsive: true,
     plugins: {
       legend: {
         position: 'bottom' as const,
+        labels: {
+          color: darkMode ? '#fff' : '#000'
+        }
       },
       title: {
         display: true,
         text: title,
-        font: {
-          size: 16,
-        },
-      },
-    },
+        color: darkMode ? '#fff' : '#000'
+      }
+    }
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow">
+    <div className={`p-6 rounded-lg shadow ${darkMode ? 'bg-gray-900' : 'bg-white'}`}>
       <Pie data={data} options={options} />
     </div>
   );

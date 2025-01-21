@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ChevronDownIcon, ChevronRightIcon, CalendarIcon, FunnelIcon, ArrowUpIcon, ArrowDownIcon } from '@heroicons/react/24/outline';
-import FormattedDate from '@/components/FormattedDate';
+import FormattedDate from '../../components/FormattedDate';
 
 // Mock history data with 20 test suites
 const historyData = [
@@ -386,26 +386,32 @@ export default function TestHistory() {
       return execution.status === statusFilter;
     })
     .sort((a, b) => {
-      const direction = sortConfig.direction === 'asc' ? 1 : -1;
-      
       switch (sortConfig.key) {
-        case 'startTime':
+        case 'startTime': {
+          const direction = sortConfig.direction === 'asc' ? 1 : -1;
           return (new Date(a.startTime).getTime() - new Date(b.startTime).getTime()) * direction;
-        case 'suiteName':
+        }
+        case 'suiteName': {
+          const direction = sortConfig.direction === 'asc' ? 1 : -1;
           return a.suiteName.localeCompare(b.suiteName) * direction;
-        case 'status':
+        }
+        case 'status': {
+          const direction = sortConfig.direction === 'asc' ? 1 : -1;
           return a.status.localeCompare(b.status) * direction;
+        }
         case 'totalTests':
-          return (a.totalTests - b.totalTests) * direction;
+          return (a.totalTests - b.totalTests) * (sortConfig.direction === 'asc' ? 1 : -1);
         case 'passedTests':
-          return (a.passedTests - b.passedTests) * direction;
-        case 'duration':
+          return (a.passedTests - b.passedTests) * (sortConfig.direction === 'asc' ? 1 : -1);
+        case 'duration': {
           // Convert duration string to minutes for comparison
           const getDurationInMinutes = (duration: string) => {
             const matches = duration.match(/(\d+)m/);
             return matches ? parseInt(matches[1]) : 0;
           };
+          const direction = sortConfig.direction === 'asc' ? 1 : -1;
           return (getDurationInMinutes(a.duration) - getDurationInMinutes(b.duration)) * direction;
+        }
         default:
           return 0;
       }
@@ -414,179 +420,117 @@ export default function TestHistory() {
   const SortIcon = ({ field }: { field: typeof sortConfig.key }) => {
     if (sortConfig.key !== field) return null;
     return sortConfig.direction === 'asc' ? 
-      <ArrowUpIcon className="h-4 w-4" /> : 
-      <ArrowDownIcon className="h-4 w-4" />;
+      <ArrowUpIcon className="h-4 w-4 text-gray-400" /> : 
+      <ArrowDownIcon className="h-4 w-4 text-gray-400" />;
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Test History</h1>
-        <div className="flex space-x-4">
-          <select
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm"
-            value={timeRange}
-            onChange={(e) => setTimeRange(e.target.value)}
-          >
-            <option value="24h">Last 24 Hours</option>
-            <option value="7d">Last 7 Days</option>
-            <option value="30d">Last 30 Days</option>
-          </select>
-          <select
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm"
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            <option value="all">All Status</option>
-            <option value="passed">Passed</option>
-            <option value="failed">Failed</option>
-          </select>
+    <div className="min-h-screen bg-black text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold">
+            <span className="text-blue-500">Test</span> <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">History</span>
+          </h1>
+          <p className="mt-2 text-gray-400">
+            View and analyze your test execution history
+          </p>
         </div>
-      </div>
 
-      {/* Sort Controls */}
-      <div className="mb-4 flex space-x-2">
-        <button
-          onClick={() => handleSort('startTime')}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md flex items-center space-x-1 ${
-            sortConfig.key === 'startTime' ? 'bg-gray-200' : 'bg-gray-100'
-          } hover:bg-gray-200`}
-        >
-          <span>Date</span>
-          <SortIcon field="startTime" />
-        </button>
-        <button
-          onClick={() => handleSort('suiteName')}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md flex items-center space-x-1 ${
-            sortConfig.key === 'suiteName' ? 'bg-gray-200' : 'bg-gray-100'
-          } hover:bg-gray-200`}
-        >
-          <span>Suite Name</span>
-          <SortIcon field="suiteName" />
-        </button>
-        <button
-          onClick={() => handleSort('status')}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md flex items-center space-x-1 ${
-            sortConfig.key === 'status' ? 'bg-gray-200' : 'bg-gray-100'
-          } hover:bg-gray-200`}
-        >
-          <span>Status</span>
-          <SortIcon field="status" />
-        </button>
-        <button
-          onClick={() => handleSort('totalTests')}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md flex items-center space-x-1 ${
-            sortConfig.key === 'totalTests' ? 'bg-gray-200' : 'bg-gray-100'
-          } hover:bg-gray-200`}
-        >
-          <span>Total Tests</span>
-          <SortIcon field="totalTests" />
-        </button>
-        <button
-          onClick={() => handleSort('passedTests')}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md flex items-center space-x-1 ${
-            sortConfig.key === 'passedTests' ? 'bg-gray-200' : 'bg-gray-100'
-          } hover:bg-gray-200`}
-        >
-          <span>Passed Tests</span>
-          <SortIcon field="passedTests" />
-        </button>
-        <button
-          onClick={() => handleSort('duration')}
-          className={`px-3 py-1.5 text-sm font-medium rounded-md flex items-center space-x-1 ${
-            sortConfig.key === 'duration' ? 'bg-gray-200' : 'bg-gray-100'
-          } hover:bg-gray-200`}
-        >
-          <span>Duration</span>
-          <SortIcon field="duration" />
-        </button>
-      </div>
-      
-      <div className="space-y-4">
-        {sortedAndFilteredHistory.map(execution => (
-          <div key={execution.id} className="bg-white rounded-lg shadow">
-            <div
-              className="p-4 cursor-pointer flex items-center justify-between hover:bg-gray-50"
-              onClick={() => toggleExecution(execution.id)}
-            >
-              <div className="flex items-center space-x-3">
-                {expandedExecutions.includes(execution.id) ? (
-                  <ChevronDownIcon className="h-5 w-5 text-gray-400" />
-                ) : (
-                  <ChevronRightIcon className="h-5 w-5 text-gray-400" />
-                )}
-                <span className="font-medium">{execution.suiteName}</span>
-                <span className={`px-2 py-1 rounded-full text-sm ${
-                  execution.status === 'passed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                }`}>
-                  {execution.status}
-                </span>
-                <span className="text-sm text-gray-500">
-                  {execution.passedTests} / {execution.totalTests} passed
-                </span>
-              </div>
-              <div className="flex items-center space-x-4 text-sm text-gray-500">
-                <span>{execution.duration}</span>
-                <FormattedDate date={execution.startTime} format="time" />
-              </div>
-            </div>
-
-            {expandedExecutions.includes(execution.id) && (
-              <div className="p-4 border-t border-gray-100">
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <p className="text-sm text-gray-500">Start Time</p>
-                    <p><FormattedDate date={execution.startTime} format="time" /></p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">End Time</p>
-                    <p><FormattedDate date={execution.endTime} format="time" /></p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Environment</p>
-                    <p>{execution.environment}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Triggered By</p>
-                    <p>{execution.triggeredBy}</p>
-                  </div>
-                </div>
-
-                {execution.error && (
-                  <div className="mb-4 p-3 bg-red-50 rounded-md">
-                    <p className="text-sm font-medium text-red-800">Error</p>
-                    <p className="text-sm text-red-700 mt-1">{execution.error}</p>
-                  </div>
-                )}
-
-                <div className="mt-4">
-                  <h3 className="font-medium mb-2">Test Cases</h3>
-                  <div className="space-y-2">
-                    {execution.testCases.map(test => (
-                      <div
-                        key={test.id}
-                        className="flex items-center justify-between p-3 bg-gray-50 rounded-md"
-                      >
-                        <div>
-                          <span className="font-medium">{test.id}</span>
-                          <span className="ml-2 text-gray-600">{test.name}</span>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          <span className="text-sm text-gray-500">{test.duration}</span>
-                          <span className={`px-2 py-1 rounded-full text-sm ${
-                            test.status === 'passed' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                          }`}>
-                            {test.status}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
+        {/* Filters */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <button className="flex items-center px-3 py-2 text-sm text-gray-400 hover:text-gray-200 bg-gray-900 rounded-md border border-gray-800">
+              <CalendarIcon className="h-4 w-4 mr-2" />
+              Date Range
+            </button>
+            <button className="flex items-center px-3 py-2 text-sm text-gray-400 hover:text-gray-200 bg-gray-900 rounded-md border border-gray-800">
+              <FunnelIcon className="h-4 w-4 mr-2" />
+              Filter
+            </button>
           </div>
-        ))}
+        </div>
+
+        {/* Test History List */}
+        <div className="space-y-4">
+          {sortedAndFilteredHistory.map((execution) => (
+            <div key={execution.id} className="bg-gray-900 rounded-lg shadow">
+              {/* Execution Header */}
+              <div
+                className="p-4 cursor-pointer hover:bg-gray-800 rounded-t-lg"
+                onClick={() => toggleExecution(execution.id)}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    {expandedExecutions.includes(execution.id) ? (
+                      <ChevronDownIcon className="h-5 w-5 text-gray-400" />
+                    ) : (
+                      <ChevronRightIcon className="h-5 w-5 text-gray-400" />
+                    )}
+                    <span className="font-medium text-white">{execution.suiteName}</span>
+                    <span className={`px-2 py-1 rounded-full text-sm ${
+                      execution.status === 'passed' ? 'bg-blue-900 text-blue-200' : 'bg-pink-900 text-pink-200'
+                    }`}>
+                      {execution.status}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-4 text-sm text-gray-400">
+                    <span>{execution.duration}</span>
+                    <FormattedDate date={execution.startTime} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Expanded Details */}
+              {expandedExecutions.includes(execution.id) && (
+                <div className="p-4 border-t border-gray-800">
+                  {/* Execution Details */}
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-400 mb-2">Execution Details</h4>
+                      <div className="space-y-2 text-sm">
+                        <p><span className="text-gray-500">Environment:</span> {execution.environment}</p>
+                        <p><span className="text-gray-500">Triggered By:</span> {execution.triggeredBy}</p>
+                        <p><span className="text-gray-500">Duration:</span> {execution.duration}</p>
+                      </div>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-gray-400 mb-2">Test Results</h4>
+                      <div className="space-y-2 text-sm">
+                        <p><span className="text-gray-500">Total Tests:</span> {execution.totalTests}</p>
+                        <p><span className="text-gray-500">Passed Tests:</span> <span className="text-blue-400">{execution.passedTests}</span></p>
+                        <p><span className="text-gray-500">Pass Rate:</span> <span className="text-blue-400">{Math.round((execution.passedTests / execution.totalTests) * 100)}%</span></p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Test Cases */}
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-400 mb-2">Test Cases</h4>
+                    <div className="space-y-2">
+                      {execution.testCases.map((testCase) => (
+                        <div key={testCase.id} className="flex items-center justify-between p-2 bg-gray-800 rounded-md">
+                          <div>
+                            <span className="text-sm font-medium text-gray-300">{testCase.id}</span>
+                            <span className="ml-2 text-sm text-gray-400">{testCase.name}</span>
+                          </div>
+                          <div className="flex items-center space-x-4">
+                            <span className="text-sm text-gray-400">{testCase.duration}</span>
+                            <span className={`px-2 py-1 rounded-full text-xs ${
+                              testCase.status === 'passed' ? 'bg-blue-900 text-blue-200' : 'bg-pink-900 text-pink-200'
+                            }`}>
+                              {testCase.status}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
