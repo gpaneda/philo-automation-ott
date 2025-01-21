@@ -34,3 +34,7 @@ logs/
 
 # Reports
 reports/
+
+# Next.js build output
+.next/
+dashboard/.next
