@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/test-suites/page": [
+    "/api/tests/route": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/test-suites/page.js"
+      "static/chunks/app/api/tests/route.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
@@ -11,10 +11,10 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/page": [
+    "/test-suites/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
+      "static/chunks/app/test-suites/page.js"
     ]
   }
 }

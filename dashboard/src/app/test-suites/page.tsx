@@ -551,53 +551,47 @@ export default function TestSuitesPage() {
 
       // Start polling for status
       const pollInterval = setInterval(async () => {
-        try {
-          const statusResponse = await fetch('/api/tests', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              action: 'status',
-              options: { suite: suiteId }
-            })
-          });
+        const statusResponse = await fetch('/api/tests', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'status',
+            options: { suite: suiteId }
+          })
+        });
 
-          const statusData = await statusResponse.json();
-          console.log('Status update:', statusData); // Debug log
-          console.log('Raw output:', statusData.output); // Added debug log
+        const statusData = await statusResponse.json();
+        console.log('Status update:', statusData);
 
-          if (!statusData.isRunning) {
-            // Clear the interval first
-            clearInterval(pollInterval);
-
-            // Log the final output
-            console.log('Final test output:', statusData.output); // Added debug log
-            console.log('Contains checkmark:', statusData.output?.includes('✅')); // Added debug log
-
-            // Update test case status based on completion
-            setSuites(prevSuites =>
-              prevSuites.map(s =>
-                s.id === suiteId
-                  ? {
-                      ...s,
-                      testCases: s.testCases.map(test =>
-                        test.id === testId
-                          ? {
-                              ...test,
-                              status: statusData.output?.includes('✅') ? 'passed' : 'failed',
-                              lastRun: new Date().toISOString(),
-                              duration: (Date.now() - new Date(statusData.startTime).getTime()) / 1000,
-                              logContent: statusData.output || statusData.error || 'Test completed.'
-                            }
-                          : test
-                      )
-                    }
-                  : s
-              )
-            );
-          }
-        } catch (error) {
-          console.error('Error polling status:', error);
+        if (!statusData.isRunning) {
           clearInterval(pollInterval);
+          
+          // Check if the test passed based on exit code and output
+          const testPassed = statusData.code === 0 || 
+                           statusData.output?.includes('✅') || 
+                           statusData.output?.includes('Test Completed Successfully') ||
+                           statusData.output?.includes('All tests passed');
+          
+          // Update test case status based on actual test result
+          setSuites(prevSuites =>
+            prevSuites.map(s =>
+              s.id === suiteId
+                ? {
+                    ...s,
+                    testCases: s.testCases.map(test =>
+                      test.id === testId
+                        ? {
+                            ...test,
+                            status: testPassed ? 'passed' : 'failed',
+                            lastRun: new Date().toISOString(),
+                            logContent: statusData.output || 'No output available'
+                          }
+                        : test
+                    )
+                  }
+                : s
+            )
+          );
         }
       }, 1000);
 
@@ -649,6 +643,30 @@ export default function TestSuitesPage() {
         throw new Error('Failed to stop test execution');
       }
 
+      // Force update UI state after stopping
+      setSuites(prevSuites =>
+        prevSuites.map(suite =>
+          suite.id === suiteId
+            ? {
+                ...suite,
+                testCases: suite.testCases.map(test => ({
+                  ...test,
+                  status: test.status === 'running' ? 'idle' : test.status,
+                  logContent: test.logContent 
+                    ? `${test.logContent}\nTest execution stopped by user.`
+                    : 'Test execution stopped by user.'
+                }))
+              }
+            : suite
+        )
+      );
+
+      // Clear running states
+      setRunningSuites(prev => prev.filter(id => id !== suiteId));
+      setStoppingStates(prev => ({ ...prev, [suiteId]: false }));
+      setCurrentTestIndex(prev => ({ ...prev, [suiteId]: 0 }));
+      cleanup();
+
     } catch (error) {
       console.error('Error stopping test execution:', error);
       setStoppingStates(prev => ({ ...prev, [suiteId]: false }));
@@ -661,6 +679,7 @@ export default function TestSuitesPage() {
                 ...suite,
                 testCases: suite.testCases.map(test => ({
                   ...test,
+                  status: test.status === 'running' ? 'failed' : test.status,
                   logContent: test.logContent 
                     ? `${test.logContent}\nError stopping test: ${error instanceof Error ? error.message : 'Unknown error'}`
                     : `Error stopping test: ${error instanceof Error ? error.message : 'Unknown error'}`
