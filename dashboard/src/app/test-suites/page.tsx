@@ -382,7 +382,6 @@ export default function TestSuitesPage() {
   const [currentTestIndex, setCurrentTestIndex] = useState<Record<string, number>>({});
   const heartbeatInterval = useRef<NodeJS.Timeout | null>(null);
   const timeoutId = useRef<NodeJS.Timeout | null>(null);
-  const wsRef = useRef<WebSocket | null>(null);
 
   // Sort function
   const sortSuites = (a: TestSuite, b: TestSuite): number => {
@@ -434,132 +433,6 @@ export default function TestSuitesPage() {
     }
   };
 
-  // WebSocket connection for real-time updates
-  const setupWebSocket = (suiteId: string) => {
-    // Close existing connection if any
-    if (wsRef.current) {
-      wsRef.current.close();
-    }
-
-    // Create new WebSocket connection
-    const ws = new WebSocket(`${window.location.origin.replace('http', 'ws')}/api/tests`);
-    wsRef.current = ws;
-
-    ws.onopen = async () => {
-      // Connect WebSocket to the running test
-      await fetch('/api/tests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'connect',
-          options: { suite: suiteId }
-        })
-      });
-    };
-
-    ws.onmessage = (event) => {
-      const update = JSON.parse(event.data);
-      
-      switch (update.type) {
-        case 'output':
-          // Update test output in real-time
-          setSuites(prevSuites =>
-            prevSuites.map(suite =>
-              suite.id === update.suite
-                ? {
-                    ...suite,
-                    testCases: suite.testCases.map(test => ({
-                      ...test,
-                      logContent: test.logContent ? `${test.logContent}\n${update.data}` : update.data
-                    }))
-                  }
-                : suite
-            )
-          );
-          break;
-
-        case 'error':
-          // Update test error in real-time
-          setSuites(prevSuites =>
-            prevSuites.map(suite =>
-              suite.id === update.suite
-                ? {
-                    ...suite,
-                    testCases: suite.testCases.map(test => ({
-                      ...test,
-                      status: 'failed',
-                      logContent: test.logContent ? `${test.logContent}\nError: ${update.data}` : `Error: ${update.data}`
-                    }))
-                  }
-                : suite
-            )
-          );
-          break;
-
-        case 'complete':
-          // Update final test results
-          const hasFailures = update.output && (
-            update.output.includes('Test Suites: 1 failed') ||
-            update.output.includes('Tests:       1 failed') ||
-            update.output.includes('FAIL ')
-          );
-
-          setSuites(prevSuites =>
-            prevSuites.map(suite =>
-              suite.id === update.suite
-                ? {
-                    ...suite,
-                    testCases: suite.testCases.map(test => ({
-                      ...test,
-                      status: hasFailures ? 'failed' : (update.error ? 'completed with warnings' : 'passed'),
-                      lastRun: new Date().toISOString(),
-                      duration: update.duration,
-                      logContent: formatTestOutput(update)
-                    }))
-                  }
-                : suite
-            )
-          );
-          
-          // Clean up
-          setRunningSuites(prev => prev.filter(id => id !== update.suite));
-          cleanup();
-          break;
-
-        case 'stopped':
-          // Update UI when tests are stopped
-          setSuites(prevSuites =>
-            prevSuites.map(suite =>
-              suite.id === update.suite
-                ? {
-                    ...suite,
-                    testCases: suite.testCases.map(test => ({
-                      ...test,
-                      status: 'idle',
-                      logContent: test.logContent ? `${test.logContent}\nTest execution stopped.` : 'Test execution stopped.'
-                    }))
-                  }
-                : suite
-            )
-          );
-          
-          // Clean up
-          setRunningSuites(prev => prev.filter(id => id !== update.suite));
-          cleanup();
-          break;
-      }
-    };
-
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-
-    ws.onclose = () => {
-      console.log('WebSocket connection closed');
-      wsRef.current = null;
-    };
-  };
-
   const runAllTests = async (suiteId: string) => {
     if (!selectedDevices[suiteId]) {
       alert('Please select a device first');
@@ -589,9 +462,6 @@ export default function TestSuitesPage() {
             : s
         )
       );
-
-      // Set up WebSocket connection for real-time updates
-      setupWebSocket(suiteId);
 
       // Start the actual test execution
       const response = await fetch('/api/tests', {
