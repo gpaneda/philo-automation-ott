@@ -3,6 +3,7 @@ import { exec, ChildProcess } from 'child_process';
 import { promisify } from 'util';
 import path from 'path';
 import axios from 'axios';
+import { updateTestResults } from '../test-history/route';
 
 const execAsync = promisify(exec);
 
@@ -11,8 +12,31 @@ interface CommandResult {
   stderr: string;
 }
 
+interface TestResult {
+  suite: string;
+  status: 'passed' | 'failed';
+  output: string;
+  error: string;
+  timestamp: string;
+}
+
 // Keep track of running tests
 const runningTests = new Map<string, { process: ChildProcess, startTime: Date, output: string, error: string }>();
+
+// Function to send test results to the UI
+async function sendTestResultToUI(result: TestResult) {
+    try {
+        await fetch('/api/update-test-status', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(result),
+        });
+    } catch (error) {
+        console.error('Error sending test result to UI:', error);
+    }
+}
 
 export async function POST(request: Request) {
   try {
@@ -61,11 +85,8 @@ export async function POST(request: Request) {
       }
 
       try {
-        // Execute the command from the root directory
         const rootDir = path.resolve(process.cwd(), '..');
         console.log('Executing command:', command);
-        console.log('Working directory:', rootDir);
-        console.log('Current directory:', process.cwd());
         
         const childProcess = exec(command, {
           cwd: rootDir,
@@ -98,9 +119,31 @@ export async function POST(request: Request) {
         console.log('Test process started:', options.suite);
 
         // Handle test completion
-        childProcess.on('exit', (code) => {
+        childProcess.on('exit', async (code) => {
           console.log('Test process exited:', { suite: options.suite, code });
-          runningTests.delete(options.suite);
+          const test = runningTests.get(options.suite);
+          runningTests.delete(options.suite); // Ensure the test is removed from runningTests
+          
+          if (test) {
+            const result = {
+              suite: options.suite,
+              status: code === 0 ? 'passed' : 'failed',
+              output: test.output,
+              error: test.error,
+              timestamp: new Date().toISOString(),
+              duration: Date.now() - test.startTime.getTime(),
+              testCases: options.testIds.map((id: string) => ({
+                id,
+                name: `Test ${id}`,
+                status: code === 0 ? 'passed' : 'failed',
+                duration: Math.floor((Date.now() - test.startTime.getTime()) / options.testIds.length),
+                error: code === 0 ? undefined : test.error
+              }))
+            };
+
+            // Update test history
+            updateTestResults(result);
+          }
         });
 
         // Wait for the command to complete

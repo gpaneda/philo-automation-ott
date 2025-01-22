@@ -29,6 +29,48 @@ This repository contains an automated testing framework for the Philo app on Fir
    # Edit .env with your configuration
    ```
 
+4. **Create OAuth Credentials for Gmail Account**
+   To access the Gmail API, you need to create OAuth 2.0 credentials. Follow these steps:
+   - Go to the [Google Cloud Console](https://console.cloud.google.com/).
+   - Create a new project or select an existing one.
+   - Navigate to **API & Services** > **Library** and enable the **Gmail API**.
+   - Go to **API & Services** > **Credentials**.
+   - Click on **Create Credentials** and select **OAuth client ID**.
+   - Configure the consent screen if prompted.
+   - Choose **Desktop app** as the application type.
+   - Click **Create**. You will receive a **Client ID** and **Client Secret**.
+   - Add the following environment variables to your `.env` file:
+     ```
+     GMAIL_CLIENT_ID=YOUR_CLIENT_ID
+     GMAIL_CLIENT_SECRET=YOUR_CLIENT_SECRET
+     GMAIL_REFRESH_TOKEN=YOUR_REFRESH_TOKEN
+     GMAIL_ACCESS_TOKEN=YOUR_ACCESS_TOKEN
+     GMAIL_REDIRECT_URI=urn:ietf:wg:oauth:2.0:oob
+     ```
+
+5. **Obtain Access and Refresh Tokens**
+   After creating your OAuth credentials, follow these steps to obtain the access and refresh tokens:
+   - Construct the authorization URL using the following format:
+     ```
+     https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/gmail.readonly&access_type=offline&include_granted_scopes=true&response_type=code&redirect_uri=YOUR_REDIRECT_URI&client_id=YOUR_CLIENT_ID
+     ```
+   - Replace `YOUR_REDIRECT_URI` with `urn:ietf:wg:oauth:2.0:oob` and `YOUR_CLIENT_ID` with your actual client ID.
+   - Open this URL in a web browser. You will be prompted to log in to your Google account and grant permissions to your application.
+   - After granting permission, you will be redirected to the specified redirect URI with an authorization code in the URL.
+   - Use the authorization code to request access and refresh tokens. You can do this using a tool like `curl` or Postman, or by writing a script. Here's an example using `curl`:
+     ```bash
+     curl --request POST \
+       --url https://oauth2.googleapis.com/token \
+       --header 'Content-Type: application/x-www-form-urlencoded' \
+       --data 'code=YOUR_AUTHORIZATION_CODE' \
+       --data 'client_id=YOUR_CLIENT_ID' \
+       --data 'client_secret=YOUR_CLIENT_SECRET' \
+       --data 'redirect_uri=urn:ietf:wg:oauth:2.0:oob' \
+       --data 'grant_type=authorization_code'
+     ```
+   - Replace `YOUR_AUTHORIZATION_CODE`, `YOUR_CLIENT_ID`, and `YOUR_CLIENT_SECRET` with the appropriate values.
+   - This request will return a JSON response containing the `access_token`, `refresh_token`, and other information. Store these tokens securely in your `.env` file.
+
 ## 🔧 Device Setup
 
 1. **Enable Developer Options on Fire TV**
@@ -121,6 +163,11 @@ Required environment variables in `.env`:
 - `PHILO_USERNAME`: Philo account username
 - `PHILO_PASSWORD`: Philo account password
 - Additional variables as specified in `.env.example`
+- `GMAIL_CLIENT_ID`: Gmail API client ID
+- `GMAIL_CLIENT_SECRET`: Gmail API client secret
+- `GMAIL_REFRESH_TOKEN`: Gmail refresh token
+- `GMAIL_ACCESS_TOKEN`: Gmail access token
+- `GMAIL_REDIRECT_URI`: OAuth redirect URI
 
 ## 📚 Documentation
 

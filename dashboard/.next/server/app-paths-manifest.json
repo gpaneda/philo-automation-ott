@@ -1,3 +1,6 @@
 {
-  "/test-suites/page": "app/test-suites/page.js"
+  "/api/tests/route": "app/api/tests/route.js",
+  "/api/test-history/route": "app/api/test-history/route.js",
+  "/test-suites/page": "app/test-suites/page.js",
+  "/test-history/page": "app/test-history/page.js"
 }
