@@ -3,18 +3,33 @@ import { OAuth2Client } from 'google-auth-library';
 
 export class GmailService {
   private oauth2Client: OAuth2Client;
+  private currentEmail: string;
 
-  constructor() {
+  constructor(email: string = process.env.PHILO_EMAIL!) {
+    this.currentEmail = email;
+    const credentials = this.getGmailCredentials(email);
+
     this.oauth2Client = new google.auth.OAuth2(
-      process.env.GMAIL_CLIENT_ID,
-      process.env.GMAIL_CLIENT_SECRET,
-      'urn:ietf:wg:oauth:2.0:oob'
+      credentials.clientId,
+      credentials.clientSecret,
+      credentials.redirectUri
     );
 
     this.oauth2Client.setCredentials({
-      refresh_token: process.env.GMAIL_REFRESH_TOKEN,
-      access_token: process.env.GMAIL_ACCESS_TOKEN,
+      refresh_token: credentials.refreshToken,
+      access_token: credentials.accessToken,
     });
+  }
+
+  private getGmailCredentials(email: string) {
+    const isSecondDevice = email === process.env.PHILO_EMAIL_2;
+    return {
+      clientId: isSecondDevice ? process.env.GMAIL_2_CLIENT_ID! : process.env.GMAIL_CLIENT_ID!,
+      clientSecret: isSecondDevice ? process.env.GMAIL_2_CLIENT_SECRET! : process.env.GMAIL_CLIENT_SECRET!,
+      refreshToken: isSecondDevice ? process.env.GMAIL_2_REFRESH_TOKEN! : process.env.GMAIL_REFRESH_TOKEN!,
+      accessToken: isSecondDevice ? process.env.GMAIL_2_ACCESS_TOKEN! : process.env.GMAIL_ACCESS_TOKEN!,
+      redirectUri: isSecondDevice ? process.env.GMAIL_2_REDIRECT_URI! : process.env.GMAIL_REDIRECT_URI!
+    };
   }
 
   async getPhiloVerificationCode(): Promise<string> {
@@ -45,14 +60,10 @@ export class GmailService {
   }
 
   private extractVerificationLink(emailBody: string): string {
-    // Implement regex or parsing logic to extract the verification link
-    const linkRegex = /https:\/\/philo.com\/verify\/[\w-]+/;
-    const match = emailBody.match(linkRegex);
-    
-    if (!match) {
+    const linkMatch = emailBody.match(/https:\/\/[^\s<>"]+/);
+    if (!linkMatch) {
       throw new Error('Verification link not found in email');
     }
-
-    return match[0];
+    return linkMatch[0];
   }
 } 

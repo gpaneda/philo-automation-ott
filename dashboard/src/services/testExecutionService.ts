@@ -6,6 +6,7 @@ interface TestExecutionConfig {
   testId?: string;
   suiteId?: string;
   mode: 'single' | 'suite' | 'failed';
+  deviceIp?: string;  // Add deviceIp to the config
 }
 
 interface TestResult {
@@ -22,7 +23,7 @@ interface TestResult {
   };
 }
 
-class TestExecutionService {
+export class TestExecutionService {
   private baseUrl: string;
   private deviceControlEndpoint: string;
 
@@ -31,10 +32,27 @@ class TestExecutionService {
     this.deviceControlEndpoint = `${this.baseUrl}/device-control`;
   }
 
+  // Helper method to determine which email to use based on device IP
+  private getEmailForDevice(deviceIp: string): string {
+    switch (deviceIp) {
+      case '10.0.0.55':
+        return process.env.PHILO_EMAIL_2!;
+      case '10.0.0.98':
+        return process.env.PHILO_EMAIL!;
+      default:
+        return process.env.PHILO_EMAIL!; // Default to first device
+    }
+  }
+
   // Check device status and establish connection
-  async connectToDevice(deviceId: string): Promise<boolean> {
+  async connectToDevice(deviceId: string, deviceIp?: string): Promise<boolean> {
     try {
-      const response = await axios.post(`${this.deviceControlEndpoint}/connect`, { deviceId });
+      const email = deviceIp ? this.getEmailForDevice(deviceIp) : process.env.PHILO_EMAIL;
+      const response = await axios.post(`${this.deviceControlEndpoint}/connect`, { 
+        deviceId,
+        deviceIp,
+        email // Pass the email to the backend
+      });
       return response.data.connected;
     } catch (error) {
       console.error('Failed to connect to device:', error);
@@ -45,11 +63,14 @@ class TestExecutionService {
   // Execute a single test
   async executeTest(config: TestExecutionConfig): Promise<TestResult> {
     try {
-      // First ensure device is connected
-      await this.connectToDevice(config.deviceId);
+      // First ensure device is connected with the correct email
+      await this.connectToDevice(config.deviceId, config.deviceIp);
 
       // Start test execution
-      const response = await axios.post(`${this.baseUrl}/execute`, config);
+      const response = await axios.post(`${this.baseUrl}/execute`, {
+        ...config,
+        email: config.deviceIp ? this.getEmailForDevice(config.deviceIp) : process.env.PHILO_EMAIL
+      });
       
       // Set up WebSocket connection for real-time updates
       this.setupWebSocket(config);
@@ -64,8 +85,11 @@ class TestExecutionService {
   // Execute an entire test suite
   async executeSuite(config: TestExecutionConfig): Promise<TestResult[]> {
     try {
-      await this.connectToDevice(config.deviceId);
-      const response = await axios.post(`${this.baseUrl}/execute-suite`, config);
+      await this.connectToDevice(config.deviceId, config.deviceIp);
+      const response = await axios.post(`${this.baseUrl}/execute-suite`, {
+        ...config,
+        email: config.deviceIp ? this.getEmailForDevice(config.deviceIp) : process.env.PHILO_EMAIL
+      });
       this.setupWebSocket(config);
       return response.data;
     } catch (error) {
@@ -77,8 +101,11 @@ class TestExecutionService {
   // Execute failed tests in a suite
   async executeFailedTests(config: TestExecutionConfig): Promise<TestResult[]> {
     try {
-      await this.connectToDevice(config.deviceId);
-      const response = await axios.post(`${this.baseUrl}/execute-failed`, config);
+      await this.connectToDevice(config.deviceId, config.deviceIp);
+      const response = await axios.post(`${this.baseUrl}/execute-failed`, {
+        ...config,
+        email: config.deviceIp ? this.getEmailForDevice(config.deviceIp) : process.env.PHILO_EMAIL
+      });
       this.setupWebSocket(config);
       return response.data;
     } catch (error) {

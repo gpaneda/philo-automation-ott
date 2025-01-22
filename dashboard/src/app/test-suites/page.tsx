@@ -12,6 +12,7 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
+import { TestExecutionService } from '@/services/testExecutionService';
 
 interface TestCase {
   id: string;
@@ -39,7 +40,7 @@ interface Device {
 
 const devices: Device[] = [
   { id: '1', name: 'Fire TV Stick 4K', status: 'active', ipAddress: '10.0.0.98' },
-  { id: '2', name: 'Fire TV Cube', status: 'inactive', ipAddress: '192.168.1.102' },
+  { id: '2', name: 'Fire TV Cube', status: 'active', ipAddress: '10.0.0.55' },
   { id: '3', name: 'Fire TV Stick Lite', status: 'busy', ipAddress: '192.168.1.103' },
 ];
 
@@ -477,74 +478,27 @@ export default function TestSuitesPage() {
   };
 
   const runAllTests = async (suiteId: string) => {
-    if (!selectedDevices[suiteId]) {
-      alert('Please select a device first');
-      return;
-    }
+    const deviceId = selectedDevices[suiteId];
+    if (!deviceId) return;
 
+    // Find the selected device to get its IP
+    const selectedDevice = devices.find(d => d.id === deviceId);
+    if (!selectedDevice) return;
+
+    setRunningSuites(prev => [...prev, suiteId]);
+    
     try {
-      // Add to running suites and initialize progress
-      setRunningSuites(prev => [...prev, suiteId]);
-      setCurrentTestIndex(prev => ({ ...prev, [suiteId]: 0 }));
-
-      const suite = suites.find(s => s.id === suiteId);
-      if (!suite) return;
-
-      // Set all tests in the suite to running state
-      setSuites(prevSuites =>
-        prevSuites.map(s =>
-          s.id === suiteId
-            ? {
-                ...s,
-                testCases: s.testCases.map(test => ({
-                  ...test,
-                  status: 'running',
-                  logContent: 'Test execution started...'
-                }))
-              }
-            : s
-        )
-      );
-
-      // Start the actual test execution
-      const response = await fetch('/api/tests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'run',
-          options: { 
-            suite: suiteId,
-            device: selectedDevices[suiteId],
-            testIds: suite.testCases.map(test => test.id)
-          }
-        })
+      const testService = new TestExecutionService();
+      await testService.executeSuite({
+        deviceId,
+        suiteId,
+        mode: 'suite',
+        deviceIp: selectedDevice.ipAddress // Pass the device IP
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to start test execution');
-      }
-
     } catch (error) {
-      console.error('Error running tests:', error);
-      // Reset states on error
+      console.error('Failed to run tests:', error);
+    } finally {
       setRunningSuites(prev => prev.filter(id => id !== suiteId));
-      setCurrentTestIndex(prev => ({ ...prev, [suiteId]: 0 }));
-      cleanup();
-
-      setSuites(prevSuites =>
-        prevSuites.map(s =>
-          s.id === suiteId
-            ? {
-                ...s,
-                testCases: s.testCases.map(test => ({
-                  ...test,
-                  status: 'failed',
-                  logContent: error instanceof Error ? error.message : 'Failed to start test execution'
-                }))
-              }
-            : s
-        )
-      );
     }
   };
 
@@ -829,9 +783,9 @@ export default function TestSuitesPage() {
                     <p className="text-gray-400">{suite.description}</p>
                   </div>
                   {expandedSuites.includes(suite.id) ? (
-                    <ChevronDownIcon className="w-6 h-6 ml-4" />
+                    <ChevronDownIcon className="w-6 h-6 mr-14" />
                   ) : (
-                    <ChevronRightIcon className="w-6 h-6 ml-4" />
+                    <ChevronRightIcon className="w-6 h-6 mr-14" />
                   )}
                 </div>
                 

@@ -22,6 +22,7 @@
     "test:elementId": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/elementId.helper.test.ts",
     "start:appium": "appium --base-path=/wd/hub",
     "test:all": "ts-node src/scripts/runAllTests.ts",
+    "test:device": "ts-node src/scripts/runAllTests.ts",
     "consolidate-reports": "ts-node src/scripts/consolidateReports.ts"
   },
   "dependencies": {

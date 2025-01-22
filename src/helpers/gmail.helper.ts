@@ -7,22 +7,46 @@ export class GmailHelper {
     private static oauth2Client: OAuth2Client;
     private static gmail = google.gmail('v1');
     private static axiosInstance: AxiosInstance;
+    private static currentEmail: string;
+
+    /**
+     * Get Gmail credentials based on email
+     */
+    private static getGmailCredentials(email: string): {
+        clientId: string;
+        clientSecret: string;
+        refreshToken: string;
+        redirectUri: string;
+    } {
+        // Use the appropriate credentials based on the email
+        const isSecondDevice = email === process.env.PHILO_EMAIL_2;
+        return {
+            clientId: isSecondDevice ? process.env.GMAIL_2_CLIENT_ID! : process.env.GMAIL_CLIENT_ID!,
+            clientSecret: isSecondDevice ? process.env.GMAIL_2_CLIENT_SECRET! : process.env.GMAIL_CLIENT_SECRET!,
+            refreshToken: isSecondDevice ? process.env.GMAIL_2_REFRESH_TOKEN! : process.env.GMAIL_REFRESH_TOKEN!,
+            redirectUri: isSecondDevice ? process.env.GMAIL_2_REDIRECT_URI! : process.env.GMAIL_REDIRECT_URI!
+        };
+    }
 
     /**
      * Initialize Gmail API client and configure axios instance
      */
-    private static async initializeGmailClient(): Promise<void> {
+    private static async initializeGmailClient(email: string = process.env.PHILO_EMAIL!): Promise<void> {
         try {
             console.log('=== Starting Gmail Client Initialization ===');
+            console.log('Initializing for email:', email);
+            
+            const credentials = this.getGmailCredentials(email);
+            this.currentEmail = email;
             
             this.oauth2Client = new OAuth2Client(
-                process.env.GMAIL_CLIENT_ID,
-                process.env.GMAIL_CLIENT_SECRET,
-                process.env.GMAIL_REDIRECT_URI
+                credentials.clientId,
+                credentials.clientSecret,
+                credentials.redirectUri
             );
             
             this.oauth2Client.setCredentials({
-                refresh_token: process.env.GMAIL_REFRESH_TOKEN
+                refresh_token: credentials.refreshToken
             });
 
             // Configure axios instance with proper headers and settings
@@ -77,10 +101,10 @@ export class GmailHelper {
     /**
      * Process Philo sign-in email and follow through the complete sign-in flow
      */
-    static async processSignInEmail(): Promise<boolean> {
+    static async processSignInEmail(email?: string): Promise<boolean> {
         try {
             console.log('\n=== Processing Philo Sign-in Email ===');
-            await this.initializeGmailClient();
+            await this.initializeGmailClient(email);
 
             // Try different search queries
             const queries = [
