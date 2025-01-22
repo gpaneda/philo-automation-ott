@@ -383,6 +383,49 @@ export default function TestSuitesPage() {
   const heartbeatInterval = useRef<NodeJS.Timeout | null>(null);
   const timeoutId = useRef<NodeJS.Timeout | null>(null);
 
+  // Load persisted test results
+  useEffect(() => {
+    async function loadTestResults() {
+      try {
+        const response = await fetch('/api/test-history');
+        if (!response.ok) {
+          throw new Error('Failed to load test results');
+        }
+        const testHistory = await response.json();
+        
+        // Update suites with persisted results
+        setSuites(prevSuites => 
+          prevSuites.map(suite => {
+            const historicalResult = testHistory.find((result: any) => result.suiteId === suite.id);
+            if (!historicalResult) return suite;
+
+            return {
+              ...suite,
+              testCases: suite.testCases.map(testCase => {
+                const historicalTestCase = historicalResult.testCases.find((tc: any) => tc.id === testCase.id);
+                if (!historicalTestCase) return testCase;
+
+                return {
+                  ...testCase,
+                  status: historicalTestCase.status,
+                  lastRun: historicalResult.endTime,
+                  duration: typeof historicalTestCase.duration === 'string' 
+                    ? parseInt(historicalTestCase.duration) 
+                    : historicalTestCase.duration,
+                  error: historicalTestCase.error
+                };
+              })
+            };
+          })
+        );
+      } catch (error) {
+        console.error('Error loading test results:', error);
+      }
+    }
+
+    loadTestResults();
+  }, []);
+
   // Sort function
   const sortSuites = (a: TestSuite, b: TestSuite): number => {
     switch (sortBy) {
