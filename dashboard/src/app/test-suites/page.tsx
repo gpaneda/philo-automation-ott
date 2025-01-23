@@ -789,7 +789,7 @@ export default function TestSuitesPage() {
                   )}
                 </div>
                 
-                <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-20">
                   {/* Device Selection Dropdown */}
                   <select
                     value={selectedDevices[suite.id] || ''}
@@ -813,7 +813,7 @@ export default function TestSuitesPage() {
                   </select>
 
                   {/* Run/Stop Controls */}
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-20">
                     {/* Run All Tests Button */}
                     <button
                       onClick={() => runAllTests(suite.id)}
