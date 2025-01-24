@@ -54,7 +54,7 @@ export class TestExecutionService {
         email // Pass the email to the backend
       });
       return response.data.connected;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to connect to device:', error);
       throw new Error(`Device connection failed: ${error.message}`);
     }
@@ -76,7 +76,7 @@ export class TestExecutionService {
       this.setupWebSocket(config);
 
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Test execution failed:', error);
       throw new Error(`Test execution failed: ${error.message}`);
     }
@@ -92,7 +92,7 @@ export class TestExecutionService {
       });
       this.setupWebSocket(config);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Suite execution failed:', error);
       throw new Error(`Suite execution failed: ${error.message}`);
     }
@@ -108,7 +108,7 @@ export class TestExecutionService {
       });
       this.setupWebSocket(config);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed tests execution failed:', error);
       throw new Error(`Failed tests execution failed: ${error.message}`);
     }
@@ -118,7 +118,7 @@ export class TestExecutionService {
   async stopExecution(config: TestExecutionConfig): Promise<void> {
     try {
       await axios.post(`${this.baseUrl}/stop-execution`, config);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to stop execution:', error);
       throw new Error(`Stop execution failed: ${error.message}`);
     }
@@ -148,7 +148,7 @@ export class TestExecutionService {
     try {
       const response = await axios.get(`${this.deviceControlEndpoint}/status/${deviceId}`);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to get device status:', error);
       throw new Error(`Device status check failed: ${error.message}`);
     }
@@ -159,7 +159,7 @@ export class TestExecutionService {
     try {
       const response = await axios.get(`${this.baseUrl}/logs/${testId}`);
       return response.data.logs;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to get test logs:', error);
       throw new Error(`Log retrieval failed: ${error.message}`);
     }
@@ -170,7 +170,7 @@ export class TestExecutionService {
     try {
       const response = await axios.get(`${this.baseUrl}/screenshots/${testId}`);
       return response.data.screenshots;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to get test screenshots:', error);
       throw new Error(`Screenshot retrieval failed: ${error.message}`);
     }
