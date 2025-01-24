@@ -1,4 +1,10 @@
+import { Browser } from "webdriverio";
+
 export class SearchPage {
+    constructor(private driver: Browser<'async'>) {
+        this.driver = driver;
+        // Initialization code
+    }
     // Define properties for each UI element based on resource IDs
     actionBarRoot = 'com.philo.philo:id/action_bar_root';
     content = 'android:id/content';
@@ -52,6 +58,24 @@ export class SearchPage {
     keypadButtonSpace = 'com.philo.philo:id/keypad_space';
     keypadButtonClear = 'com.philo.philo:id/button_clear';
     keypadButtonBackspace = 'com.philo.philo:id/keypad_backspace';
+
+    // Add these new elements
+    tileGroups = 'com.philo.philo:id/tile_groups';
+    defaultTileRow = 'com.philo.philo:id/default_tile_row';
+    tileGroupRowHeaderLayout = 'com.philo.philo:id/tile_group_row_header_layout';
+    buttonTileGroup = 'com.philo.philo:id/button_tile_group';
+    labelTileGroup = 'com.philo.philo:id/label_tile_group';
+    listViewBroadcasts = 'com.philo.philo:id/list_view_broadcasts';
+    widgetTileWrapper = 'com.philo.philo:id/widget_tile_wrapper';
+    tileViewWrapper = 'com.philo.philo:id/tile_view_wrapper';
+    tileView = 'com.philo.philo:id/tile_view';
+    pressedOverlay = 'com.philo.philo:id/pressed_overlay';
+    channelLogo = 'com.philo.philo:id/channel_logo';
+    favoriteIcon = 'com.philo.philo:id/favorite_icon';
+    backgroundImage = 'com.philo.philo:id/background_image';
+    iconPlayRadial = 'com.philo.philo:id/icon_play_radial';
+    title = 'com.philo.philo:id/title';
+    expandToGridIcon = 'com.philo.philo:id/expand_to_grid_icon';
 
     // Method to get the action bar root element
     getActionBarRootElement() {
@@ -112,4 +136,89 @@ export class SearchPage {
     getKeypadButtonElement(buttonId: string) {
         return `//android.widget.Button[@resource-id='${buttonId}']`;
     }
-} 
+
+    // Add corresponding getter methods
+    getTileGroupsElement() {
+        return `//androidx.recyclerview.widget.RecyclerView[@resource-id='${this.tileGroups}']`;
+    }
+
+    getDefaultTileRowElement() {
+        return `//android.view.ViewGroup[@resource-id='${this.defaultTileRow}']`;
+    }
+
+    getLabelTileGroupElement() {
+        return `//android.widget.TextView[@resource-id='${this.labelTileGroup}']`;
+    }
+
+    getListViewBroadcastsElement() {
+        return `//androidx.recyclerview.widget.RecyclerView[@resource-id='${this.listViewBroadcasts}']`;
+    }
+
+    getTileViewElement() {
+        return `//android.view.ViewGroup[@resource-id='${this.tileView}']`;
+    }
+
+    getChannelLogoElement() {
+        return `//android.widget.ImageView[@resource-id='${this.channelLogo}']`;
+    }
+
+    getTitleElement() {
+        return `//android.widget.TextView[@resource-id='${this.title}']`;
+    }
+
+    async enterSearchTerm(term: string): Promise<void> {
+        // Convert the term to uppercase since the keyboard has uppercase letters
+        const upperTerm = term.toUpperCase();
+        
+        for (const char of upperTerm) {
+            if (char === ' ') {
+                await this.click(this.keypadButtonSpace);
+            } else if (/[0-9]/.test(char)) {
+                await this.click(`com.philo.philo:id/keypad_${char}`);
+            } else {
+                await this.click(`com.philo.philo:id/keypad_${char.toLowerCase()}`);
+            }
+            await this.pause(100); // Small delay between keypresses
+        }
+    }
+
+    async clearInput(): Promise<void> {
+        const input = await this.driver.$(this.searchInput);
+        const text = await input.getText();
+        for (let i = 0; i < text.length; i++) {
+            await this.click(this.keypadButtonBackspace);
+            await this.pause(100);
+        }
+    }
+
+    // Add these helper methods
+    async click(elementId: string): Promise<void> {
+        const element = await this.driver.$(`//*[@resource-id='${elementId}']`);
+        await element.click();
+    }
+
+    async pause(ms: number): Promise<void> {
+        await new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async isElementDisplayed(elementId: string): Promise<boolean> {
+        try {
+            const element = await this.driver.$(`//*[@resource-id='${elementId}']`);
+            return await element.isDisplayed();
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async getHeaderText(): Promise<string[]> {
+        try {
+            const elements = await this.driver.$$(`//*[@resource-id='${this.labelTileGroup}']`);
+            const texts = await Promise.all(elements.map(element => element.getText()));
+            return texts;
+        } catch (error) {
+            console.error('Failed to get header texts:', error);
+            return [];
+        }
+    }
+}
+    
