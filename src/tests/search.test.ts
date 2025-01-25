@@ -69,12 +69,11 @@ beforeEach(async () => {
         throw error;
     }
 });
-
-//afterAll(async () => {
+afterAll(async () => {
     // Clean up app data after test
-    //console.log('Clearing app data after test...');
-    //await AppHelper.clearAppData();
-//});
+    console.log('Clearing app data after test...');
+    await AppHelper.clearAppData();
+});
 
 describe('Search Test', () => {
     test('TC501 - should display Search Results for Series', async () => {

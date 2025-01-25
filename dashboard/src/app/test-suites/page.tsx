@@ -318,6 +318,45 @@ const testSuites: TestSuite[] = [
         duration: null,
       }
     ],
+  },
+  {
+    id: 'test:search',
+    name: 'Search Tests',
+    description: 'Verify search functionality',
+    testCases: [
+      {
+        id: 'TC501',
+        name: 'Verify Search Results for Series',
+        description: 'Verify search results for series',
+        status: 'idle',
+        lastRun: null,
+        duration: null,
+      },
+      {
+        id: 'TC502',
+        name: 'Verify Search Results for Movies',
+        description: 'Verify search results for movies',
+        status: 'idle',
+        lastRun: null,
+        duration: null,
+      },
+      {
+        id: 'TC503',
+        name: 'Verify Search Results for Channels',
+        description: 'Verify search results for channels',
+        status: 'idle',
+        lastRun: null,
+        duration: null,
+      },
+      {
+        id: 'TC504',
+        name: 'Verify Empty State when no results are found',
+        description: 'Verify empty state when no results are found',
+        status: 'idle',
+        lastRun: null,
+        duration: null,
+      }
+    ]
   }
 ];
 

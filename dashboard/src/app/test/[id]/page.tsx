@@ -321,6 +321,12 @@ export default function TestDetails() {
                   ],
                   '6': [ // Login Tests
                     { id: 'TC103', name: 'Verify User Authentication Flow' }
+                  ],
+                  '7': [ // Search Tests
+                    { id: 'TC501', name: 'Verify Search Results for Series' },
+                    { id: 'TC502', name: 'Verify Search Results for Movies' },
+                    { id: 'TC503', name: 'Verify Search Results for Channels' },
+                    { id: 'TC504', name: 'Verify Empty State when no results are found' }
                   ]
                 };
 
