@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { 
   CheckCircleIcon, 
   XCircleIcon, 
@@ -13,391 +13,13 @@ import {
   ChevronRightIcon,
 } from '@heroicons/react/24/outline';
 import { TestExecutionService } from '@/services/testExecutionService';
+import { testSuites, devices } from '@/config/testConfig';
+import type { TestSuite, TestCase, Device } from '@/types/testTypes';
+import type { TestExecutionResponse } from '@/types/testTypes';
 
-interface TestCase {
-  id: string;
-  name: string;
-  description: string;
-  status: 'idle' | 'running' | 'passed' | 'failed' | 'warning' | 'completed with warnings';
-  lastRun: string | null;
-  duration: number | null;
-  logContent?: string;
-}
-
-interface TestSuite {
-  id: string;
-  name: string;
-  description: string;
-  testCases: TestCase[];
-}
-
-interface Device {
-  id: string;
-  name: string;
-  status: 'active' | 'inactive' | 'busy';
-  ipAddress: string;
-}
-
-const devices: Device[] = [
-  { id: '1', name: 'Fire TV Stick 4K', status: 'active', ipAddress: '10.0.0.98' },
-  { id: '2', name: 'Fire TV Cube', status: 'active', ipAddress: '10.0.0.55' },
-  { id: '3', name: 'Fire TV Stick Lite', status: 'busy', ipAddress: '192.168.1.103' },
-];
-
-const testSuites: TestSuite[] = [
-  {
-    id: 'test:landing',
-    name: 'Landing Page Tests',
-    description: 'Verify landing page functionality',
-    testCases: [
-      {
-        id: 'TC101',
-        name: 'Verify Landing Page Loads Successfully',
-        description: 'Check if the landing page loads with all elements',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC102',
-        name: 'Verify Featured Content Carousel',
-        description: 'Check if featured content carousel works correctly',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC103',
-        name: 'Verify Navigation Menu Items',
-        description: 'Check if navigation menu items are correct',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      }
-    ],
-  },
-  {
-    id: 'test:navigation',
-    name: 'Navigation Tests',
-    description: 'Verify navigation and menu functionality',
-    testCases: [
-      {
-        id: 'TC106',
-        name: 'Main Menu Navigation',
-        description: 'Verify main menu navigation functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC107',
-        name: 'Search Functionality',
-        description: 'Verify search functionality works correctly',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC108',
-        name: 'Category Filtering',
-        description: 'Verify category filtering works',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC109',
-        name: 'Genre Selection',
-        description: 'Verify genre selection functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC110',
-        name: 'Profile Switching',
-        description: 'Verify profile switching functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC111',
-        name: 'Settings Menu',
-        description: 'Verify settings menu navigation',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC112',
-        name: 'Back Button Navigation',
-        description: 'Verify back button functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC113',
-        name: 'Home Button Navigation',
-        description: 'Verify home button functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC114',
-        name: 'Menu Shortcuts',
-        description: 'Verify menu shortcuts work correctly',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC115',
-        name: 'Content Browsing',
-        description: 'Verify content browsing functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC116',
-        name: 'Quick Menu Access',
-        description: 'Verify quick menu access functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC117',
-        name: 'Navigation History',
-        description: 'Verify navigation history functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC118',
-        name: 'Movie Titles Logging',
-        description: 'Verify movie titles logging in Top Free Movies row',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      }
-    ],
-  },
-  {
-    id: 'test:login',
-    name: 'Login Tests',
-    description: 'Verify login functionality',
-    testCases: [
-      {
-        id: 'TC103',
-        name: 'User Authentication Flow',
-        description: 'Verify user authentication flow works correctly',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      }
-    ],
-  },
-  {
-    id: 'test:series',
-    name: 'Series Details Tests',
-    description: 'Verify series details page functionality',
-    testCases: [
-      {
-        id: 'TC119',
-        name: 'Series Overview Page',
-        description: 'Verify series overview page layout',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC120',
-        name: 'Episode List Navigation',
-        description: 'Verify episode list navigation',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC121',
-        name: 'Season Selection',
-        description: 'Verify season selection functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC122',
-        name: 'Episode Details',
-        description: 'Verify episode details display',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC123',
-        name: 'Series Information',
-        description: 'Verify series information display',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      }
-    ],
-  },
-  {
-    id: 'test:playback',
-    name: 'Playback Tests',
-    description: 'Verify video playback functionality',
-    testCases: [
-      {
-        id: 'TC201',
-        name: 'Content Playback',
-        description: 'Verify content playback functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC202',
-        name: 'Series Playback and Pause',
-        description: 'Verify series playback and pause functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC203',
-        name: 'Forward Playback',
-        description: 'Verify forward playback functionality',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC204',
-        name: 'Audio Track Selection',
-        description: 'Verify audio track selection',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC205',
-        name: 'Ad Triggers',
-        description: 'Verify ads trigger with multiple right keypresses',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      }
-    ],
-  },
-  {
-    id: 'test:movies',
-    name: 'Movies Details Tests',
-    description: 'Verify movies details page functionality',
-    testCases: [
-      {
-        id: 'TC124',
-        name: 'Movie Details Page Layout',
-        description: 'Verify movie details page layout',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC125',
-        name: 'Movie Playback Controls',
-        description: 'Verify movie playback controls',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      }
-    ],
-  },
-  {
-    id: 'test:search',
-    name: 'Search Tests',
-    description: 'Verify search functionality',
-    testCases: [
-      {
-        id: 'TC501',
-        name: 'Verify Search Results for Series',
-        description: 'Verify search results for series',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC502',
-        name: 'Verify Search Results for Movies',
-        description: 'Verify search results for movies',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC503',
-        name: 'Verify Search Results for Channels',
-        description: 'Verify search results for channels',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      },
-      {
-        id: 'TC504',
-        name: 'Verify Empty State when no results are found',
-        description: 'Verify empty state when no results are found',
-        status: 'idle',
-        lastRun: null,
-        duration: null,
-      }
-    ]
-  }
-];
-
-function formatTestOutput(data: any) {
+function formatTestOutput(data: Record<string, any>): string {
   if (!data) return '';
-  
-  try {
-    const result = typeof data === 'string' ? JSON.parse(data) : data;
-    const timestamp = result.timestamp ? `\nTimestamp: ${new Date(result.timestamp).toLocaleString()}` : '';
-    
-    let filteredOutput = '';
-    if (result.output) {
-      const lines = result.output.split('\n');
-      const essentialLines = lines
-        .filter((line: string) => 
-          line.includes('console.log') && 
-          !line.includes('at ') &&
-          (
-            line.includes('Test completed') ||
-            line.includes('✅') ||
-            line.includes('❌')
-          )
-        )
-        .map((line: string) => {
-          const parts = line.split('console.log');
-          return parts[1]?.trim().replace(/^["']|["']$/g, '') || line;
-        });
-      
-      if (essentialLines.length > 0) {
-        filteredOutput = `\nResults:\n${essentialLines.join('\n')}`;
-      }
-    }
-
-    return `Test Execution Summary:
-Command: ${result.command}
-Status: ${result.message}${timestamp}${filteredOutput}
-${result.error ? `\nErrors:\n${result.error}` : ''}`
-      .trim();
-  } catch (e) {
-    return JSON.stringify(data, null, 2);
-  }
+  return typeof data === 'string' ? data : JSON.stringify(data, null, 2);
 }
 
 // Add this helper function near the other utility functions
@@ -411,60 +33,189 @@ const getTestSuiteStatus = (suite: TestSuite): 'passed' | 'failed' | 'running' |
 
 export default function TestSuitesPage() {
   const router = useRouter();
-  const [suites, setSuites] = useState<TestSuite[]>(testSuites);
-  const [expandedSuites, setExpandedSuites] = useState<string[]>([]);
-  const [selectedDevices, setSelectedDevices] = useState<Record<string, string>>({});
-  const [expandedLogs, setExpandedLogs] = useState<string[]>([]);
+  const pathname = usePathname();
+  const [suites, setSuites] = useState<TestSuite[]>(() => {
+    // Initialize with default state for both server and client
+    const defaultState = testSuites.map(suite => ({
+      ...suite,
+      testCases: suite.testCases.map(test => ({
+        ...test,
+        status: 'idle',
+        lastRun: null,
+        duration: null,
+        logContent: ''
+      }))
+    }));
+
+    // Only try to load from localStorage on client side
+    if (typeof window !== 'undefined') {
+      try {
+        const persistedTestStates = localStorage.getItem('testStates');
+        if (persistedTestStates) {
+          const states = JSON.parse(persistedTestStates);
+          return defaultState.map(suite => ({
+            ...suite,
+            testCases: suite.testCases.map(test => ({
+              ...test,
+              status: states[`${suite.id}-${test.id}`]?.status || 'idle',
+              lastRun: states[`${suite.id}-${test.id}`]?.lastRun || null,
+              duration: states[`${suite.id}-${test.id}`]?.duration || null,
+              logContent: states[`${suite.id}-${test.id}`]?.logContent || ''
+            }))
+          }));
+        }
+      } catch (error) {
+        console.error('Error loading initial state:', error);
+      }
+    }
+    
+    return defaultState;
+  });
+  const [expandedSuites, setExpandedSuites] = useState<string[]>(() => {
+    try {
+      const persisted = localStorage.getItem('expandedSuites');
+      return persisted ? JSON.parse(persisted) : [];
+    } catch (error) {
+      return [];
+    }
+  });
+  const [selectedDevices, setSelectedDevices] = useState<Record<string, string>>(() => {
+    try {
+      const persisted = localStorage.getItem('selectedDevices');
+      return persisted ? JSON.parse(persisted) : {};
+    } catch (error) {
+      return {};
+    }
+  });
+  const [expandedLogs, setExpandedLogs] = useState<string[]>(() => {
+    try {
+      const persisted = localStorage.getItem('expandedLogs');
+      return persisted ? JSON.parse(persisted) : [];
+    } catch (error) {
+      return [];
+    }
+  });
+  const [runningSuites, setRunningSuites] = useState<string[]>(() => {
+    try {
+      const persisted = localStorage.getItem('runningSuites');
+      return persisted ? JSON.parse(persisted) : [];
+    } catch (error) {
+      return [];
+    }
+  });
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [sortBy, setSortBy] = useState<'name' | 'state' | 'lastRun'>('name');
-  const [runningSuites, setRunningSuites] = useState<string[]>([]);
   const [stoppingStates, setStoppingStates] = useState<Record<string, boolean>>({});
   const [currentTestIndex, setCurrentTestIndex] = useState<Record<string, number>>({});
   const heartbeatInterval = useRef<NodeJS.Timeout | null>(null);
   const timeoutId = useRef<NodeJS.Timeout | null>(null);
+  const statusCheckInterval = useRef<NodeJS.Timeout | null>(null);
 
-  // Load persisted test results
+  // Start status check on mount
   useEffect(() => {
-    async function loadTestResults() {
-      try {
-        const response = await fetch('/api/test-history');
-        if (!response.ok) {
-          throw new Error('Failed to load test results');
-        }
-        const testHistory = await response.json();
-        
-        // Update suites with persisted results
-        setSuites(prevSuites => 
-          prevSuites.map(suite => {
-            const historicalResult = testHistory.find((result: any) => result.suiteId === suite.id);
-            if (!historicalResult) return suite;
-
-            return {
-              ...suite,
-              testCases: suite.testCases.map(testCase => {
-                const historicalTestCase = historicalResult.testCases.find((tc: any) => tc.id === testCase.id);
-                if (!historicalTestCase) return testCase;
-
-                return {
-                  ...testCase,
-                  status: historicalTestCase.status,
-                  lastRun: historicalResult.endTime,
-                  duration: typeof historicalTestCase.duration === 'string' 
-                    ? parseInt(historicalTestCase.duration) 
-                    : historicalTestCase.duration,
-                  error: historicalTestCase.error
-                };
-              })
-            };
-          })
-        );
-      } catch (error) {
-        console.error('Error loading test results:', error);
+    startStatusCheck();
+    return () => {
+      if (statusCheckInterval.current) {
+        clearInterval(statusCheckInterval.current);
       }
+    };
+  }, []);
+
+  // Persist state changes
+  useEffect(() => {
+    localStorage.setItem('selectedDevices', JSON.stringify(selectedDevices));
+  }, [selectedDevices]);
+
+  useEffect(() => {
+    localStorage.setItem('runningSuites', JSON.stringify(runningSuites));
+  }, [runningSuites]);
+
+  useEffect(() => {
+    localStorage.setItem('expandedSuites', JSON.stringify(expandedSuites));
+  }, [expandedSuites]);
+
+  useEffect(() => {
+    localStorage.setItem('expandedLogs', JSON.stringify(expandedLogs));
+  }, [expandedLogs]);
+
+  useEffect(() => {
+    // Persist test states
+    const testStates: Record<string, any> = {};
+    suites.forEach(suite => {
+      suite.testCases.forEach(test => {
+        testStates[`${suite.id}-${test.id}`] = {
+          status: test.status,
+          lastRun: test.lastRun,
+          duration: test.duration,
+          logContent: test.logContent,
+        };
+      });
+    });
+    localStorage.setItem('testStates', JSON.stringify(testStates));
+  }, [suites]);
+
+  // Start periodic status check
+  const startStatusCheck = () => {
+    if (statusCheckInterval.current) {
+      clearInterval(statusCheckInterval.current);
     }
 
-    loadTestResults();
-  }, []);
+    statusCheckInterval.current = setInterval(async () => {
+      // Only check if there are running tests
+      if (runningSuites.length === 0) {
+        return;
+      }
+
+      const testService = new TestExecutionService();
+      
+      // Check status for each running suite
+      for (const suiteId of runningSuites) {
+        try {
+          const deviceId = selectedDevices[suiteId];
+          if (!deviceId) {
+            // Remove from running suites if no device is selected
+            setRunningSuites(prev => prev.filter(id => id !== suiteId));
+            continue;
+          }
+
+          const device = devices.find(d => d.id === deviceId);
+          if (!device) {
+            // Remove from running suites if device not found
+            setRunningSuites(prev => prev.filter(id => id !== suiteId));
+            continue;
+          }
+
+          try {
+            // Check device connection
+            const deviceStatus = await testService.getDeviceStatus(deviceId);
+            if (!deviceStatus.connected) {
+              // Update suite status if device is disconnected
+              setSuites(prevSuites =>
+                prevSuites.map(suite =>
+                  suite.id === suiteId
+                    ? {
+                        ...suite,
+                        testCases: suite.testCases.map(test => ({
+                          ...test,
+                          status: test.status === 'running' ? 'failed' : test.status,
+                          logContent: test.logContent + '\nDevice disconnected during test execution.'
+                        }))
+                      }
+                    : suite
+                )
+              );
+              setRunningSuites(prev => prev.filter(id => id !== suiteId));
+            }
+          } catch (error) {
+            // If device status check fails, don't update the UI
+            console.warn(`Could not check status for device ${deviceId}:`, error);
+          }
+        } catch (error) {
+          console.error(`Error checking status for suite ${suiteId}:`, error);
+        }
+      }
+    }, 10000); // Check every 10 seconds instead of 5
+  };
 
   // Sort function
   const sortSuites = (a: TestSuite, b: TestSuite): number => {
@@ -488,9 +239,9 @@ export default function TestSuitesPage() {
       case 'lastRun':
         const getLastRun = (suite: TestSuite) => {
           const lastRuns = suite.testCases
-            .map(test => test.lastRun)
-            .filter(date => date) as string[];
-          return lastRuns.length ? Math.max(...lastRuns.map(date => new Date(date).getTime())) : 0;
+            .map(test => test.lastRun ? new Date(test.lastRun).getTime() : 0)
+            .filter(timestamp => timestamp > 0);
+          return lastRuns.length ? Math.max(...lastRuns) : 0;
         };
         const lastRunA = getLastRun(a);
         const lastRunB = getLastRun(b);
@@ -517,142 +268,192 @@ export default function TestSuitesPage() {
   };
 
   const runAllTests = async (suiteId: string) => {
-    const deviceId = selectedDevices[suiteId];
-    if (!deviceId) return;
-
-    // Find the selected device to get its IP
-    const selectedDevice = devices.find(d => d.id === deviceId);
-    if (!selectedDevice) return;
-
-    setRunningSuites(prev => [...prev, suiteId]);
-    
     try {
+      const deviceId = selectedDevices[suiteId];
+      if (!deviceId) {
+        console.error('No device selected');
+        return;
+      }
+
+      const device = devices.find(d => d.id === deviceId);
+      if (!device) {
+        console.error('Selected device not found');
+        return;
+      }
+
+      // Update UI state
+      setRunningSuites(prev => [...prev, suiteId]);
+      
+      // Find the suite
+      const suite = suites.find(s => s.id === suiteId);
+      if (!suite) {
+        console.error('Suite not found');
+        return;
+      }
+
+      // Update all tests in the suite to running state
+      setSuites(prevSuites =>
+        prevSuites.map(s =>
+          s.id === suiteId
+            ? {
+                ...s,
+                testCases: s.testCases.map(test => ({
+                  ...test,
+                  status: 'running',
+                  lastRun: new Date().toISOString()
+                }))
+              }
+            : s
+        )
+      );
+
+      // Start test execution
       const testService = new TestExecutionService();
-      await testService.executeSuite({
-        deviceId,
+      const result = await testService.executeSuite({
         suiteId,
-        mode: 'suite',
-        deviceIp: selectedDevice.ipAddress // Pass the device IP
-      });
+        deviceId,
+        deviceIp: device.ipAddress,
+        mode: 'suite'
+      }) as TestExecutionResponse;
+
+      // Update test states based on result
+      setSuites(prevSuites =>
+        prevSuites.map(s =>
+          s.id === suiteId
+            ? {
+                ...s,
+                testCases: s.testCases.map(test => ({
+                  ...test,
+                  status: result.success ? 'passed' : 'failed',
+                  logContent: result.output || test.logContent
+                }))
+              }
+            : s
+        )
+      );
+
+      // Only remove from running suites if all tests in the suite are complete
+      const updatedSuite = suites.find(s => s.id === suiteId);
+      if (updatedSuite && !updatedSuite.testCases.some(test => test.status === 'running')) {
+        setRunningSuites(prev => prev.filter(id => id !== suiteId));
+      }
+
     } catch (error) {
       console.error('Failed to run tests:', error);
-    } finally {
-      setRunningSuites(prev => prev.filter(id => id !== suiteId));
+      
+      // Update UI state on error
+      setSuites(prevSuites =>
+        prevSuites.map(s =>
+          s.id === suiteId
+            ? {
+                ...s,
+                testCases: s.testCases.map(test => ({
+                  ...test,
+                  status: test.status === 'running' ? 'failed' : test.status,
+                  logContent: `${test.logContent || ''}\nError: ${error}`
+                }))
+              }
+            : s
+        )
+      );
+
+      // Only remove from running suites if all tests in the suite are complete
+      const updatedSuite = suites.find(s => s.id === suiteId);
+      if (updatedSuite && !updatedSuite.testCases.some(test => test.status === 'running')) {
+        setRunningSuites(prev => prev.filter(id => id !== suiteId));
+      }
     }
   };
 
   const runTest = async (suiteId: string, testId: string) => {
-    if (!selectedDevices[suiteId]) {
-      alert('Please select a device first');
-      return;
-    }
-
-    // Clean up any existing intervals
-    cleanup();
-
     try {
-      // Update initial running state
-      setSuites(prevSuites =>
-        prevSuites.map(s =>
-          s.id === suiteId
-            ? {
-                ...s,
-                testCases: s.testCases.map(test =>
-                  test.id === testId
-                    ? { ...test, status: 'running', logContent: 'Test execution started...' }
-                    : test
-                )
-              }
-            : s
-        )
-      );
-
-      const response = await fetch('/api/tests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'run',
-          options: {
-            suite: suiteId,
-            device: selectedDevices[suiteId],
-            testIds: [testId]
-          }
-        })
-      });
-
-      const data = await response.json();
-      if (data.error) {
-        throw new Error(data.error);
+      const deviceId = selectedDevices[suiteId];
+      if (!deviceId) {
+        console.error('No device selected');
+        return;
       }
 
-      // Start polling for status
-      const pollInterval = setInterval(async () => {
-        const statusResponse = await fetch('/api/tests', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            action: 'status',
-            options: { suite: suiteId }
-          })
-        });
+      const device = devices.find(d => d.id === deviceId);
+      if (!device) {
+        console.error('Selected device not found');
+        return;
+      }
 
-        const statusData = await statusResponse.json();
-        console.log('Status update:', statusData);
-
-        if (!statusData.isRunning) {
-          clearInterval(pollInterval);
-          
-          // Check if the test passed based on exit code and output
-          const testPassed = statusData.code === 0 || 
-                           statusData.output?.includes('✅') || 
-                           statusData.output?.includes('Test Completed Successfully') ||
-                           statusData.output?.includes('All tests passed');
-          
-          // Update test case status based on actual test result
-          setSuites(prevSuites =>
-            prevSuites.map(s =>
-              s.id === suiteId
-                ? {
-                    ...s,
-                    testCases: s.testCases.map(test =>
-                      test.id === testId
-                        ? {
-                            ...test,
-                            status: testPassed ? 'passed' : 'failed',
-                            lastRun: new Date().toISOString(),
-                            logContent: statusData.output || 'No output available'
-                          }
-                        : test
-                    )
-                  }
-                : s
-            )
-          );
-        }
-      }, 1000);
-
-    } catch (error) {
-      console.error('Error running test:', error);
-      // Update state to show error
+      // Update UI state
+      setRunningSuites(prev => [...prev, suiteId]);
+      
+      // Update test state to running
       setSuites(prevSuites =>
         prevSuites.map(s =>
           s.id === suiteId
             ? {
                 ...s,
-                testCases: s.testCases.map(test =>
-                  test.id === testId
-                    ? {
-                        ...test,
-                        status: 'failed',
-                        lastRun: new Date().toISOString(),
-                        logContent: error instanceof Error ? error.message : 'An unknown error occurred'
-                      }
-                    : test
-                )
+                testCases: s.testCases.map(test => ({
+                  ...test,
+                  status: test.id === testId ? 'running' : test.status,
+                  lastRun: test.id === testId ? new Date().toISOString() : test.lastRun
+                }))
               }
             : s
         )
       );
+
+      // Start test execution
+      const testService = new TestExecutionService();
+      const result = await testService.executeTest({
+        suiteId,
+        testId,
+        deviceId,
+        deviceIp: device.ipAddress,
+        mode: 'single'
+      }) as TestExecutionResponse;
+
+      // Update test state based on result
+      setSuites(prevSuites =>
+        prevSuites.map(s =>
+          s.id === suiteId
+            ? {
+                ...s,
+                testCases: s.testCases.map(test => ({
+                  ...test,
+                  status: test.id === testId ? (result.success ? 'passed' : 'failed') : test.status,
+                  logContent: test.id === testId ? result.output : test.logContent
+                }))
+              }
+            : s
+        )
+      );
+
+      // Only remove from running suites if all tests in the suite are complete
+      const updatedSuite = suites.find(s => s.id === suiteId);
+      if (updatedSuite && !updatedSuite.testCases.some(test => test.status === 'running')) {
+        setRunningSuites(prev => prev.filter(id => id !== suiteId));
+      }
+
+    } catch (error) {
+      console.error('Failed to run test:', error);
+      
+      // Update UI state on error
+      setSuites(prevSuites =>
+        prevSuites.map(s =>
+          s.id === suiteId
+            ? {
+                ...s,
+                testCases: s.testCases.map(test => ({
+                  ...test,
+                  status: test.id === testId ? 'failed' : test.status,
+                  logContent: test.id === testId ? `${test.logContent || ''}\nError: ${error}` : test.logContent
+                }))
+              }
+            : s
+        )
+      );
+
+      // Only remove from running suites if all tests in the suite are complete
+      const updatedSuite = suites.find(s => s.id === suiteId);
+      if (updatedSuite && !updatedSuite.testCases.some(test => test.status === 'running')) {
+        setRunningSuites(prev => prev.filter(id => id !== suiteId));
+      }
     }
   };
 
@@ -665,19 +466,13 @@ export default function TestSuitesPage() {
       // Set stopping state
       setStoppingStates(prev => ({ ...prev, [suiteId]: true }));
 
-      // Call the API to stop test execution
-      const response = await fetch('/api/tests', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action: 'stop',
-          options: { suite: suiteId }
-        })
+      // Call the test service to stop execution
+      const testService = new TestExecutionService();
+      await testService.stopExecution({
+        suiteId,
+        deviceId: selectedDevices[suiteId],
+        mode: 'suite'
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to stop test execution');
-      }
 
       // Force update UI state after stopping
       setSuites(prevSuites =>
@@ -687,7 +482,7 @@ export default function TestSuitesPage() {
                 ...suite,
                 testCases: suite.testCases.map(test => ({
                   ...test,
-                  status: test.status === 'running' ? 'idle' : test.status,
+                  status: test.status === 'running' ? 'stopped' : test.status,
                   logContent: test.logContent 
                     ? `${test.logContent}\nTest execution stopped by user.`
                     : 'Test execution stopped by user.'
@@ -748,8 +543,8 @@ export default function TestSuitesPage() {
     );
   };
 
-  const formatDuration = (seconds: number | null): string => {
-    if (!seconds) return '--:--';
+  const formatDuration = (seconds: number | null | undefined): string => {
+    if (seconds == null) return '--:--';
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
@@ -758,6 +553,147 @@ export default function TestSuitesPage() {
   const formatLastRun = (dateString: string | null): string => {
     if (!dateString) return 'Never';
     return new Date(dateString).toLocaleString();
+  };
+
+  const handleTestClick = (test: TestCase, suiteId: string) => {
+    if (test.status === 'running') {
+      stopTestExecution(suiteId);
+    } else {
+      runTest(suiteId, test.id);
+    }
+  };
+
+  const handleSuiteClick = (suiteId: string) => {
+    // ... existing code ...
+  };
+
+  const handleDeviceSelect = (deviceId: string, suiteId: string) => {
+    setSelectedDevices(prev => ({
+      ...prev,
+      [suiteId]: deviceId
+    }));
+  };
+
+  const handleLogClick = (testId: string) => {
+    // ... existing code ...
+  };
+
+  const formatDate = (date: Date | string | null | undefined): string => {
+    if (!date) return 'Never';
+    return new Date(date).toLocaleString();
+  };
+
+  const renderDeviceSelector = (suiteId: string) => {
+    return (
+      <select
+        value={selectedDevices[suiteId] || ''}
+        onChange={(e) => handleDeviceSelect(e.target.value, suiteId)}
+        className="ml-4 rounded-md py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm bg-white/5 border border-white/10 text-white"
+        style={{ colorScheme: 'dark' }}
+      >
+        <option value="" className="bg-gray-800 text-white">Select Device</option>
+        {devices.map((device: Device) => (
+          <option 
+            key={device.id} 
+            value={device.id}
+            disabled={device.status !== 'active'}
+            className="bg-gray-800 text-white"
+            style={{ 
+              backgroundColor: '#1f2937',
+              color: device.status === 'active' ? 'white' : '#9ca3af'
+            }}
+          >
+            {device.name} ({device.ipAddress}) {device.status !== 'active' ? '- ' + device.status : ''}
+          </option>
+        ))}
+      </select>
+    );
+  };
+
+  const renderTestCase = (test: TestCase, index: number, suiteId: string) => {
+    // ... existing code ...
+  };
+
+  const handleTestExecution = async (test: TestCase, suiteId: string) => {
+    try {
+      const deviceId = selectedDevices[suiteId];
+      if (!deviceId) {
+        console.error('No device selected');
+        return;
+      }
+
+      const device = devices.find((d: Device) => d.id === deviceId);
+      if (!device) {
+        console.error('Selected device not found');
+        return;
+      }
+
+      // ... rest of the function
+    } catch (error) {
+      console.error('Test execution failed:', error);
+    }
+  };
+
+  const handleSuiteExecution = async (suite: TestSuite) => {
+    try {
+      const deviceId = selectedDevices[suite.id];
+      if (!deviceId) {
+        console.error('No device selected');
+        return;
+      }
+
+      const device = devices.find((d: Device) => d.id === deviceId);
+      if (!device) {
+        console.error('Selected device not found');
+        return;
+      }
+
+      // ... rest of the function
+    } catch (error) {
+      console.error('Suite execution failed:', error);
+    }
+  };
+
+  const renderTestStatus = (test: TestCase) => {
+    const statusColors = {
+      idle: 'bg-gray-100 text-gray-800',
+      running: 'bg-blue-100 text-blue-800',
+      passed: 'bg-green-100 text-green-800',
+      failed: 'bg-red-100 text-red-800',
+      stopped: 'bg-yellow-100 text-yellow-800'
+    };
+
+    return (
+      <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[test.status]}`}>
+        {test.status.charAt(0).toUpperCase() + test.status.slice(1)}
+      </span>
+    );
+  };
+
+  const renderTestDuration = (test: TestCase) => {
+    if (!test.duration) return 'N/A';
+    return `${test.duration}s`;
+  };
+
+  const renderLastRun = (test: TestCase) => {
+    return formatDate(test.lastRun);
+  };
+
+  const updateTestStatus = (suiteId: string, testId: string, updates: Partial<TestCase>) => {
+    setSuites(prevSuites =>
+      prevSuites.map(suite =>
+        suite.id === suiteId
+          ? {
+              ...suite,
+              testCases: suite.testCases.map(test =>
+                test.id === testId
+                  ? { ...test, ...updates }
+                  : test
+              )
+            }
+          : suite
+      )
+    );
   };
 
   return (
@@ -830,26 +766,7 @@ export default function TestSuitesPage() {
                 
                 <div className="flex items-center space-x-20">
                   {/* Device Selection Dropdown */}
-                  <select
-                    value={selectedDevices[suite.id] || ''}
-                    onChange={(e) => setSelectedDevices(prev => ({
-                      ...prev,
-                      [suite.id]: e.target.value
-                    }))}
-                    className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">Select Device</option>
-                    {devices.map((device) => (
-                      <option 
-                        key={device.id} 
-                        value={device.id}
-                        disabled={device.status !== 'active'}
-                        className="text-black"
-                      >
-                        {`${device.name} (${device.ipAddress})`}
-                      </option>
-                    ))}
-                  </select>
+                  {renderDeviceSelector(suite.id)}
 
                   {/* Run/Stop Controls */}
                   <div className="flex items-center space-x-20">
@@ -973,57 +890,20 @@ export default function TestSuitesPage() {
                                 : 'bg-gray-500/50 text-gray-400 cursor-not-allowed'
                             } transition-colors flex items-center space-x-2`}
                           >
-                            {stoppingStates[suite.id] ? (
-                              <>
-                                <ArrowPathIcon className="w-4 h-4 animate-spin" />
-                                <span>Stopping...</span>
-                              </>
-                            ) : (
+                            {test.status === 'running' ? (
                               <>
                                 <StopIcon className="w-4 h-4" />
                                 <span>Stop</span>
                               </>
+                            ) : (
+                              <>
+                                <StopIcon className="w-4 h-4" />
+                                <span>Stopped</span>
+                              </>
                             )}
                           </button>
-
-                          {/* Progress Bar */}
-                          {runningSuites.includes(suite.id) && currentTestIndex[suite.id] === index && test.status === 'running' && (
-                            <div className="flex items-center space-x-2">
-                              <div className="w-32 bg-gray-700 rounded-full h-2">
-                                <div
-                                  className="bg-blue-500 h-2 rounded-full transition-all duration-500 animate-pulse"
-                                  style={{ width: '100%' }}
-                                />
-                              </div>
-                            </div>
-                          )}
-
-                          {/* Duration */}
-                          <div className="text-gray-400">
-                            {formatDuration(test.duration)}
-                          </div>
-
-                          {/* Log Button */}
-                          <button
-                            onClick={() => toggleLog(test.id)}
-                            className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors"
-                          >
-                            Logs
-                          </button>
-
-                          {/* Last Run */}
-                          <div className="text-sm text-gray-400">
-                            Last Run: {formatLastRun(test.lastRun)}
-                          </div>
                         </div>
                       </div>
-
-                      {/* Log Content */}
-                      {expandedLogs.includes(test.id) && (
-                        <div className="mt-4 p-4 rounded-lg bg-black/50 font-mono text-sm">
-                          {test.logContent || 'No logs available'}
-                        </div>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -1034,4 +914,4 @@ export default function TestSuitesPage() {
       </div>
     </div>
   );
-} 
+}

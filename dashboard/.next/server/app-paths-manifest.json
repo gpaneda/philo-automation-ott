@@ -1,6 +1,6 @@
 {
+  "/api/device-control/status/[deviceId]/route": "app/api/device-control/status/[deviceId]/route.js",
   "/api/test-history/route": "app/api/test-history/route.js",
   "/test-suites/page": "app/test-suites/page.js",
-  "/settings/page": "app/settings/page.js",
-  "/reports/page": "app/reports/page.js"
+  "/test-history/page": "app/test-history/page.js"
 }

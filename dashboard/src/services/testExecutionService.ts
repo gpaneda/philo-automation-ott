@@ -23,13 +23,19 @@ interface TestResult {
   };
 }
 
+interface TestExecutionResponse {
+  success: boolean;
+  output: string;
+  errors: string;
+}
+
 export class TestExecutionService {
   private baseUrl: string;
   private deviceControlEndpoint: string;
 
   constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_TEST_FRAMEWORK_URL || 'http://localhost:3001';
-    this.deviceControlEndpoint = `${this.baseUrl}/device-control`;
+    this.deviceControlEndpoint = `${this.baseUrl}/api/device-control`;
   }
 
   // Helper method to determine which email to use based on device IP
@@ -48,10 +54,14 @@ export class TestExecutionService {
   async connectToDevice(deviceId: string, deviceIp?: string): Promise<boolean> {
     try {
       const email = deviceIp ? this.getEmailForDevice(deviceIp) : process.env.PHILO_EMAIL;
-      const response = await axios.post(`${this.deviceControlEndpoint}/connect`, { 
+      const url = `${this.deviceControlEndpoint}/connect`;
+      console.log('Attempting to connect to device at URL:', url);
+      console.log('Request payload:', { deviceId, deviceIp, email });
+      
+      const response = await axios.post(url, { 
         deviceId,
         deviceIp,
-        email // Pass the email to the backend
+        email
       });
       return response.data.connected;
     } catch (error: any) {
@@ -61,40 +71,53 @@ export class TestExecutionService {
   }
 
   // Execute a single test
-  async executeTest(config: TestExecutionConfig): Promise<TestResult> {
+  async executeTest(config: TestExecutionConfig): Promise<TestExecutionResponse> {
     try {
       // First ensure device is connected with the correct email
       await this.connectToDevice(config.deviceId, config.deviceIp);
 
       // Start test execution
-      const response = await axios.post(`${this.baseUrl}/execute`, {
+      const response = await axios.post(`${this.baseUrl}/api/execute`, {
         ...config,
         email: config.deviceIp ? this.getEmailForDevice(config.deviceIp) : process.env.PHILO_EMAIL
       });
       
-      // Set up WebSocket connection for real-time updates
-      this.setupWebSocket(config);
-
-      return response.data;
+      return {
+        success: response.data.success,
+        output: response.data.output,
+        errors: response.data.errors
+      };
     } catch (error: any) {
       console.error('Test execution failed:', error);
-      throw new Error(`Test execution failed: ${error.message}`);
+      return {
+        success: false,
+        output: '',
+        errors: `Test execution failed: ${error.message}`
+      };
     }
   }
 
   // Execute an entire test suite
-  async executeSuite(config: TestExecutionConfig): Promise<TestResult[]> {
+  async executeSuite(config: TestExecutionConfig): Promise<TestExecutionResponse> {
     try {
       await this.connectToDevice(config.deviceId, config.deviceIp);
-      const response = await axios.post(`${this.baseUrl}/execute-suite`, {
+      const response = await axios.post(`${this.baseUrl}/api/execute-suite`, {
         ...config,
         email: config.deviceIp ? this.getEmailForDevice(config.deviceIp) : process.env.PHILO_EMAIL
       });
-      this.setupWebSocket(config);
-      return response.data;
+      
+      return {
+        success: response.data.success,
+        output: response.data.output,
+        errors: response.data.errors
+      };
     } catch (error: any) {
       console.error('Suite execution failed:', error);
-      throw new Error(`Suite execution failed: ${error.message}`);
+      return {
+        success: false,
+        output: '',
+        errors: `Suite execution failed: ${error.message}`
+      };
     }
   }
 
@@ -102,11 +125,12 @@ export class TestExecutionService {
   async executeFailedTests(config: TestExecutionConfig): Promise<TestResult[]> {
     try {
       await this.connectToDevice(config.deviceId, config.deviceIp);
-      const response = await axios.post(`${this.baseUrl}/execute-failed`, {
+      const response = await axios.post(`${this.baseUrl}/api/execute-failed`, {
         ...config,
         email: config.deviceIp ? this.getEmailForDevice(config.deviceIp) : process.env.PHILO_EMAIL
       });
-      this.setupWebSocket(config);
+      // Temporarily disable WebSocket
+      // this.setupWebSocket(config);
       return response.data;
     } catch (error: any) {
       console.error('Failed tests execution failed:', error);
@@ -117,7 +141,10 @@ export class TestExecutionService {
   // Stop test execution
   async stopExecution(config: TestExecutionConfig): Promise<void> {
     try {
-      await axios.post(`${this.baseUrl}/stop-execution`, config);
+      const response = await axios.post(`${this.baseUrl}/api/stop-execution`, config);
+      if (!response.data.success) {
+        throw new Error(response.data.error || 'Failed to stop test execution');
+      }
     } catch (error: any) {
       console.error('Failed to stop execution:', error);
       throw new Error(`Stop execution failed: ${error.message}`);
@@ -126,7 +153,9 @@ export class TestExecutionService {
 
   // Set up WebSocket connection for real-time updates
   private setupWebSocket(config: TestExecutionConfig): void {
-    const ws = new WebSocket(`${this.baseUrl.replace('http', 'ws')}/test-updates`);
+    // Temporarily disable WebSocket setup
+    /*
+    const ws = new WebSocket(`${this.baseUrl.replace('http', 'ws')}/api/test-updates`);
     
     ws.onmessage = (event) => {
       const update = JSON.parse(event.data);
@@ -141,6 +170,7 @@ export class TestExecutionService {
     ws.onclose = () => {
       console.log('WebSocket connection closed');
     };
+    */
   }
 
   // Get device status
@@ -157,7 +187,7 @@ export class TestExecutionService {
   // Get test logs
   async getTestLogs(testId: string): Promise<string[]> {
     try {
-      const response = await axios.get(`${this.baseUrl}/logs/${testId}`);
+      const response = await axios.get(`${this.baseUrl}/api/logs/${testId}`);
       return response.data.logs;
     } catch (error: any) {
       console.error('Failed to get test logs:', error);
@@ -168,7 +198,7 @@ export class TestExecutionService {
   // Get test screenshots
   async getTestScreenshots(testId: string): Promise<string[]> {
     try {
-      const response = await axios.get(`${this.baseUrl}/screenshots/${testId}`);
+      const response = await axios.get(`${this.baseUrl}/api/screenshots/${testId}`);
       return response.data.screenshots;
     } catch (error: any) {
       console.error('Failed to get test screenshots:', error);

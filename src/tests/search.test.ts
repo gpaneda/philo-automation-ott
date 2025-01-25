@@ -86,7 +86,7 @@ describe('Search Test', () => {
 
             await searchPage.enterSearchTerm('Series');
             await driver.pause(3000);
-            homeScreen.pressEnterButton
+            await homeScreen.pressEnterButton();
 
             //Verify that the search results displays Channels, Shows, Episodes Header Text
             const headerTexts = await searchPage.getHeaderText();
@@ -104,7 +104,7 @@ describe('Search Test', () => {
 
         await searchPage.enterSearchTerm('Movies');
         await driver.pause(3000);
-        homeScreen.pressEnterButton
+        await homeScreen.pressEnterButton();
 
         //Verify that the search results displays Channels, Shows, Episodes Header Text
         const headerTexts = await searchPage.getHeaderText();
@@ -122,7 +122,7 @@ describe('Search Test', () => {
 
         await searchPage.enterSearchTerm('AMC');
         await driver.pause(3000);
-        homeScreen.pressEnterButton
+        await homeScreen.pressEnterButton();
 
         //Verify that the search results displays Channels, Shows, Episodes Header Text
         const headerTexts = await searchPage.getHeaderText();
@@ -145,7 +145,7 @@ describe('Search Test', () => {
         console.log('Channels Text is displayed');
     }, 180000);
 
-    test.only('TC504 - should display Empty State when no results are found', async () => {
+    test('TC504 - should display Empty State when no results are found', async () => {
         try {
             await searchPage.navigateToSearchAndVerify();
         } catch (error) {
@@ -155,7 +155,7 @@ describe('Search Test', () => {
         //Enter a search term that does not exist
         await searchPage.enterSearchTerm('skdhfkadfkjdfhak');
         await driver.pause(3000);
-        homeScreen.pressEnterButton
+        await homeScreen.pressEnterButton();
 
         //Expect Channels, Shows, Episodes, Movies does not exist - header text is empty    
         const headerTexts = await searchPage.getHeaderText();
