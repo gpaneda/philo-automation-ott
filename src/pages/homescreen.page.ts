@@ -3,6 +3,12 @@ import { BasePage } from './base.page';
 import { exec } from 'child_process';
 import path from 'path';
 import fs from 'fs/promises';
+export class HomeScreen {
+    public driver: Browser<'async'>;
+    constructor(driver: Browser<'async'>) {
+        this.driver = driver;
+    }
+}
 export class HomeScreenPage extends BasePage {
     
 

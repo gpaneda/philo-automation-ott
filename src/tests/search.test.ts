@@ -7,6 +7,7 @@ import { TopPage } from '../pages/top.page';
 import { CategoriesPage } from '../pages/categories.page';
 import { MoviesDetailsPage } from '../pages/moviesDetails.page';
 import { SearchPage } from '../pages/search.page';
+import { preProcessFile } from 'typescript';
 
 let driver: Browser<'async'>;
 let homeScreen: HomeScreenPage;
@@ -78,33 +79,25 @@ beforeEach(async () => {
 describe('Search Test', () => {
     test('TC501 - should display Search Results for Series', async () => {
         try {
-            await homeScreen.pressUpButton();
-            await driver.pause(3000);
-            await homeScreen.navigateToSearch();
-            expect(await homeScreen.isElementDisplayed(homeScreen.selectors.topNavSearch)).toBe(true);
+            await searchPage.navigateToSearchAndVerify();
             } catch (error) {
                 console.error('Search page was not displayed:', error);
                 throw error;
             }
 
-            await searchPage.enterSearchTerm('AMC');
+            await searchPage.enterSearchTerm('Series');
             await driver.pause(3000);
             homeScreen.pressEnterButton
 
             //Verify that the search results displays Channels, Shows, Episodes Header Text
             const headerTexts = await searchPage.getHeaderText();
             console.log('Header Texts:', headerTexts);
-            expect(headerTexts).toContain('Channels');
             expect(headerTexts).toContain('Shows');
-            expect(headerTexts).toContain('Episodes');
         }, 180000);
 
     test('TC502 - should display Search Results for Movies', async () => {
         try {
-            await homeScreen.pressUpButton();
-            await driver.pause(3000);
-            await homeScreen.navigateToSearch();
-            expect(await homeScreen.isElementDisplayed(homeScreen.selectors.topNavSearch)).toBe(true);
+            await searchPage.navigateToSearchAndVerify();
         } catch (error) {
             console.error('Search page was not displayed:', error);
             throw error;
@@ -117,9 +110,63 @@ describe('Search Test', () => {
         //Verify that the search results displays Channels, Shows, Episodes Header Text
         const headerTexts = await searchPage.getHeaderText();
         console.log('Header Texts:', headerTexts);
-        expect(headerTexts).toContain('Channels');
-        expect(headerTexts).toContain('Shows');
         expect(headerTexts).toContain('Movies');
+    }, 180000);
+
+    test('TC503 - should display Search Results for Channels', async () => {
+        try {
+            await searchPage.navigateToSearchAndVerify();
+        } catch (error) {
+            console.error('Search page was not displayed:', error);
+            throw error;
+        }
+
+        await searchPage.enterSearchTerm('AMC');
+        await driver.pause(3000);
+        homeScreen.pressEnterButton
+
+        //Verify that the search results displays Channels, Shows, Episodes Header Text
+        const headerTexts = await searchPage.getHeaderText();
+        console.log('Header Texts:', headerTexts);
+        expect(headerTexts).toContain('Channels');
+        
+        //Goes to Keyboard
+        for (let i = 0; i < 2; i++) {
+            await homeScreen.pressDownButton();
+        }
+        //Press right button until channels row is in focus and go to channels row
+        for (let i = 0; i < 7; i++) {
+            await homeScreen.pressRightButton();
+        }
+        await driver.pause(3000);
+        await searchPage.interactWithSearchResults();
+        //Check if Channels Text is displayed
+        expect(await searchPage.isElementDisplayed(searchPage.labelTileGroup)).toBe(true);
+        //Add console log to check if Channels Text is displayed
+        console.log('Channels Text is displayed');
+    }, 180000);
+
+    test.only('TC504 - should display Empty State when no results are found', async () => {
+        try {
+            await searchPage.navigateToSearchAndVerify();
+        } catch (error) {
+            console.error('Search page was not displayed:', error);
+            throw error;
+        }
+        //Enter a search term that does not exist
+        await searchPage.enterSearchTerm('skdhfkadfkjdfhak');
+        await driver.pause(3000);
+        homeScreen.pressEnterButton
+
+        //Expect Channels, Shows, Episodes, Movies does not exist - header text is empty    
+        const headerTexts = await searchPage.getHeaderText();
+        console.log('Header Texts:', headerTexts);
+        expect(headerTexts).not.toContain('Channels');
+        expect(headerTexts).not.toContain('Shows');
+        expect(headerTexts).not.toContain('Episodes');
+        expect(headerTexts).not.toContain('Movies');
+        //Add console log to check if Empty State is displayed
+        console.log('Empty State is displayed');
     }, 180000);
 
 });

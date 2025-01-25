@@ -1,9 +1,11 @@
 import { Browser } from "webdriverio";
-
-export class SearchPage {
-    constructor(private driver: Browser<'async'>) {
-        this.driver = driver;
+import { HomeScreen, HomeScreenPage } from "./homescreen.page";
+import { BasePage } from "./base.page";
+export class SearchPage extends BasePage    {
+    constructor(driver: Browser<'async'>) {
+        super(driver);
         // Initialization code
+        this.driver = driver;
     }
     // Define properties for each UI element based on resource IDs
     actionBarRoot = 'com.philo.philo:id/action_bar_root';
@@ -219,6 +221,21 @@ export class SearchPage {
             console.error('Failed to get header texts:', error);
             return [];
         }
+    }
+    async navigateToSearchAndVerify() {
+        const homeScreen = new HomeScreenPage(this.driver);
+        await homeScreen.pressUpButton();
+        await this.pause(3000);
+        await homeScreen.navigateToSearch();
+        expect(await homeScreen.isElementDisplayed(homeScreen.selectors.topNavSearch)).toBe(true);
+    }
+
+    async interactWithSearchResults() {
+        const homeScreen = new HomeScreenPage(this.driver);
+        expect(await this.isElementDisplayed(this.expandToGridIcon)).toBe(true);
+        await homeScreen.pressLeftButton(); // Assuming homeScreen is accessible
+        await homeScreen.pressEnterButton();
+        await this.driver.pause(3000); // Assuming driver is accessible
     }
 }
     
