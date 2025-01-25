@@ -163,6 +163,10 @@ export default function TestSuitesPage() {
     statusCheckInterval.current = setInterval(async () => {
       // Only check if there are running tests
       if (runningSuites.length === 0) {
+        if (statusCheckInterval.current) {
+          clearInterval(statusCheckInterval.current);
+          statusCheckInterval.current = null;
+        }
         return;
       }
 
@@ -181,6 +185,13 @@ export default function TestSuitesPage() {
           const device = devices.find(d => d.id === deviceId);
           if (!device) {
             // Remove from running suites if device not found
+            setRunningSuites(prev => prev.filter(id => id !== suiteId));
+            continue;
+          }
+
+          // Only check device status if there are actually running tests in the suite
+          const suite = suites.find(s => s.id === suiteId);
+          if (!suite?.testCases.some(test => test.status === 'running')) {
             setRunningSuites(prev => prev.filter(id => id !== suiteId));
             continue;
           }
@@ -214,7 +225,7 @@ export default function TestSuitesPage() {
           console.error(`Error checking status for suite ${suiteId}:`, error);
         }
       }
-    }, 10000); // Check every 10 seconds instead of 5
+    }, 10000); // Check every 10 seconds
   };
 
   // Sort function
@@ -255,7 +266,7 @@ export default function TestSuitesPage() {
   // Sort the suites
   const sortedSuites = [...suites].sort(sortSuites);
 
-  // Cleanup function for intervals and timeouts
+  // Clean up function
   const cleanup = () => {
     if (heartbeatInterval.current) {
       clearInterval(heartbeatInterval.current);
@@ -265,103 +276,66 @@ export default function TestSuitesPage() {
       clearTimeout(timeoutId.current);
       timeoutId.current = null;
     }
+    if (statusCheckInterval.current) {
+      clearInterval(statusCheckInterval.current);
+      statusCheckInterval.current = null;
+    }
+  };
+
+  // Add the updateTestCaseStatuses function
+  const updateTestCaseStatuses = (
+    suiteId: string, 
+    status: 'passed' | 'failed' | 'running' | 'idle' | 'stopped',
+    message?: string
+  ) => {
+    setSuites(prevSuites =>
+      prevSuites.map(s =>
+        s.id === suiteId
+          ? {
+              ...s,
+              testCases: s.testCases.map(test => ({
+                ...test,
+                status,
+                logContent: message ? `${test.logContent || ''}\n${message}` : test.logContent
+              }))
+            }
+          : s
+      )
+    );
   };
 
   const runAllTests = async (suiteId: string) => {
+    const deviceId = selectedDevices[suiteId];
+    if (!deviceId) {
+      console.error('No device selected for suite:', suiteId);
+      return;
+    }
+
+    const device = devices.find(d => d.id === deviceId);
+    if (!device) {
+      console.error('Selected device not found:', deviceId);
+      return;
+    }
+
     try {
-      const deviceId = selectedDevices[suiteId];
-      if (!deviceId) {
-        console.error('No device selected');
-        return;
-      }
-
-      const device = devices.find(d => d.id === deviceId);
-      if (!device) {
-        console.error('Selected device not found');
-        return;
-      }
-
-      // Update UI state
       setRunningSuites(prev => [...prev, suiteId]);
-      
-      // Find the suite
-      const suite = suites.find(s => s.id === suiteId);
-      if (!suite) {
-        console.error('Suite not found');
-        return;
-      }
-
-      // Update all tests in the suite to running state
-      setSuites(prevSuites =>
-        prevSuites.map(s =>
-          s.id === suiteId
-            ? {
-                ...s,
-                testCases: s.testCases.map(test => ({
-                  ...test,
-                  status: 'running',
-                  lastRun: new Date().toISOString()
-                }))
-              }
-            : s
-        )
-      );
-
-      // Start test execution
       const testService = new TestExecutionService();
       const result = await testService.executeSuite({
         suiteId,
         deviceId,
         deviceIp: device.ipAddress,
         mode: 'suite'
-      }) as TestExecutionResponse;
+      });
 
-      // Update test states based on result
-      setSuites(prevSuites =>
-        prevSuites.map(s =>
-          s.id === suiteId
-            ? {
-                ...s,
-                testCases: s.testCases.map(test => ({
-                  ...test,
-                  status: result.success ? 'passed' : 'failed',
-                  logContent: result.output || test.logContent
-                }))
-              }
-            : s
-        )
-      );
-
-      // Only remove from running suites if all tests in the suite are complete
-      const updatedSuite = suites.find(s => s.id === suiteId);
-      if (updatedSuite && !updatedSuite.testCases.some(test => test.status === 'running')) {
-        setRunningSuites(prev => prev.filter(id => id !== suiteId));
+      if (!result.success) {
+        console.error('Test execution failed:', result.errors);
+        updateTestCaseStatuses(suiteId, 'failed', result.errors || 'Test execution failed');
       }
-
-    } catch (error) {
-      console.error('Failed to run tests:', error);
-      
-      // Update UI state on error
-      setSuites(prevSuites =>
-        prevSuites.map(s =>
-          s.id === suiteId
-            ? {
-                ...s,
-                testCases: s.testCases.map(test => ({
-                  ...test,
-                  status: test.status === 'running' ? 'failed' : test.status,
-                  logContent: `${test.logContent || ''}\nError: ${error}`
-                }))
-              }
-            : s
-        )
-      );
-
-      // Only remove from running suites if all tests in the suite are complete
-      const updatedSuite = suites.find(s => s.id === suiteId);
-      if (updatedSuite && !updatedSuite.testCases.some(test => test.status === 'running')) {
-        setRunningSuites(prev => prev.filter(id => id !== suiteId));
-      }
+    } catch (error: any) {
+      console.error('Error running tests:', error);
+      updateTestCaseStatuses(suiteId, 'failed', error.message);
+    } finally {
+      setRunningSuites(prev => prev.filter(id => id !== suiteId));
     }
   };
 
@@ -611,7 +585,113 @@ export default function TestSuitesPage() {
   };
 
   const renderTestCase = (test: TestCase, index: number, suiteId: string) => {
-    // ... existing code ...
+    return (
+      <div key={test.id} className="p-6 border-b border-white/10 last:border-b-0">
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="flex items-center space-x-3">
+              <h3 className="font-medium">{test.id} - {test.name}</h3>
+              <div className={`px-2 py-0.5 text-xs font-medium rounded ${
+                test.status === 'passed' ? 'bg-green-500/20 text-green-400' :
+                test.status === 'failed' ? 'bg-red-500/20 text-red-400' :
+                test.status === 'running' ? 'bg-blue-500/20 text-blue-400' :
+                'bg-gray-500/20 text-gray-400'
+              }`}>
+                {test.status.toUpperCase()}
+              </div>
+            </div>
+            <p className="text-sm text-gray-400">{test.description}</p>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            {/* Run Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!selectedDevices[suiteId]) {
+                  alert('Please select a device first');
+                  return;
+                }
+                runTest(suiteId, test.id);
+              }}
+              disabled={runningSuites.includes(suiteId) || !selectedDevices[suiteId]}
+              className={`px-4 py-2 rounded-lg ${
+                runningSuites.includes(suiteId) || !selectedDevices[suiteId]
+                  ? 'bg-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 hover:bg-blue-600'
+              } transition-colors flex items-center space-x-2`}
+            >
+              {test.status === 'running' ? (
+                <>
+                  <ArrowPathIcon className="w-4 h-4 animate-spin" />
+                  <span>Running...</span>
+                </>
+              ) : (
+                <>
+                  <PlayIcon className="w-4 h-4" />
+                  <span>Run</span>
+                </>
+              )}
+            </button>
+
+            {/* Runtime */}
+            <div className="text-sm text-gray-400">
+              Runtime: {renderTestDuration(test)}
+            </div>
+
+            {/* Stop Button */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                stopTestExecution(suiteId);
+              }}
+              disabled={test.status !== 'running' || stoppingStates[suiteId]}
+              className={`px-4 py-2 rounded-lg ${
+                stoppingStates[suiteId]
+                  ? 'bg-gray-500 cursor-not-allowed'
+                  : test.status === 'running'
+                  ? 'bg-red-500 hover:bg-red-600'
+                  : 'bg-gray-500/50 text-gray-400 cursor-not-allowed'
+              } transition-colors flex items-center space-x-2`}
+            >
+              {test.status === 'running' ? (
+                <>
+                  <StopIcon className="w-4 h-4" />
+                  <span>Stop</span>
+                </>
+              ) : (
+                <>
+                  <StopIcon className="w-4 h-4" />
+                  <span>Stopped</span>
+                </>
+              )}
+            </button>
+
+            {/* Logs Button */}
+            <button
+              onClick={() => toggleLog(test.id)}
+              className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors flex items-center space-x-2"
+            >
+              {expandedLogs.includes(test.id) ? (
+                <ChevronDownIcon className="w-4 h-4" />
+              ) : (
+                <ChevronRightIcon className="w-4 h-4" />
+              )}
+              <span>Logs</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Logs Panel */}
+        {expandedLogs.includes(test.id) && test.logContent && (
+          <div className="mt-4">
+            <pre className="p-4 rounded-lg bg-black/50 text-sm font-mono overflow-x-auto">
+              {test.logContent}
+            </pre>
+          </div>
+        )}
+      </div>
+    );
   };
 
   const handleTestExecution = async (test: TestCase, suiteId: string) => {
@@ -827,85 +907,7 @@ export default function TestSuitesPage() {
               {/* Test Cases */}
               {expandedSuites.includes(suite.id) && (
                 <div className="border-t border-white/10">
-                  {suite.testCases.map((test, index) => (
-                    <div key={test.id} className="p-6 border-b border-white/10 last:border-b-0">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <div className="flex items-center space-x-3">
-                            <h3 className="font-medium">{test.id} - {test.name}</h3>
-                            <div className={`px-2 py-0.5 text-xs font-medium rounded ${
-                              test.status === 'passed' ? 'bg-green-500/20 text-green-400' :
-                              test.status === 'failed' ? 'bg-red-500/20 text-red-400' :
-                              test.status === 'running' ? 'bg-blue-500/20 text-blue-400' :
-                              'bg-gray-500/20 text-gray-400'
-                            }`}>
-                              {test.status.toUpperCase()}
-                            </div>
-                          </div>
-                          <p className="text-sm text-gray-400">{test.description}</p>
-                        </div>
-                        <div className="flex items-center space-x-4">
-                          {/* Run Button */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              if (!selectedDevices[suite.id]) {
-                                alert('Please select a device first');
-                                return;
-                              }
-                              runTest(suite.id, test.id);
-                            }}
-                            disabled={runningSuites.includes(suite.id) || !selectedDevices[suite.id]}
-                            className={`px-4 py-2 rounded-lg ${
-                              runningSuites.includes(suite.id) || !selectedDevices[suite.id]
-                                ? 'bg-gray-500 cursor-not-allowed'
-                                : 'bg-blue-500 hover:bg-blue-600'
-                            } transition-colors flex items-center space-x-2`}
-                          >
-                            {test.status === 'running' ? (
-                              <>
-                                <ArrowPathIcon className="w-4 h-4 animate-spin" />
-                                <span>Running...</span>
-                              </>
-                            ) : (
-                              <>
-                                <PlayIcon className="w-4 h-4" />
-                                <span>Run</span>
-                              </>
-                            )}
-                          </button>
-
-                          {/* Stop Button */}
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              stopTestExecution(suite.id);
-                            }}
-                            disabled={test.status !== 'running' || stoppingStates[suite.id]}
-                            className={`px-4 py-2 rounded-lg ${
-                              stoppingStates[suite.id]
-                                ? 'bg-gray-500 cursor-not-allowed'
-                                : test.status === 'running'
-                                ? 'bg-red-500 hover:bg-red-600'
-                                : 'bg-gray-500/50 text-gray-400 cursor-not-allowed'
-                            } transition-colors flex items-center space-x-2`}
-                          >
-                            {test.status === 'running' ? (
-                              <>
-                                <StopIcon className="w-4 h-4" />
-                                <span>Stop</span>
-                              </>
-                            ) : (
-                              <>
-                                <StopIcon className="w-4 h-4" />
-                                <span>Stopped</span>
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                  {suite.testCases.map((test, index) => renderTestCase(test, index, suite.id))}
                 </div>
               )}
             </div>

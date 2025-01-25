@@ -13,10 +13,12 @@
 - [x] Add the values to the dashboard/src/app/api/tests/route.ts file
 - [x] Ask how to integrate the new email and new device into the dashboard so that it can be used to run parallel tests
 - [ ] Need to add more test cases to all the areas of the application - Playback, Series Details Page, Movies, etc.
-- [ ] Need to create Search Test Cases 
+- [x] Need to create Search Test Cases 
 - [ ] Need to create test cases for live channels
 - [ ] Include historical run both in Test Suite Page and Test History page 
 - [ ] Troubleshoot Stop Run button - does not work
+- [ ] Device should be disabled when it is running a test
+
 
 ### Ideas for the Dashboard UI
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the Test History page

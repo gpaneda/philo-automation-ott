@@ -2,11 +2,11 @@ import axios from 'axios';
 
 // Define interfaces for type safety
 interface TestExecutionConfig {
-  deviceId: string;
+  suiteId: string;
   testId?: string;
-  suiteId?: string;
+  deviceId: string;
+  deviceIp?: string;
   mode: 'single' | 'suite' | 'failed';
-  deviceIp?: string;  // Add deviceIp to the config
 }
 
 interface TestResult {
@@ -26,19 +26,25 @@ interface TestResult {
 interface TestExecutionResponse {
   success: boolean;
   output: string;
-  errors: string;
+  errors?: string;
+}
+
+interface DeviceStatus {
+  connected: boolean;
+  lastChecked: string;
 }
 
 export class TestExecutionService {
   private baseUrl: string;
   private deviceControlEndpoint: string;
+  private deviceEmailMap: Map<string, string>;
 
   constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_TEST_FRAMEWORK_URL || 'http://localhost:3001';
     this.deviceControlEndpoint = `${this.baseUrl}/api/device-control`;
+    this.deviceEmailMap = new Map();
   }
 
-  // Helper method to determine which email to use based on device IP
   private getEmailForDevice(deviceIp: string): string {
     switch (deviceIp) {
       case '10.0.0.55':
@@ -50,8 +56,7 @@ export class TestExecutionService {
     }
   }
 
-  // Check device status and establish connection
-  async connectToDevice(deviceId: string, deviceIp?: string): Promise<boolean> {
+  async connectToDevice(deviceId: string, deviceIp?: string): Promise<void> {
     try {
       const email = deviceIp ? this.getEmailForDevice(deviceIp) : process.env.PHILO_EMAIL;
       const url = `${this.deviceControlEndpoint}/connect`;
@@ -63,14 +68,26 @@ export class TestExecutionService {
         deviceIp,
         email
       });
-      return response.data.connected;
+
+      if (!response.data.connected) {
+        throw new Error(response.data.error || 'Failed to connect to device');
+      }
     } catch (error: any) {
-      console.error('Failed to connect to device:', error);
+      console.error('Device connection failed:', error);
       throw new Error(`Device connection failed: ${error.message}`);
     }
   }
 
-  // Execute a single test
+  async getDeviceStatus(deviceId: string): Promise<DeviceStatus> {
+    try {
+      const response = await axios.get(`${this.deviceControlEndpoint}/status/${deviceId}`);
+      return response.data;
+    } catch (error: any) {
+      console.error('Failed to get device status:', error);
+      throw new Error(`Failed to get device status: ${error.message}`);
+    }
+  }
+
   async executeTest(config: TestExecutionConfig): Promise<TestExecutionResponse> {
     try {
       // First ensure device is connected with the correct email
@@ -97,10 +114,12 @@ export class TestExecutionService {
     }
   }
 
-  // Execute an entire test suite
   async executeSuite(config: TestExecutionConfig): Promise<TestExecutionResponse> {
     try {
+      // First ensure device is connected with the correct email
       await this.connectToDevice(config.deviceId, config.deviceIp);
+
+      // Start suite execution
       const response = await axios.post(`${this.baseUrl}/api/execute-suite`, {
         ...config,
         email: config.deviceIp ? this.getEmailForDevice(config.deviceIp) : process.env.PHILO_EMAIL
@@ -121,24 +140,29 @@ export class TestExecutionService {
     }
   }
 
-  // Execute failed tests in a suite
-  async executeFailedTests(config: TestExecutionConfig): Promise<TestResult[]> {
+  async executeFailedTests(config: TestExecutionConfig): Promise<TestExecutionResponse> {
     try {
       await this.connectToDevice(config.deviceId, config.deviceIp);
       const response = await axios.post(`${this.baseUrl}/api/execute-failed`, {
         ...config,
         email: config.deviceIp ? this.getEmailForDevice(config.deviceIp) : process.env.PHILO_EMAIL
       });
-      // Temporarily disable WebSocket
-      // this.setupWebSocket(config);
-      return response.data;
+      
+      return {
+        success: response.data.success,
+        output: response.data.output,
+        errors: response.data.errors
+      };
     } catch (error: any) {
       console.error('Failed tests execution failed:', error);
-      throw new Error(`Failed tests execution failed: ${error.message}`);
+      return {
+        success: false,
+        output: '',
+        errors: `Failed tests execution failed: ${error.message}`
+      };
     }
   }
 
-  // Stop test execution
   async stopExecution(config: TestExecutionConfig): Promise<void> {
     try {
       const response = await axios.post(`${this.baseUrl}/api/stop-execution`, config);
@@ -148,39 +172,6 @@ export class TestExecutionService {
     } catch (error: any) {
       console.error('Failed to stop execution:', error);
       throw new Error(`Stop execution failed: ${error.message}`);
-    }
-  }
-
-  // Set up WebSocket connection for real-time updates
-  private setupWebSocket(config: TestExecutionConfig): void {
-    // Temporarily disable WebSocket setup
-    /*
-    const ws = new WebSocket(`${this.baseUrl.replace('http', 'ws')}/api/test-updates`);
-    
-    ws.onmessage = (event) => {
-      const update = JSON.parse(event.data);
-      // Emit events for UI updates
-      window.dispatchEvent(new CustomEvent('test-update', { detail: update }));
-    };
-
-    ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
-    };
-
-    ws.onclose = () => {
-      console.log('WebSocket connection closed');
-    };
-    */
-  }
-
-  // Get device status
-  async getDeviceStatus(deviceId: string): Promise<any> {
-    try {
-      const response = await axios.get(`${this.deviceControlEndpoint}/status/${deviceId}`);
-      return response.data;
-    } catch (error: any) {
-      console.error('Failed to get device status:', error);
-      throw new Error(`Device status check failed: ${error.message}`);
     }
   }
 
