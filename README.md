@@ -217,6 +217,16 @@ Additional documentation can be found in the `docs/` directory:
    - Test result reporting
    - Device/emulator management
 
+   - How to compile websocket server:
+     ```bash
+     npx tsc simpleWebSocketServer.ts
+     ```
+
+   - How to run websocket server:
+     ```bash
+     node simpleWebSocketServer.js
+     ```
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
