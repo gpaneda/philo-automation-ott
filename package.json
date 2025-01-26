@@ -25,7 +25,8 @@
     "test:device": "ts-node src/scripts/runAllTests.ts",
     "consolidate-reports": "ts-node src/scripts/consolidateReports.ts",
     "test:search": "NODE_OPTIONS=--experimental-vm-modules jest src/tests/search.test.ts",
-    "test:websocket": "ts-node src/scripts/testWebSocketHelper.ts"
+    "test:websocket": "ts-node src/scripts/testWebSocketHelper.ts",
+    "test:appium-api-extractor": "ts-node src/scripts/appium_api_extractor.ts"
   },
   "dependencies": {
     "@appium/base-driver": "^9.15.0",

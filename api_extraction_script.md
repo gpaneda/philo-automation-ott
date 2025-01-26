@@ -22,7 +22,7 @@ class AppiumAPIExtractor {
 
   async captureAPIData() {
     // Navigate through app sections
-    await this.driver.startActivity('com.philo.app', '.MainActivity');
+    await this.driver.startActivity('com.philo.philo', '.com.philo.philo.app.activity.MainActivity');
     
     // Simulate user interactions
     await this.simulateAppInteractions();
