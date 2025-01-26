@@ -9,7 +9,7 @@ dotenv.config();
 
 describe('Open Philo App', () => {
     beforeAll(async () => {
-        webSocketHelper = new WebSocketHelper('ws://localhost:3000');
+        webSocketHelper = new WebSocketHelper({ url: 'ws://localhost:3000' });
         // Verify required environment variables are present
         const requiredEnvVars = [
             'GMAIL_CLIENT_ID',
