@@ -2,7 +2,7 @@ import WebSocketHelper from '../utils/WebSocketHelper';
 
 // Replace with your local WebSocket server URL
 const wsUrl = 'ws://localhost:3000'; // Adjust the port as needed
-const wsHelper = new WebSocketHelper(wsUrl);
+const wsHelper = new WebSocketHelper({ url: wsUrl });
 
 async function runTest() {
     try {
