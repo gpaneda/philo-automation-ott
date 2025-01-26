@@ -1,0 +1,576 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.HomeScreenPage = exports.HomeScreen = void 0;
+const base_page_1 = require("./base.page");
+const child_process_1 = require("child_process");
+const path_1 = __importDefault(require("path"));
+const promises_1 = __importDefault(require("fs/promises"));
+class HomeScreen {
+    constructor(driver) {
+        this.driver = driver;
+    }
+}
+exports.HomeScreen = HomeScreen;
+class HomeScreenPage extends base_page_1.BasePage {
+    getSettingsButtonElement() {
+        return `//android.widget.Button[@resource-id='com.philo.philo:id/settings_button']`;
+    }
+    // Content Actions
+    verifyGuidePage() {
+        throw new Error('Method not implemented.');
+    }
+    constructor(driver) {
+        super(driver);
+        this.selectors = {
+            // Profile Selection Screen
+            profilesTitle: 'android=resourceId("com.philo.philo:id/profiles_title")',
+            profilesRecyclerView: 'android=resourceId("com.philo.philo:id/recycler_view")',
+            profileAvatar: 'android=resourceId("com.philo.philo:id/avatar")',
+            profileLabel: 'android=resourceId("com.philo.philo:id/label")',
+            addNewProfile: 'android=text("Add new profile")',
+            holdToEditText: 'android=resourceId("com.philo.philo:id/tv_hold_to_edit")',
+            philoLogo: 'android=resourceId("com.philo.philo:id/logo")',
+            // Header
+            homeHeader: 'android=resourceId("com.philo.philo:id/home_header")',
+            userProfileIcon: 'android=resourceId("com.philo.philo:id/user_profile_icon")',
+            headerWhitespace: 'android=resourceId("com.philo.philo:id/header_whitespace")',
+            // Top Menu Navigation
+            menuText: 'android=text("Menu")',
+            topNavHome: 'android=text("Home")',
+            topNavGuide: 'android=text("Guide")',
+            topNavSaved: 'android=text("Saved")',
+            topNavSearch: 'android=text("Search")',
+            topNavSettings: 'android=resourceId("com.philo.philo:id/tab_profile")',
+            // Main Navigation
+            liveTVButton: 'android=resourceId("com.philo.philo:id/live_tv_button")',
+            onDemandButton: 'android=resourceId("com.philo.philo:id/on_demand_button")',
+            dvrButton: 'android=resourceId("com.philo.philo:id/dvr_button")',
+            // Content Categories
+            topFreeMovies: 'android=text("Top Free Movies")',
+            topFreeShows: 'android=text("Top Free Shows")',
+            recommended: 'android=text("Recommended")',
+            trendingLive: 'android=text("Trending Live")',
+            realityRoundup: 'android=text("Reality Roundup")',
+            trueCrime: 'android=text("True Crime")',
+            saved: 'android=text("Saved")',
+            homeAndTravel: 'android=text("Home & Travel")',
+            keepWatching: 'android=text("Keep Watching")',
+            funForTheFamily: 'android=text("Fun for the Family")',
+            allTheFixings: 'android=text("All the Fixings")',
+            actionAndThrillers: 'android=text("Action & Thrillers")',
+            inTheNews: 'android=text("In the News")',
+            outDoorsAndSports: 'android=text("Outdoors & Sports")',
+            theLaughTrack: 'android=text("The Laugh Track")',
+            anime: 'android=text("Anime")',
+            // Movie Tiles
+            firstMovieTile: 'android=new UiSelector().resourceId("com.philo.philo:id/list_view_broadcasts").childSelector(new UiSelector().className("android.view.ViewGroup").instance(0))',
+            movieTileTitle: 'android=resourceId("com.philo.philo:id/title")',
+            // Series Tiles
+            topFreeShowsRow: 'android=resourceId("com.philo.philo:id/group_header_text")',
+            topFreeShowsText: 'android=text("Top Free Shows")',
+            firstSeriesTile: 'android=new UiSelector().resourceId("com.philo.philo:id/widget_tile_wrapper").instance(6)',
+            seriesTileTitle: 'android=resourceId("com.philo.philo:id/title")',
+            // Featured Content
+            featuredShow: 'android=resourceId("com.philo.philo:id/featured_show")',
+            featuredMovie: 'android=resourceId("com.philo.philo:id/featured_movie")',
+        };
+    }
+    /**
+     * Simulates pressing a key using ADB keycode
+     * @param keycode The keycode to send
+     */
+    async sendKeyEvent(keycode) {
+        return new Promise((resolve, reject) => {
+            (0, child_process_1.exec)(`adb -s 10.0.0.98:5555 shell input keyevent ${keycode}`, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`Error sending key event: ${stderr}`);
+                    reject(error);
+                }
+                else {
+                    resolve();
+                }
+            });
+        });
+    }
+    /**
+     * Simulates pressing the up button on the remote
+     */
+    async pressUpButton() {
+        await this.sendKeyEvent(19); // KEYCODE_DPAD_UP
+    }
+    async pressDownButton() {
+        await this.sendKeyEvent(20); // KEYCODE_DPAD_DOWN
+    }
+    async pressEnterButton() {
+        await this.sendKeyEvent(66); // KEYCODE_ENTER
+    }
+    async pressBackButton() {
+        await this.sendKeyEvent(4); // KEYCODE_BACK
+    }
+    async pressRightButton() {
+        await this.sendKeyEvent(22); // KEYCODE_DPAD_RIGHT
+    }
+    async pressLeftButton() {
+        await this.sendKeyEvent(21); // KEYCODE_DPAD_LEFT
+    }
+    /**
+     * Verify home screen elements are displayed
+     */
+    async verifyHomeScreenElements() {
+        let foundAnyElement = false;
+        // Add Press Up Button
+        await this.pressUpButton();
+        // Try to verify top menu elements
+        try {
+            if (await this.isElementDisplayed(this.selectors.menuText))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.topNavHome))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.topNavGuide))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.topNavSaved))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.topNavSearch))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.topNavSettings))
+                foundAnyElement = true;
+        }
+        catch (error) {
+            console.log('Some top menu elements not found');
+        }
+        // Try to verify main content elements
+        try {
+            if (await this.isElementDisplayed(this.selectors.homeHeader))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.userProfileIcon))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.liveTVButton))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.onDemandButton))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.dvrButton))
+                foundAnyElement = true;
+        }
+        catch (error) {
+            console.log('Some main content elements not found');
+        }
+        // Press Down Button to display content
+        await this.pressDownButton();
+        // Try to verify content categories
+        try {
+            if (await this.isElementDisplayed(this.selectors.topFreeMovies))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.topFreeShows))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.recommended))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.trendingLive))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.realityRoundup))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.trueCrime))
+                foundAnyElement = true;
+        }
+        catch (error) {
+            console.log('Some content category elements not found');
+        }
+        if (!foundAnyElement) {
+            throw new Error('No home screen elements were found');
+        }
+    }
+    async verifyTopMenuElements() {
+        let foundAnyElement = false;
+        try {
+            if (await this.isElementDisplayed(this.selectors.topNavHome))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.topNavGuide))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.topNavSaved))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.topNavSearch))
+                foundAnyElement = true;
+            if (await this.isElementDisplayed(this.selectors.topNavSettings))
+                foundAnyElement = true;
+        }
+        catch (error) {
+            console.log('Some top menu elements not found');
+        }
+        if (!foundAnyElement) {
+            throw new Error('No top menu elements were found');
+        }
+    }
+    // Navigation methods for top menu
+    async navigateToGuide() {
+        await this.click(this.selectors.topNavGuide);
+    }
+    async navigateToSaved() {
+        await this.click(this.selectors.topNavSaved);
+    }
+    async navigateToSearch() {
+        await this.click(this.selectors.topNavSearch);
+    }
+    async navigateToSettings() {
+        await this.click(this.selectors.topNavSettings);
+    }
+    /**
+     * Navigate to Live TV
+     */
+    async goToLiveTV() {
+        await this.click(this.selectors.liveTVButton);
+    }
+    /**
+     * Navigate to On Demand
+     */
+    async goToOnDemand() {
+        await this.click(this.selectors.onDemandButton);
+    }
+    /**
+     * Navigate to DVR
+     */
+    async goToDVR() {
+        await this.click(this.selectors.dvrButton);
+    }
+    /**
+     * Navigate to settings from home screen
+     */
+    async navigateToSettingsFromHome() {
+        // Press up to expose top menu
+        await this.pressUpButton();
+        // Wait for menu to be visible and click settings
+        await this.isElementDisplayed(this.selectors.topNavSettings);
+        await this.click(this.selectors.topNavSettings);
+    }
+    async getTopNavSettingsButtonElement() {
+        return `//android.widget.Button[@resource-id='com.philo.philo:id/tab_profile']`;
+    }
+    async clickTopNavSettingsButtonElement() {
+        const settingsButton = await this.getTopNavSettingsButtonElement();
+        await this.click(settingsButton);
+    }
+    /**
+     * Gets the title of the first movie in the Top Free Movies row
+     * @returns Promise<string> The movie title
+     */
+    async getFirstMovieTitle() {
+        await this.waitForElement(this.selectors.topFreeMovies);
+        const movieTile = await this.waitForElement(this.selectors.firstMovieTile);
+        return movieTile.getAttribute('content-desc');
+    }
+    /**
+     * Clicks on the first movie tile in the Top Free Movies row
+     */
+    async clickFirstMovie() {
+        try {
+            // One down press to focus
+            await this.pressDownButton();
+            await this.driver.pause(2000);
+            await this.pressLeftButton();
+            await this.driver.pause(2000);
+            await this.pressEnterButton();
+            await this.verifyTopFreeMoviesHeaderDisplayed();
+        }
+        catch (error) {
+            console.error('Error navigating to Top Free Movies:', error);
+            throw error;
+        } // Add a pause to let the details page load
+    }
+    async verifyTopFreeMoviesHeaderDisplayed() {
+        await this.waitForElement(this.selectors.topFreeMovies);
+    }
+    /**
+     * Base method for verifying a category page
+     * @param categoryName Name of the category for screenshots and logs
+     * @param goToCategory Function that navigates to the category
+     * @param topPage The top page object for screenshots
+     */
+    async verifyCategoryPage(categoryName, goToCategory, topPage) {
+        try {
+            await goToCategory();
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const currentScreenshotName = `${categoryName.toLowerCase().replace(/ /g, '_')}_current_${timestamp}.png`;
+            const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
+            const referenceScreenshotPath = path_1.default.join(process.cwd(), 'screenshots', 'reference', `${categoryName.toLowerCase().replace(/ /g, '_')}_reference.png`);
+            try {
+                await promises_1.default.access(referenceScreenshotPath);
+                const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `${categoryName.toLowerCase().replace(/ /g, '_')}_difference_${timestamp}.png`));
+                expect(comparison.misMatchPercentage).toBeLessThan(5);
+            }
+            catch (error) {
+                console.log('First run - creating reference image for:', categoryName);
+                await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
+            }
+        }
+        catch (error) {
+            console.error(`Error verifying ${categoryName} category:`, error);
+            throw error;
+        }
+    }
+    /**
+     * Verify Top Free Movies category
+     * @param categoriesPage The categories page object
+     * @param topPage The top page object for screenshots
+     */
+    async verifyTopFreeMovies(categoriesPage, topPage) {
+        await this.verifyCategoryPage('Top Free Movies', () => categoriesPage.goToTopFreeMovies(), topPage);
+    }
+    /**
+     * Verify Top Free Shows category
+     * @param categoriesPage The categories page object
+     * @param topPage The top page object for screenshots
+     */
+    async verifyTopFreeShows(categoriesPage, topPage) {
+        await this.verifyCategoryPage('Top Free Shows', () => categoriesPage.goToTopFreeShows(), topPage);
+    }
+    /**
+     * Verify Recommended category
+     * @param categoriesPage The categories page object
+     * @param topPage The top page object for screenshots
+     */
+    async verifyRecommended(categoriesPage, topPage) {
+        await this.verifyCategoryPage('Recommended', () => categoriesPage.goToRecommended(), topPage);
+    }
+    /**
+     * Verify Saved category
+     * @param categoriesPage The categories page object
+     * @param topPage The top page object for screenshots
+     */
+    async verifySavedCategory(categoriesPage, topPage) {
+        try {
+            await this.verifyHomeScreenElements();
+            // Find the Saved category
+            const found = await this.findCategory('Saved');
+            if (!found) {
+                throw new Error('Saved category not found');
+            }
+            // Press down once more to get to the actual row content
+            await this.pressDownButton();
+            await this.driver.pause(2000);
+            // Now that we're at Saved content, press left and enter
+            await this.pressLeftButton();
+            await this.driver.pause(2000);
+            await this.pressEnterButton();
+            await this.driver.pause(3000);
+            // Take and compare screenshot
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const currentScreenshotName = `saved_current_${timestamp}.png`;
+            const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
+            const referenceScreenshotPath = path_1.default.join(process.cwd(), 'screenshots', 'reference', 'saved_reference.png');
+            try {
+                await promises_1.default.access(referenceScreenshotPath);
+                const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `saved_difference_${timestamp}.png`));
+                expect(comparison.misMatchPercentage).toBeLessThan(5);
+            }
+            catch (error) {
+                console.log('First run - creating saved reference image');
+                await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
+            }
+        }
+        catch (error) {
+            console.error('Error verifying Saved category:', error);
+            throw error;
+        }
+    }
+    /**
+     * Find a specific category by navigating through the content
+     * @param targetCategory The category to find
+     * @param maxPresses Maximum number of times to press down/up
+     * @returns Promise<boolean> Whether the category was found
+     */
+    async findCategory(targetCategory, maxPresses = 15) {
+        // First press down to start at categories
+        await this.pressDownButton();
+        await this.driver.pause(5000);
+        // List of all possible categories
+        const categories = [
+            'Top Free Movies',
+            'Top Free Shows',
+            'Recommended',
+            'Trending Live',
+            'Reality Roundup',
+            'True Crime',
+            'Saved',
+            'Home & Travel',
+            'Keep Watching',
+            'Fun for the Family',
+            'All the Fixings',
+            'Action & Thrillers',
+            'In the News',
+            'Outdoors & Sports',
+            'The Laugh Track',
+            'Anime'
+        ];
+        // Try to find the category
+        for (let pressCount = 0; pressCount < maxPresses; pressCount++) {
+            // Check all categories that might be visible
+            for (const category of categories) {
+                try {
+                    const element = await this.driver.$(`android=text("${category}")`);
+                    const isDisplayed = await element.isDisplayed();
+                    if (isDisplayed && category === targetCategory) {
+                        console.log(`Found target category "${targetCategory}" after ${pressCount} presses`);
+                        return true;
+                    }
+                }
+                catch (error) {
+                    // Ignore errors for individual elements
+                }
+            }
+            // Press down to reveal more categories
+            await this.pressDownButton();
+            await this.driver.pause(2000);
+        }
+        console.log(`Category "${targetCategory}" not found after ${maxPresses} presses`);
+        return false;
+    }
+    /**
+     * Navigate to and verify Trending Live category
+     * @param categoriesPage The categories page object
+     * @param topPage The top page object for screenshots
+     */
+    async verifyTrendingLive(categoriesPage, topPage) {
+        try {
+            await this.verifyHomeScreenElements();
+            // Find the Trending Live category
+            const found = await this.findCategory('Trending Live');
+            if (!found) {
+                throw new Error('Trending Live category not found');
+            }
+            // Press down once more to get to the actual row content
+            await this.pressDownButton();
+            await this.driver.pause(2000);
+            // Now that we're at Trending Live content, press left and enter
+            await this.pressLeftButton();
+            await this.driver.pause(2000);
+            await this.pressEnterButton();
+            await this.driver.pause(3000);
+            // Take and compare screenshot
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const currentScreenshotName = `trending_live_current_${timestamp}.png`;
+            const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
+            const referenceScreenshotPath = path_1.default.join(process.cwd(), 'screenshots', 'reference', 'trending_live_reference.png');
+            try {
+                await promises_1.default.access(referenceScreenshotPath);
+                const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `trending_live_difference_${timestamp}.png`));
+                expect(comparison.misMatchPercentage).toBeLessThan(5);
+            }
+            catch (error) {
+                console.log('First run - creating trending live reference image');
+                await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
+            }
+        }
+        catch (error) {
+            console.error('Error verifying Trending Live category:', error);
+            throw error;
+        }
+    }
+    /**
+     * Navigate to and verify the Top page
+     * @param topPage The top page object for screenshots
+     * @returns Promise<void>
+     */
+    async verifyTopPage(topPage) {
+        try {
+            await this.pressUpButton();
+            await this.driver.pause(5000);
+            for (let i = 0; i < 2; i++) {
+                await this.pressRightButton();
+            }
+            await this.pressEnterButton();
+            await this.driver.pause(10000);
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const currentScreenshotName = `top_page_current_${timestamp}.png`;
+            const screenshotPath = await topPage.takeScreenshot(path_1.default.join(process.cwd(), 'screenshots', 'current', currentScreenshotName));
+            const referenceScreenshotPath = path_1.default.join(process.cwd(), 'screenshots', 'reference', 'top_page_reference.png');
+            try {
+                await promises_1.default.access(referenceScreenshotPath);
+                const comparison = await topPage.compareImages(screenshotPath, referenceScreenshotPath, path_1.default.join(process.cwd(), 'screenshots', 'difference', `top_difference_${timestamp}.png`));
+                expect(comparison.misMatchPercentage).toBeLessThan(5);
+            }
+            catch (error) {
+                console.log('First run - creating top page reference image');
+                await promises_1.default.copyFile(screenshotPath, referenceScreenshotPath);
+            }
+        }
+        catch (error) {
+            console.error('Error verifying Top page:', error);
+            throw error;
+        }
+    }
+    /**
+     * Scan and log all content categories
+     * @returns Promise<string[]> Array of found category names
+     */
+    async scanContentCategories() {
+        const categoryTexts = [];
+        const minimumPresses = 15;
+        // Navigate down to categories and wait for content to load
+        await this.pressDownButton();
+        await this.driver.pause(5000);
+        // Check for each category using text selectors
+        const categories = [
+            'Top Free Movies',
+            'Top Free Shows',
+            'Recommended',
+            'Trending Live',
+            'Reality Roundup',
+            'True Crime',
+            'Saved',
+            'Home & Travel',
+            'Keep Watching',
+            'Fun for the Family',
+            'All the Fixings',
+            'Action & Thrillers',
+            'In the News',
+            'Outdoors & Sports',
+            'The Laugh Track',
+            'Anime'
+        ];
+        // Scan through all categories
+        for (let pressCount = 0; pressCount < minimumPresses; pressCount++) {
+            const foundInThisPress = [];
+            for (const category of categories) {
+                try {
+                    const element = await this.driver.$(`android=text("${category}")`);
+                    const isDisplayed = await element.isDisplayed();
+                    if (isDisplayed) {
+                        foundInThisPress.push(category);
+                        if (!categoryTexts.includes(category)) {
+                            categoryTexts.push(category);
+                            console.log(`Found new category: ${category}`);
+                        }
+                    }
+                }
+                catch (error) {
+                    // Ignore errors for individual elements
+                }
+            }
+            if (foundInThisPress.length > 0) {
+                console.log(`Press ${pressCount + 1}: Found categories:`, foundInThisPress);
+            }
+            // Press down to reveal more categories
+            await this.pressDownButton();
+            await this.driver.pause(2000);
+        }
+        return categoryTexts;
+    }
+    /**
+     * Gets the title of the second movie in the grid
+     * @returns Promise<string> The title of the second movie
+     */
+    async getSecondMovieTitle() {
+        const selector = 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).focusable(true).instance(1)';
+        const element = await this.driver.$(selector);
+        const title = await element.getAttribute('content-desc');
+        return title;
+    }
+    /**
+     * Clicks the currently focused movie tile
+     */
+    async clickMovieTile() {
+        await this.pressEnterButton();
+    }
+}
+exports.HomeScreenPage = HomeScreenPage;

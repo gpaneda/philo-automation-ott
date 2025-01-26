@@ -1,11 +1,15 @@
 import { AppHelper } from '../helpers/app.helper';
 import dotenv from 'dotenv';
+import WebSocketHelper from '../utils/WebSocketHelper';
+
+let webSocketHelper: WebSocketHelper;
 
 // Load environment variables
 dotenv.config();
 
 describe('Open Philo App', () => {
     beforeAll(async () => {
+        webSocketHelper = new WebSocketHelper('ws://localhost:3000');
         // Verify required environment variables are present
         const requiredEnvVars = [
             'GMAIL_CLIENT_ID',
@@ -31,6 +35,7 @@ describe('Open Philo App', () => {
         // Clean up app data after test
         console.log('Clearing app data after test...');
         await AppHelper.clearAppData();
+        await webSocketHelper.close();
     });
 
     test('TC103 - should complete email sign in flow', async () => {

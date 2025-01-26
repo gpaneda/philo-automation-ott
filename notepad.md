@@ -18,15 +18,16 @@
 - [ ] Include historical run both in Test Suite Page and Test History page 
 - [ ] Troubleshoot Stop Run button - does not work
 - [ ] Device should be disabled when it is running a test
+- [ ] Landing page status not updating
 
 
-### Ideas for the Dashboard UI
+### Notes for the Dashboard UI
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the Test History page
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the Pie Chart page
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the  Reports page
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the Test Execution page
 
-### Ideas for Performance Testing
+### Notes for Performance Testing
 - [ ] Research on common performance testing tools and frameworks
 - [ ] Research on how to integrate the performance testing tools and frameworks into the dashboard
 - [ ] Research on how to run the performance testing tools and frameworks in parallel
@@ -76,3 +77,11 @@ By following these steps, you can successfully add new devices to your dashboard
 
 
 
+## User Interactions to get API Data
+- User opens the app
+- User clicks sign in button
+- User enters email
+- User clicks on submit button
+- User clicks on profile picture
+- User pressed up button
+- User chooses 

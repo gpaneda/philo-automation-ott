@@ -1,5 +1,5 @@
 {
-  "/api/execute-suite/route": "app/api/execute-suite/route.js",
-  "/api/device-control/connect/route": "app/api/device-control/connect/route.js",
+  "/api/test-history/route": "app/api/test-history/route.js",
+  "/test-history/page": "app/test-history/page.js",
   "/test-suites/page": "app/test-suites/page.js"
 }
