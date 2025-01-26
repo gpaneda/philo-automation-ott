@@ -1,12 +1,31 @@
 import { Browser } from "webdriverio";
 import { HomeScreen, HomeScreenPage } from "./homescreen.page";
 import { BasePage } from "./base.page";
+
+type ChannelShowResultsElementNames = 
+    | 'fearTheWalkingDead'
+    | 'theWalkingDead'
+    | 'theWalkingDeadUniverse'
+    | 'theWalkingDeadDarylDixon'
+    | 'theWalkingDeadWorldBeyond'
+    | 'topShowsWalkingDeadChannel'
+    | 'bigTileTopButtons'
+    | 'topShowsWalkingDeadUniverse'
+    | 'episodeTitle'
+    | 'airDate'
+    | 'playButton'
+    | 'channelLogo';
+
 export class SearchPage extends BasePage    {
+    theWalkingDeadUniverse(theWalkingDeadUniverse: any): boolean | PromiseLike<boolean> {
+        throw new Error('Method not implemented.');
+    }
     constructor(driver: Browser<'async'>) {
         super(driver);
         // Initialization code
         this.driver = driver;
     }
+    
     // Define properties for each UI element based on resource IDs
     actionBarRoot = 'com.philo.philo:id/action_bar_root';
     content = 'android:id/content';
@@ -78,6 +97,77 @@ export class SearchPage extends BasePage    {
     iconPlayRadial = 'com.philo.philo:id/icon_play_radial';
     title = 'com.philo.philo:id/title';
     expandToGridIcon = 'com.philo.philo:id/expand_to_grid_icon';
+
+    //Channel Show Results Elements
+    channelShowResultsElements = {
+        // New elements added from ui_dump_formatted.xml
+        "fearTheWalkingDead": {
+            "selector": "com.philo.philo:id/widget_tile_wrapper",
+            "description": "Fear the Walking Dead",
+            "type": "view"
+        },
+        "theWalkingDead": {
+            "selector": "com.philo.philo:id/widget_tile_wrapper",
+            "description": "The Walking Dead",
+            "type": "view"
+        },
+
+        "theWalkingDeadUniverse": {
+            "selector": "com.philo.philo:id/widget_tile_wrapper",
+            "description": "The Walking Dead Universe",
+            "type": "view"
+        },
+        "theWalkingDeadDarylDixon": {
+            "selector": "com.philo.philo:id/widget_tile_wrapper",
+            "description": "The Walking Dead: Daryl Dixon",
+            "type": "view"
+        },
+        "theWalkingDeadWorldBeyond": {
+            "selector": "com.philo.philo:id/widget_tile_wrapper",
+            "description": "The Walking Dead: World Beyond",
+            "type": "view"
+        },
+        "topShowsWalkingDeadChannel": {
+            "selector": "com.philo.philo:id/list_view_broadcasts",
+            "description": "Top shows on The Walking Dead Channel",
+            "type": "recyclerView"
+        },
+
+        "topShowsWalkingDeadUniverse": {
+            "selector": "com.philo.philo:id/list_view_broadcasts",
+            "description": "Top shows on The Walking Dead Universe",
+            "type": "recyclerView"
+        },
+        "bigTileTopButtons": {
+            "selector": "com.philo.philo:id/big_tile_top_buttons_container",
+            "description": "Top buttons for big tile",
+            "type": "view"
+        },  
+        episodeTitle: {
+            description: "Episode Title",
+            selector: "com.philo.philo:id/title", 
+            type: "textView"
+        },
+        airDate: {
+            description: "Air Date",
+            selector: "com.philo.philo:id/air_date", 
+            type: "textView"
+        },
+        playButton: {
+            description: "Play Button",
+            selector: "com.philo.philo:id/icon_play_radial",
+            type: "imageView"
+        },
+        channelLogo: {
+            description: "Channel Logo",
+            selector: "com.philo.philo:id/channel_logo", 
+            type: "imageView"
+        },
+
+        
+    }
+   
+
 
     // Method to get the action bar root element
     getActionBarRootElement() {
@@ -236,6 +326,20 @@ export class SearchPage extends BasePage    {
         await homeScreen.pressLeftButton(); // Assuming homeScreen is accessible
         await homeScreen.pressEnterButton();
         await this.driver.pause(3000); // Assuming driver is accessible
+    }
+    getElement(elementName: ChannelShowResultsElementNames) {
+        const element = this.channelShowResultsElements[elementName];
+        if (element) {
+            return this.driver.$(`//*[@resource-id='${element.selector}' or @content-desc='${element.description}']`);
+        }
+        throw new Error(`Element ${elementName} not found`);
+    }
+
+    // Example usage of get and verify methods
+    async verifyAllElements() {
+        for (const key in this.channelShowResultsElements) {
+            await this.verifyElementDisplayed(key);
+        }
     }
 }
     

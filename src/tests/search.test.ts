@@ -3,7 +3,7 @@ import { Browser } from 'webdriverio';
 import { HomeScreenPage } from '../pages/homescreen.page';
 import { SettingsPage } from '../pages/settings.page';
 import { TopPage } from '../pages/top.page';
-
+import WebSocketHelper from '../utils/WebSocketHelper';
 import { CategoriesPage } from '../pages/categories.page';
 import { MoviesDetailsPage } from '../pages/moviesDetails.page';
 import { SearchPage } from '../pages/search.page';
@@ -16,7 +16,7 @@ let topPage: TopPage;
 let categoriesPage: CategoriesPage;
 let movieDetailsPage: MoviesDetailsPage;
 let searchPage: SearchPage;
-
+let webSocketHelper: WebSocketHelper;
 beforeAll(async () => {
     try {
         const requiredEnvVars = [
@@ -42,6 +42,8 @@ beforeAll(async () => {
         if (!loginSuccess) {
             throw new Error('Failed to login to Philo');
         }
+
+        webSocketHelper = new WebSocketHelper({ url: 'ws://localhost:3000' });
 
         // Initialize driver and page objects
         driver = await AppHelper.initializeDriver();
@@ -69,11 +71,12 @@ beforeEach(async () => {
         throw error;
     }
 });
-afterAll(async () => {
+//afterAll(async () => {
     // Clean up app data after test
-    console.log('Clearing app data after test...');
-    await AppHelper.clearAppData();
-});
+    //console.log('Clearing app data after test...');
+    //await AppHelper.clearAppData();
+    //webSocketHelper.close();
+//});
 
 describe('Search Test', () => {
     test('TC501 - should display Search Results for Series', async () => {
@@ -166,6 +169,70 @@ describe('Search Test', () => {
         expect(headerTexts).not.toContain('Movies');
         //Add console log to check if Empty State is displayed
         console.log('Empty State is displayed');
+    }, 180000);
+
+    test('TC505 - should display Search Results for Specific Title', async () => {
+        try {
+            await searchPage.navigateToSearchAndVerify();
+        } catch (error) {
+            console.error('Search page was not displayed:', error);
+            throw error;
+        }
+
+        await searchPage.enterSearchTerm('The Walking Dead');
+        await driver.pause(3000);
+        await homeScreen.pressEnterButton();
+
+        //Verify that the search results displays Channels, Shows, Episodes Header Text
+        const headerTexts = await searchPage.getHeaderText();
+        console.log('Header Texts:', headerTexts);
+        expect(headerTexts).toContain('Shows');
+
+        //Goes to Keyboard
+        for (let i = 0; i < 2; i++) {
+            await homeScreen.pressDownButton();
+        }
+        //Press right button until channels row is in focus and go to channels row
+        for (let i = 0; i < 7; i++) {
+            await homeScreen.pressRightButton();
+        }
+        await driver.pause(3000);
+        await searchPage.interactWithSearchResults();
+        //Press Enter Button
+        await homeScreen.pressEnterButton();
+        //Verify that any of the Walking Dead shows are displayed
+        try {
+            const possibleElements = [
+                'topShowsWalkingDeadUniverse',
+                'fearTheWalkingDead',
+                'theWalkingDead',
+                'theWalkingDeadDarylDixon',
+                'theWalkingDeadWorldBeyond'
+            ] as const;
+
+            let foundShow = false;
+            for (const elementName of possibleElements) {
+                try {
+                    console.log(`Checking for element: ${elementName}`);
+                    const element = await searchPage.getElement(elementName);
+                    const isVisible = await element.isDisplayed();
+                    console.log(`Element ${elementName} visibility:`, isVisible);
+                    if (isVisible) {
+                        foundShow = true;
+                        console.log(`Found visible show: ${elementName}`);
+                        break;
+                    }
+                } catch (error) {
+                    console.log(`Element ${elementName} not found:`, error.message);
+                    continue;
+                }
+            }
+
+            expect(foundShow).toBe(true);
+        } catch (error) {
+            console.error('Error checking for Walking Dead shows:', error);
+            throw error;
+        }
     }, 180000);
 
 });

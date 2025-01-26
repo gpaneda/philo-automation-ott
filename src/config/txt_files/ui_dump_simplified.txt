@@ -26,10 +26,6 @@ Element: undefined
                 bounds: [0,0][1920,1080]
 
               Element: android.widget.FrameLayout
-                resource-id: com.philo.philo:id/modal_fragment_host
-                bounds: [0,0][1920,1080]
-
-              Element: android.widget.FrameLayout
                 resource-id: com.philo.philo:id/dialog_fragment_host
                 bounds: [0,0][1920,1080]
 
@@ -37,447 +33,592 @@ Element: undefined
                 resource-id: com.philo.philo:id/fragment_host
                 bounds: [0,0][1920,1080]
 
-                Element: android.view.ViewGroup
-                  resource-id: com.philo.philo:id/fragment_search
+                Element: android.widget.FrameLayout
+                  resource-id: com.philo.philo:id/fragment_grid_or_list
                   bounds: [0,0][1920,1080]
 
-                  Element: androidx.recyclerview.widget.RecyclerView
-                    resource-id: com.philo.philo:id/tile_groups
-                    bounds: [40,0][1920,1080]
+                  Element: android.widget.FrameLayout
+                    resource-id: com.philo.philo:id/grid_or_row_fragment_host
+                    bounds: [0,0][1920,1080]
 
                     Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/default_tile_row
-                      bounds: [40,0][1920,396]
-
-                      Element: android.view.ViewGroup
-                        resource-id: com.philo.philo:id/tile_group_row_header_layout
-                        bounds: [140,0][1920,66]
-                        content-desc: Expand collection Channels
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/button_tile_group
-                          bounds: [140,10][1920,56]
-
-                          Element: android.widget.TextView
-                            resource-id: com.philo.philo:id/label_tile_group
-                            bounds: [140,10][295,56]
-                            text: Channels
+                      resource-id: com.philo.philo:id/fragment_tile_group_grid
+                      bounds: [0,0][1920,1080]
 
                       Element: androidx.recyclerview.widget.RecyclerView
-                        resource-id: com.philo.philo:id/list_view_broadcasts
-                        bounds: [40,66][1920,364]
-                        content-desc: Channels
+                        resource-id: com.philo.philo:id/tile_groups
+                        bounds: [0,0][1920,1080]
 
                         Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/widget_tile_wrapper
-                          bounds: [120,66][424,364]
-                          content-desc: AMC Thrillers
+                          resource-id: com.philo.philo:id/grid_row
+                          bounds: [0,0][1920,1080]
 
-                          Element: android.widget.FrameLayout
-                            resource-id: com.philo.philo:id/tile_view_wrapper
-                            bounds: [120,66][424,364]
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/header_whitespace
+                            bounds: [0,0][1920,216]
+
+                            Element: android.widget.ImageView
+                              resource-id: com.philo.philo:id/icon_tile_group
+                              bounds: [619,148][675,204]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/label_tile_group
+                              bounds: [701,151][875,202]
+                              text: Channels
+
+                            Element: android.widget.LinearLayout
+                              resource-id: com.philo.philo:id/sorter_container
+                              bounds: [1003,148][1368,204]
+
+                              Element: android.widget.HorizontalScrollView
+                                resource-id: com.philo.philo:id/layout_sorters
+                                bounds: [1003,148][1368,204]
+
+                                Element: android.widget.LinearLayout
+                                  resource-id: com.philo.philo:id/layout_sortings
+                                  bounds: [1003,148][1368,204]
+
+                                  Element: android.widget.TextView
+                                    resource-id: com.philo.philo:id/label_page_filter
+                                    bounds: [1003,148][1219,204]
+                                    text: Relevance
+
+                                  Element: android.widget.TextView
+                                    resource-id: com.philo.philo:id/label_page_filter
+                                    bounds: [1219,148][1368,204]
+                                    text: A to Z
+
+                          Element: android.widget.GridView
+                            resource-id: com.philo.philo:id/list_view_broadcasts
+                            bounds: [456,232][1464,1080]
+                            content-desc: Channels
 
                             Element: android.view.ViewGroup
-                              resource-id: com.philo.philo:id/tile_view
-                              bounds: [120,66][418,364]
+                              bounds: [472,232][770,530]
+                              content-desc: The Walking Dead Universe
 
                               Element: android.widget.ImageView
-                                bounds: [120,66][418,364]
+                                bounds: [472,232][770,530]
 
                               Element: android.view.View
                                 resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [120,66][418,364]
+                                bounds: [472,232][770,530]
 
                               Element: android.widget.ImageView
                                 resource-id: com.philo.philo:id/channel_logo
-                                bounds: [194,140][344,290]
-                                content-desc: AMC Thrillers
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/favorite_icon
-                                bounds: [251,294][287,330]
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/widget_tile_wrapper
-                          bounds: [424,66][728,364]
-                          content-desc: Stories by AMC
-
-                          Element: android.widget.FrameLayout
-                            resource-id: com.philo.philo:id/tile_view_wrapper
-                            bounds: [424,66][728,364]
+                                bounds: [546,306][696,456]
+                                content-desc: The Walking Dead Universe
 
                             Element: android.view.ViewGroup
-                              resource-id: com.philo.philo:id/tile_view
-                              bounds: [424,66][722,364]
+                              bounds: [808,232][1106,530]
+                              content-desc: The Walking Dead Channel
 
                               Element: android.widget.ImageView
-                                bounds: [424,66][722,364]
+                                bounds: [808,232][1106,530]
 
                               Element: android.view.View
                                 resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [424,66][722,364]
+                                bounds: [808,232][1106,530]
 
                               Element: android.widget.ImageView
                                 resource-id: com.philo.philo:id/channel_logo
-                                bounds: [498,140][648,290]
-                                content-desc: Stories by AMC
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/widget_tile_wrapper
-                          bounds: [728,66][1032,364]
-                          content-desc: AMC
-
-                          Element: android.widget.FrameLayout
-                            resource-id: com.philo.philo:id/tile_view_wrapper
-                            bounds: [728,66][1032,364]
-
-                            Element: android.view.ViewGroup
-                              resource-id: com.philo.philo:id/tile_view
-                              bounds: [728,66][1026,364]
-
-                              Element: android.widget.ImageView
-                                bounds: [728,66][1026,364]
-
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [728,66][1026,364]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/channel_logo
-                                bounds: [802,140][952,290]
-                                content-desc: AMC
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/widget_tile_wrapper
-                          bounds: [1032,66][1336,364]
-                          content-desc: AMC+
-
-                          Element: android.widget.FrameLayout
-                            resource-id: com.philo.philo:id/tile_view_wrapper
-                            bounds: [1032,66][1336,364]
-
-                            Element: android.view.ViewGroup
-                              resource-id: com.philo.philo:id/tile_view
-                              bounds: [1032,66][1330,364]
-
-                              Element: android.widget.ImageView
-                                bounds: [1032,66][1330,364]
-
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [1032,66][1330,364]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/channel_logo
-                                bounds: [1106,140][1256,290]
-                                content-desc: AMC+
-
-                      Element: android.widget.ImageView
-                        resource-id: com.philo.philo:id/expand_to_grid_icon
-                        bounds: [56,66][104,364]
-                        content-desc: Expand collection
-
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/default_tile_row
-                      bounds: [40,396][1920,762]
-
-                      Element: android.view.ViewGroup
-                        resource-id: com.philo.philo:id/tile_group_row_header_layout
-                        bounds: [140,396][1920,462]
-                        content-desc: Expand collection Shows
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/button_tile_group
-                          bounds: [140,406][1920,452]
-
-                          Element: android.widget.TextView
-                            resource-id: com.philo.philo:id/label_tile_group
-                            bounds: [140,406][248,452]
-                            text: Shows
-
-                      Element: androidx.recyclerview.widget.RecyclerView
-                        resource-id: com.philo.philo:id/list_view_broadcasts
-                        bounds: [40,462][1920,730]
-                        content-desc: Shows
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/widget_tile_wrapper
-                          bounds: [120,462][608,730]
-                          content-desc: AMC+ Fan Experience
-
-                          Element: android.widget.FrameLayout
-                            resource-id: com.philo.philo:id/tile_view_wrapper
-                            bounds: [120,462][608,730]
-
-                            Element: android.view.ViewGroup
-                              resource-id: com.philo.philo:id/tile_view
-                              bounds: [120,462][602,730]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [120,462][602,730]
-
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [120,462][602,730]
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/widget_tile_wrapper
-                          bounds: [608,462][1096,730]
-                          content-desc: Andy Gold: Dreamcatcher
-
-                          Element: android.widget.FrameLayout
-                            resource-id: com.philo.philo:id/tile_view_wrapper
-                            bounds: [608,462][1096,730]
-
-                            Element: android.view.ViewGroup
-                              resource-id: com.philo.philo:id/tile_view
-                              bounds: [608,462][1090,730]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [608,462][1090,730]
-
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [608,462][1090,730]
-
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/default_tile_row
-                      bounds: [40,762][1920,1080]
-
-                      Element: android.view.ViewGroup
-                        resource-id: com.philo.philo:id/tile_group_row_header_layout
-                        bounds: [140,762][1920,828]
-                        content-desc: Expand collection Episodes
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/button_tile_group
-                          bounds: [140,772][1920,818]
-
-                          Element: android.widget.TextView
-                            resource-id: com.philo.philo:id/label_tile_group
-                            bounds: [140,772][289,818]
-                            text: Episodes
-
-                      Element: androidx.recyclerview.widget.RecyclerView
-                        resource-id: com.philo.philo:id/list_view_broadcasts
-                        bounds: [40,828][1920,1080]
-                        content-desc: Episodes
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/widget_tile_wrapper
-                          bounds: [120,828][608,1080]
-                          content-desc: Wheeler Dealers
-
-                          Element: android.widget.FrameLayout
-                            resource-id: com.philo.philo:id/tile_view_wrapper
-                            bounds: [120,828][608,1080]
-
-                            Element: android.view.ViewGroup
-                              resource-id: com.philo.philo:id/tile_view
-                              bounds: [120,828][602,1080]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [120,828][602,1080]
-
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [120,828][602,1080]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/channel_logo
-                                bounds: [152,863][216,927]
-                                content-desc: MotorTrend
-
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/icon_play_radial
-                                bounds: [502,863][566,927]
-
-                              Element: android.widget.TextView
-                                resource-id: com.philo.philo:id/title
-                                bounds: [152,1050][570,1080]
-                                text: Wheeler Dealers
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/widget_tile_wrapper
-                          bounds: [608,828][1096,1080]
-                          content-desc: Worst Car Ever
-
-                          Element: android.widget.FrameLayout
-                            resource-id: com.philo.philo:id/tile_view_wrapper
-                            bounds: [608,828][1096,1080]
-
-                            Element: android.view.ViewGroup
-                              resource-id: com.philo.philo:id/tile_view
-                              bounds: [608,828][1090,1080]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [608,828][1090,1080]
-
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [608,828][1090,1080]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/channel_logo
-                                bounds: [640,863][704,927]
-                                content-desc: Discovery Channel
-
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/icon_play_radial
-                                bounds: [990,863][1054,927]
-
-                              Element: android.widget.TextView
-                                resource-id: com.philo.philo:id/title
-                                bounds: [640,1050][1058,1080]
-                                text: Worst Car Ever
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/widget_tile_wrapper
-                          bounds: [1096,828][1584,1080]
-                          content-desc: Deck the Hallmark Presents: Hallmark Non-Hallmark Movie Reviews
-
-                          Element: android.widget.FrameLayout
-                            resource-id: com.philo.philo:id/tile_view_wrapper
-                            bounds: [1096,828][1584,1080]
-
-                            Element: android.view.ViewGroup
-                              resource-id: com.philo.philo:id/tile_view
-                              bounds: [1096,828][1578,1080]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [1096,828][1578,1080]
-
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [1096,828][1578,1080]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/channel_logo
-                                bounds: [1128,863][1192,927]
-                                content-desc: Deck the Hallmark
-
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/icon_play_radial
-                                bounds: [1478,863][1542,927]
-
-                              Element: android.widget.TextView
-                                resource-id: com.philo.philo:id/title
-                                bounds: [1128,1050][1546,1080]
-                                text: Deck the Hallmark Presents: Hallmark Non-Hallmark Movie Reviews
-
-                        Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/widget_tile_wrapper
-                          bounds: [1584,828][1920,1080]
-                          content-desc: Overhaulin'
-
-                          Element: android.widget.FrameLayout
-                            resource-id: com.philo.philo:id/tile_view_wrapper
-                            bounds: [1584,828][1920,1080]
-
-                            Element: android.view.ViewGroup
-                              resource-id: com.philo.philo:id/tile_view
-                              bounds: [1584,828][1920,1080]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [1584,828][1920,1080]
-
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [1584,828][1920,1080]
-
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/channel_logo
-                                bounds: [1616,863][1680,927]
-                                content-desc: MotorTrend
-
-                              Element: android.widget.TextView
-                                resource-id: com.philo.philo:id/title
-                                bounds: [1616,1050][1920,1080]
-                                text: Overhaulin'
+                                bounds: [882,306][1032,456]
+                                content-desc: The Walking Dead Channel
 
               Element: android.widget.FrameLayout
-                resource-id: com.philo.philo:id/fragment_tabs
-                bounds: [0,0][1920,244]
+                resource-id: com.philo.philo:id/modal_fragment_host
+                bounds: [0,0][1920,1080]
 
                 Element: android.view.ViewGroup
-                  resource-id: com.philo.philo:id/widget_tabs
-                  bounds: [0,0][1920,244]
+                  resource-id: com.philo.philo:id/fragment_big_tile_nested_scroll
+                  bounds: [0,0][1920,1080]
 
-                  Element: android.widget.LinearLayout
-                    resource-id: com.philo.philo:id/tab_bar
-                    bounds: [482,50][1439,146]
+                  Element: android.view.View
+                    resource-id: com.philo.philo:id/big_tile_fragment_background
+                    bounds: [0,0][1920,1080]
+
+                  Element: android.view.ViewGroup
+                    resource-id: com.philo.philo:id/big_tile_inner_fragment_host_coordinator
+                    bounds: [0,0][1920,1080]
+
+                    Element: android.widget.FrameLayout
+                      resource-id: com.philo.philo:id/big_tile_inner_fragment_host
+                      bounds: [0,552][1920,1080]
+
+                      Element: android.view.ViewGroup
+                        resource-id: com.philo.philo:id/inner_fragment_root_view
+                        bounds: [0,552][1920,1080]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/inner_fragment_views_container
+                          bounds: [0,552][1920,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/inner_fragment_list_container
+                            bounds: [0,552][1920,1080]
+
+                            Element: androidx.recyclerview.widget.RecyclerView
+                              resource-id: com.philo.philo:id/tile_groups
+                              bounds: [0,552][1920,1080]
+
+                              Element: android.view.ViewGroup
+                                resource-id: com.philo.philo:id/default_tile_row
+                                bounds: [0,552][1920,934]
+
+                                Element: androidx.recyclerview.widget.RecyclerView
+                                  resource-id: com.philo.philo:id/list_view_broadcasts
+                                  bounds: [0,552][1920,902]
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/widget_tile_wrapper
+                                    bounds: [0,552][228,902]
+                                    content-desc: Fear the Walking Dead
+
+                                    Element: android.widget.FrameLayout
+                                      resource-id: com.philo.philo:id/tile_view_wrapper
+                                      bounds: [0,552][228,902]
+
+                                      Element: android.view.ViewGroup
+                                        resource-id: com.philo.philo:id/tile_view
+                                        bounds: [0,552][222,902]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/background_image
+                                          bounds: [0,552][222,902]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/pressed_overlay
+                                          bounds: [0,552][222,902]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/icon_play_radial
+                                          bounds: [122,587][186,651]
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/title
+                                          bounds: [0,774][190,810]
+                                          text: Fear the Walking Dead
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/subtitle
+                                          bounds: [0,810][190,846]
+                                          text: S6 | E9 Things Left to Do
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/widget_tile_wrapper
+                                    bounds: [228,552][716,902]
+                                    content-desc: Fear the Walking Dead
+
+                                    Element: android.widget.FrameLayout
+                                      resource-id: com.philo.philo:id/tile_view_wrapper
+                                      bounds: [228,552][716,902]
+
+                                      Element: android.view.ViewGroup
+                                        resource-id: com.philo.philo:id/tile_view
+                                        bounds: [228,552][710,902]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/background_image
+                                          bounds: [228,552][710,902]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/pressed_overlay
+                                          bounds: [228,552][710,902]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/channel_logo
+                                          bounds: [260,587][324,651]
+                                          content-desc: AMC+
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/icon_play_radial
+                                          bounds: [610,587][674,651]
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/title
+                                          bounds: [260,774][678,810]
+                                          text: Fear the Walking Dead
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/subtitle
+                                          bounds: [260,810][678,846]
+                                          text: S6 | E10 Handle With Care
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/air_date
+                                          bounds: [260,846][341,880]
+                                          text: 7:36am
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/widget_tile_wrapper
+                                    bounds: [716,552][1204,902]
+                                    content-desc: Fear the Walking Dead
+
+                                    Element: android.widget.FrameLayout
+                                      resource-id: com.philo.philo:id/tile_view_wrapper
+                                      bounds: [716,552][1204,902]
+
+                                      Element: android.view.ViewGroup
+                                        resource-id: com.philo.philo:id/tile_view
+                                        bounds: [716,552][1198,902]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/background_image
+                                          bounds: [716,552][1198,902]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/pressed_overlay
+                                          bounds: [716,552][1198,902]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/channel_logo
+                                          bounds: [748,587][812,651]
+                                          content-desc: The Walking Dead Channel
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/flag_live
+                                          bounds: [828,601][881,637]
+                                          text: Live
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/icon_play_radial
+                                          bounds: [1098,587][1162,651]
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/title
+                                          bounds: [748,774][1166,810]
+                                          text: Fear the Walking Dead
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/subtitle
+                                          bounds: [748,810][1166,846]
+                                          text: S6 | E11 The Holding
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/air_date
+                                          bounds: [748,846][829,880]
+                                          text: 8:25am
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/widget_tile_wrapper
+                                    bounds: [1204,552][1692,902]
+                                    content-desc: Fear the Walking Dead
+
+                                    Element: android.widget.FrameLayout
+                                      resource-id: com.philo.philo:id/tile_view_wrapper
+                                      bounds: [1204,552][1692,902]
+
+                                      Element: android.view.ViewGroup
+                                        resource-id: com.philo.philo:id/tile_view
+                                        bounds: [1204,552][1686,902]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/background_image
+                                          bounds: [1204,552][1686,902]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/pressed_overlay
+                                          bounds: [1204,552][1686,902]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/channel_logo
+                                          bounds: [1236,587][1300,651]
+                                          content-desc: The Walking Dead Channel
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/title
+                                          bounds: [1236,774][1654,810]
+                                          text: Fear the Walking Dead
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/subtitle
+                                          bounds: [1236,810][1654,846]
+                                          text: S6 | E12 In Dreams
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/upcoming
+                                          bounds: [1236,847][1268,879]
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/air_date
+                                          bounds: [1268,846][1342,880]
+                                          text: 9:17am
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/widget_tile_wrapper
+                                    bounds: [1692,552][1920,902]
+                                    content-desc: Fear the Walking Dead
+
+                                    Element: android.widget.FrameLayout
+                                      resource-id: com.philo.philo:id/tile_view_wrapper
+                                      bounds: [1692,552][1920,902]
+
+                                      Element: android.view.ViewGroup
+                                        resource-id: com.philo.philo:id/tile_view
+                                        bounds: [1692,552][1920,902]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/background_image
+                                          bounds: [1692,552][1920,902]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/pressed_overlay
+                                          bounds: [1692,552][1920,902]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/channel_logo
+                                          bounds: [1724,587][1788,651]
+                                          content-desc: The Walking Dead Channel
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/title
+                                          bounds: [1724,774][1920,810]
+                                          text: Fear the Walking Dead
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/subtitle
+                                          bounds: [1724,810][1920,846]
+                                          text: S6 | E13 J.D.
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/upcoming
+                                          bounds: [1724,847][1756,879]
+
+                                        Element: android.widget.TextView
+                                          resource-id: com.philo.philo:id/air_date
+                                          bounds: [1756,846][1813,880]
+                                          text: 10am
+
+                              Element: android.view.ViewGroup
+                                resource-id: com.philo.philo:id/default_tile_row
+                                bounds: [0,934][1920,1080]
+
+                                Element: android.view.ViewGroup
+                                  resource-id: com.philo.philo:id/tile_group_row_header_layout
+                                  bounds: [100,934][1920,1000]
+                                  content-desc: Expand collection Top shows on The Walking Dead Channel
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/button_tile_group
+                                    bounds: [100,944][1920,990]
+
+                                    Element: android.widget.TextView
+                                      resource-id: com.philo.philo:id/label_tile_group
+                                      bounds: [100,944][772,990]
+                                      text: Top shows on The Walking Dead Channel
+
+                                Element: androidx.recyclerview.widget.RecyclerView
+                                  resource-id: com.philo.philo:id/list_view_broadcasts
+                                  bounds: [0,1000][1920,1080]
+                                  content-desc: Top shows on The Walking Dead Channel
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/widget_tile_wrapper
+                                    bounds: [80,1000][568,1080]
+                                    content-desc: Fear the Walking Dead
+
+                                    Element: android.widget.FrameLayout
+                                      resource-id: com.philo.philo:id/tile_view_wrapper
+                                      bounds: [80,1000][568,1080]
+
+                                      Element: android.view.ViewGroup
+                                        resource-id: com.philo.philo:id/tile_view
+                                        bounds: [80,1000][562,1080]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/background_image
+                                          bounds: [80,1000][562,1080]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/pressed_overlay
+                                          bounds: [80,1000][562,1080]
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/widget_tile_wrapper
+                                    bounds: [568,1000][1056,1080]
+                                    content-desc: The Walking Dead
+
+                                    Element: android.widget.FrameLayout
+                                      resource-id: com.philo.philo:id/tile_view_wrapper
+                                      bounds: [568,1000][1056,1080]
+
+                                      Element: android.view.ViewGroup
+                                        resource-id: com.philo.philo:id/tile_view
+                                        bounds: [568,1000][1050,1080]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/background_image
+                                          bounds: [568,1000][1050,1080]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/pressed_overlay
+                                          bounds: [568,1000][1050,1080]
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/widget_tile_wrapper
+                                    bounds: [1056,1000][1544,1080]
+                                    content-desc: The Walking Dead: Daryl Dixon
+
+                                    Element: android.widget.FrameLayout
+                                      resource-id: com.philo.philo:id/tile_view_wrapper
+                                      bounds: [1056,1000][1544,1080]
+
+                                      Element: android.view.ViewGroup
+                                        resource-id: com.philo.philo:id/tile_view
+                                        bounds: [1056,1000][1538,1080]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/background_image
+                                          bounds: [1056,1000][1538,1080]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/pressed_overlay
+                                          bounds: [1056,1000][1538,1080]
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/widget_tile_wrapper
+                                    bounds: [1544,1000][1920,1080]
+                                    content-desc: The Walking Dead: World Beyond
+
+                                    Element: android.widget.FrameLayout
+                                      resource-id: com.philo.philo:id/tile_view_wrapper
+                                      bounds: [1544,1000][1920,1080]
+
+                                      Element: android.view.ViewGroup
+                                        resource-id: com.philo.philo:id/tile_view
+                                        bounds: [1544,1000][1920,1080]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/background_image
+                                          bounds: [1544,1000][1920,1080]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/pressed_overlay
+                                          bounds: [1544,1000][1920,1080]
+
+                  Element: androidx.recyclerview.widget.RecyclerView
+                    resource-id: com.philo.philo:id/big_tile_tile_groups
+                    bounds: [0,22][1920,1080]
 
                     Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_home
-                      bounds: [490,58][661,138]
+                      resource-id: com.philo.philo:id/big_tile_row
+                      bounds: [0,22][1920,1080]
 
-                      Element: android.widget.TextView
-                        resource-id: com.philo.philo:id/label_tab
-                        bounds: [526,74][625,122]
-                        text: Home
+                      Element: androidx.recyclerview.widget.RecyclerView
+                        resource-id: com.philo.philo:id/list_view_broadcasts
+                        bounds: [0,22][1920,1080]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/big_tile_layout
+                          bounds: [0,22][50,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/big_tile_background_container
+                            bounds: [0,30][50,1080]
+
+                            Element: android.view.View
+                              resource-id: com.philo.philo:id/drop_shadow_shape
+                              bounds: [0,86][50,1076]
+
+                            Element: android.widget.ImageView
+                              resource-id: com.philo.philo:id/big_tile_background_image_view
+                              bounds: [0,90][50,1080]
+
+                            Element: android.view.View
+                              resource-id: com.philo.philo:id/big_tile_gradient_layer_view
+                              bounds: [0,90][50,1080]
+
+                            Element: android.widget.FrameLayout
+                              resource-id: com.philo.philo:id/big_tile_background_video_view
+                              bounds: [0,90][50,1080]
+
+                              Element: android.widget.FrameLayout
+                                resource-id: com.philo.philo:id/exo_ad_overlay
+                                bounds: [0,90][50,1080]
+
+                              Element: android.widget.FrameLayout
+                                resource-id: com.philo.philo:id/exo_overlay
+                                bounds: [0,90][50,1080]
+
+                              Element: android.widget.FrameLayout
+                                resource-id: com.philo.philo:id/exo_content_frame
+                                bounds: [0,90][50,1080]
+
+                                Element: android.view.View
+                                  bounds: [0,90][50,1080]
+
+                                Element: android.view.View
+                                  resource-id: com.philo.philo:id/exo_shutter
+                                  bounds: [0,90][50,1080]
+
+                                Element: android.widget.ImageView
+                                  resource-id: com.philo.philo:id/exo_artwork
+                                  bounds: [0,90][50,1080]
+
+                                Element: android.widget.FrameLayout
+                                  resource-id: com.philo.philo:id/exo_subtitles
+                                  bounds: [0,90][50,1080]
+
+                                  Element: android.view.View
+                                    bounds: [0,90][50,1080]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/big_tile_layout
+                          bounds: [70,22][1830,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/big_tile_background_container
+                            bounds: [70,30][1830,1080]
+
+                            Element: android.view.View
+                              resource-id: com.philo.philo:id/drop_shadow_shape
+                              bounds: [70,86][1830,1076]
+
+                            Element: android.widget.ImageView
+                              resource-id: com.philo.philo:id/big_tile_background_image_view
+                              bounds: [70,90][1830,1080]
+
+                            Element: android.view.View
+                              resource-id: com.philo.philo:id/big_tile_gradient_layer_view
+                              bounds: [70,90][1830,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/big_tile_item_details_container
+                            bounds: [70,30][1830,953]
+
+                            Element: android.view.ViewGroup
+                              resource-id: com.philo.philo:id/big_tile_channel_item_details_layout
+                              bounds: [70,30][1830,532]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo:id/big_tile_channel_details_logo
+                                bounds: [868,224][1032,388]
+                                content-desc: More on this channel
+
+                              Element: android.widget.FrameLayout
+                                resource-id: com.philo.philo:id/button_favorite
+                                bounds: [833,420][1068,532]
+
+                                Element: android.view.ViewGroup
+                                  resource-id: com.philo.philo:id/root_favorite
+                                  bounds: [833,420][1068,532]
+
+                                  Element: android.widget.TextView
+                                    resource-id: com.philo.philo:id/label_favorite
+                                    bounds: [833,420][1068,532]
+                                    content-desc: Favorite
+                                    text: Favorite
+
+                  Element: android.view.ViewGroup
+                    resource-id: com.philo.philo:id/big_tile_top_buttons_container
+                    bounds: [0,108][1920,182]
 
                     Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_guide
-                      bounds: [661,58][832,138]
+                      resource-id: com.philo.philo:id/big_tile_top_buttons_layout
+                      bounds: [0,108][1920,182]
 
                       Element: android.widget.TextView
-                        resource-id: com.philo.philo:id/label_tab
-                        bounds: [697,74][796,122]
-                        text: Guide
-
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_top
-                      bounds: [832,58][964,138]
-
-                      Element: android.widget.TextView
-                        resource-id: com.philo.philo:id/label_tab
-                        bounds: [868,74][928,122]
-                        text: Top
-
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_saved
-                      bounds: [964,58][1138,138]
-
-                      Element: android.widget.TextView
-                        resource-id: com.philo.philo:id/label_tab
-                        bounds: [1000,74][1102,122]
-                        text: Saved
-
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_search
-                      bounds: [1138,58][1327,138]
-
-                      Element: android.widget.TextView
-                        resource-id: com.philo.philo:id/label_tab
-                        bounds: [1174,74][1291,122]
+                        resource-id: com.philo.philo:id/big_tile_dismiss_text
+                        bounds: [922,108][998,182]
                         text: Search
-
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_profile
-                      bounds: [1327,62][1399,134]
-
-                      Element: android.widget.ImageView
-                        resource-id: com.philo.philo:id/icon_tab
-                        bounds: [1327,62][1399,134]
-                        content-desc: Settings Page
-
-                  Element: android.widget.LinearLayout
-                    resource-id: com.philo.philo:id/tab_bar_time
-                    bounds: [1588,50][1772,146]
-
-                    Element: android.widget.TextView
-                      resource-id: com.philo.philo:id/tab_bar_time_label
-                      bounds: [1620,50][1740,146]
-                      text: 3:15p
-
-              Element: android.widget.TextView
-                resource-id: com.philo.philo:id/tv_hint_text
-                bounds: [1496,930][1824,984]
-                text: Press and hold to favorite
 
