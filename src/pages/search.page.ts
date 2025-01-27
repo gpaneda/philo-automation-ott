@@ -1,5 +1,6 @@
 import { Browser } from "webdriverio";
 import { BasePage } from "./base.page";
+import { HomeScreenPage } from "./homescreen.page";
 
 type ChannelShowResultsElementNames = 
     | 'fearTheWalkingDead'
@@ -165,8 +166,6 @@ export class SearchPage extends BasePage    {
 
         
     }
-   
-
 
     // Method to get the action bar root element
     getActionBarRootElement() {
