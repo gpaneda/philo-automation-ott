@@ -3,12 +3,16 @@ import { BasePage } from './base.page';
 import { exec } from 'child_process';
 import path from 'path';
 import fs from 'fs/promises';
-export class HomeScreen {
-    public driver: Browser<'async'>;
-    constructor(driver: Browser<'async'>) {
-        this.driver = driver;
-    }
-}
+
+type SelectorKeys = 
+    | 'forYellowstoneFans'
+    | 'crimeAndDrama'
+    | 'reality'
+    | 'homeAndLifestyle'
+    | 'documentary'
+    | 'comedy'
+    | 'family'   
+
 export class HomeScreenPage extends BasePage {
     
 
@@ -65,7 +69,23 @@ export class HomeScreenPage extends BasePage {
         outDoorsAndSports: 'android=text("Outdoors & Sports")',
         theLaughTrack: 'android=text("The Laugh Track")',
         anime: 'android=text("Anime")',
+        savedCategory: 'android=text("Saved")',
+        featuredOnAMCPlus: 'android=text("Featured on AMC+")',
+        featuredOnPhilo: 'android=text("Featured on Philo")',
+        newEpisodesThisWeek: 'android=text("New Episodes This Week")',
+        topMoviesOnPhilo: 'android=text("Top Movies on Philo")',
+        bingeableSeries: 'android=text("Bingeable Series")',
+        browseByGenre: 'android=text("Browse by Genre")',
+        newlyAddedMovies: 'android=text("Newly Added Movies")',
+        sitcoms: 'android=text("Sitcoms")',
+        classics: 'android=text("Classics")',
+        criticallyAcclaimedMovies: 'android=text("Critically Acclaimed Movies")',
+        watchTheWholeSeriesDrama: 'android=text("Watch the Whole Series:Drama")',
+        theTylerPerryUniverse: 'android=text("The Tyler Perry Universe")',
+        docuDramas: 'android=text("Docu-Dramas")',
+        newAndUpcoming: 'android=text("New and Upcoming")',
 
+        
         // Movie Tiles
         firstMovieTile: 'android=new UiSelector().resourceId("com.philo.philo:id/list_view_broadcasts").childSelector(new UiSelector().className("android.view.ViewGroup").instance(0))',
         movieTileTitle: 'android=resourceId("com.philo.philo:id/title")',
@@ -79,6 +99,27 @@ export class HomeScreenPage extends BasePage {
         // Featured Content
         featuredShow: 'android=resourceId("com.philo.philo:id/featured_show")',
         featuredMovie: 'android=resourceId("com.philo.philo:id/featured_movie")',
+
+        // Featured on Philo Channels
+        betChannel: 'android=text("BET")',
+        lifetimeChannel: 'android=text("Lifetime")',
+        mtvChannel: 'android=text("MTV")',
+        aAndEChannel: 'android=text("A&E")',
+        amcPlusChannel: 'android=text("AMC+")',
+        discoveryChannel: 'android=text("Discovery")',
+        historyChannel: 'android=text("History")',
+        foodNetworkChannel: 'android=text("Food Network")',
+        hallmarkChannel: 'android=text("Hallmark Channel")',
+        hgtvChannel: 'android=text("HGTV")',
+
+        //Browse by Genre
+        forYellowstoneFans: 'android=text("For Yellowstone Fans")',
+        crimeAndDrama: 'android=text("Crime & Drama")',
+        reality: 'android=text("Reality")',
+        homeAndLifestyle: 'android=text("Home & Lifestyle")',
+        documentary: 'android=text("Documentary")',
+        comedy: 'android=text("Comedy")',
+        family: 'android=text("Family")',
     };
 
     constructor(driver: Browser<'async'>) {
@@ -444,7 +485,21 @@ export class HomeScreenPage extends BasePage {
             'In the News',
             'Outdoors & Sports',
             'The Laugh Track',
-            'Anime'
+            'Anime',
+            'Featured on AMC+',
+            'Featured on Philo',
+            'New Episodes This Week',
+            'Top Movies on Philo',
+            'Bingeable Series',
+            'Browse by Genre',
+            'Newly Added Movies',
+            'Sitcoms',
+            'Classics',
+            'Critically Acclaimed Movies',
+            'Watch the Whole Series:Drama',
+            'The Tyler Perry Universe',
+            'Docu-Dramas',
+            'New and Upcoming'
         ];
 
         // Try to find the category
@@ -644,6 +699,28 @@ export class HomeScreenPage extends BasePage {
      */
     async clickMovieTile(): Promise<void> {
         await this.pressEnterButton();
+    }
+
+    // Method to click on a featured show
+    async clickOnFeaturedShow(show: SelectorKeys): Promise<void> {
+        const showSelector = this.selectors[show];
+        if (showSelector) {
+            const element = await this.driver.$(showSelector);
+            await element.click();
+        } else {
+            throw new Error(`Show ${show} not found in Featured on Philo elements.`);
+        }
+    }
+
+    // Method to click on a tab
+    async clickOnTab(tab: SelectorKeys): Promise<void> {
+        const tabSelector = this.selectors[tab];
+        if (tabSelector) {
+            const element = await this.driver.$(tabSelector);
+            await element.click();
+        } else {
+            throw new Error(`Tab ${tab} not found in tab bar elements.`);
+        }
     }
 
 } 

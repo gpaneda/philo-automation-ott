@@ -173,4 +173,186 @@ Certainly! Below is a **consolidated outline** of all the use cases, including t
 
 ---
 
-This consolidated outline organizes all primary and alternative use cases into a single, easy-to-follow structure. Each sub-use case builds on the primary use case, ensuring comprehensive coverage of user interactions with the Philo App on Fire TV.
+Below is a **comprehensive test case document** based on the use cases outlined earlier. Each primary use case is treated as a **test suite**, and each sub-use case is converted into a **test case** (TC) with steps and expected results. Both **happy path** and **negative testing** scenarios are included.
+
+---
+
+### **Test Suite 1: Launching the Philo App and Browsing Content**
+
+#### **TC-1.1: Launching via Voice Command (Happy Path)**
+- **Steps**:
+  1. Press the voice button on the Fire TV remote.
+  2. Say, “Open Philo.”
+- **Expected Result**: The Philo app launches successfully.
+
+#### **TC-1.2: Launching via Voice Command (Negative Test - Invalid Command)**
+- **Steps**:
+  1. Press the voice button on the Fire TV remote.
+  2. Say, “Open Netflix.”
+- **Expected Result**: The Philo app does not launch; the Fire TV responds with an appropriate error message.
+
+#### **TC-1.3: Browsing by Genre (Happy Path)**
+- **Steps**:
+  1. Open the Philo app.
+  2. Navigate to the “Genres” section.
+  3. Select a genre (e.g., Comedy).
+- **Expected Result**: The app displays a list of shows and movies under the selected genre.
+
+#### **TC-1.4: Browsing by Genre (Negative Test - No Content Available)**
+- **Steps**:
+  1. Open the Philo app.
+  2. Navigate to the “Genres” section.
+  3. Select a genre with no available content.
+- **Expected Result**: The app displays a message indicating no content is available for the selected genre.
+
+#### **TC-1.5: Browsing Recommendations (Happy Path)**
+- **Steps**:
+  1. Open the Philo app.
+  2. Navigate to the “Home” section.
+  3. Select a recommended show or movie.
+- **Expected Result**: The selected content begins playing.
+
+#### **TC-1.6: Browsing Recommendations (Negative Test - No Recommendations)**
+- **Steps**:
+  1. Open the Philo app with a new account (no viewing history).
+  2. Navigate to the “Home” section.
+- **Expected Result**: The app displays a message like “Start watching to get recommendations.”
+
+---
+
+### **Test Suite 2: Watching Live TV**
+
+#### **TC-2.1: Switching Channels Quickly (Happy Path)**
+- **Steps**:
+  1. Open the Philo app and start watching a live channel.
+  2. Press the “Last” button on the remote.
+- **Expected Result**: The app switches to the previous channel.
+
+#### **TC-2.2: Switching Channels Quickly (Negative Test - No Previous Channel)**
+- **Steps**:
+  1. Open the Philo app and start watching the first channel.
+  2. Press the “Last” button on the remote.
+- **Expected Result**: The app remains on the current channel and displays a message like “No previous channel available.”
+
+#### **TC-2.3: Using Closed Captions (Happy Path)**
+- **Steps**:
+  1. Open the Philo app and start watching live TV.
+  2. Access playback settings and enable closed captions.
+- **Expected Result**: Closed captions appear on the screen.
+
+#### **TC-2.4: Using Closed Captions (Negative Test - Unsupported Content)**
+- **Steps**:
+  1. Open the Philo app and start watching live TV that does not support closed captions.
+  2. Attempt to enable closed captions.
+- **Expected Result**: The app displays a message like “Closed captions are not available for this content.”
+
+---
+
+### **Test Suite 3: Watching On-Demand Content**
+
+#### **TC-3.1: Auto-Play Next Episode (Happy Path)**
+- **Steps**:
+  1. Open the Philo app and start watching an episode of a series.
+  2. Wait for the episode to end.
+- **Expected Result**: The next episode in the series begins playing automatically.
+
+#### **TC-3.2: Auto-Play Next Episode (Negative Test - No Next Episode)**
+- **Steps**:
+  1. Open the Philo app and start watching the final episode of a series.
+  2. Wait for the episode to end.
+- **Expected Result**: The app returns to the series details page or displays a message like “No more episodes available.”
+
+#### **TC-3.3: Skipping Intros or Recaps (Happy Path)**
+- **Steps**:
+  1. Open the Philo app and start watching an episode with an intro or recap.
+  2. Click the “Skip Intro” or “Skip Recap” button.
+- **Expected Result**: The app skips the intro or recap and jumps to the main episode.
+
+#### **TC-3.4: Skipping Intros or Recaps (Negative Test - No Skip Option)**
+- **Steps**:
+  1. Open the Philo app and start watching an episode without an intro or recap.
+- **Expected Result**: The “Skip Intro” or “Skip Recap” button does not appear.
+
+---
+
+### **Test Suite 4: Saving Shows or Movies to Watch Later**
+
+#### **TC-4.1: Saving an Entire Series (Happy Path)**
+- **Steps**:
+  1. Open the Philo app and navigate to a series.
+  2. Select “Save Series.”
+- **Expected Result**: The series is added to the user’s “Saved” list.
+
+#### **TC-4.2: Saving an Entire Series (Negative Test - Already Saved)**
+- **Steps**:
+  1. Open the Philo app and navigate to a series that is already saved.
+  2. Attempt to save the series again.
+- **Expected Result**: The app displays a message like “This series is already saved.”
+
+---
+
+### **Test Suite 5: Searching for Specific Content**
+
+#### **TC-5.1: Searching by Actor or Director (Happy Path)**
+- **Steps**:
+  1. Open the Philo app and navigate to the “Search” section.
+  2. Enter the name of an actor or director.
+- **Expected Result**: The app displays content featuring the searched actor or director.
+
+#### **TC-5.2: Searching by Actor or Director (Negative Test - No Results)**
+- **Steps**:
+  1. Open the Philo app and navigate to the “Search” section.
+  2. Enter the name of an actor or director not featured in any content.
+- **Expected Result**: The app displays a message like “No results found.”
+
+---
+
+### **Test Suite 6: Managing Account and Settings**
+
+#### **TC-6.1: Changing Streaming Quality (Happy Path)**
+- **Steps**:
+  1. Open the Philo app and navigate to “Settings.”
+  2. Change the streaming quality to a lower resolution.
+- **Expected Result**: The app adjusts the streaming quality accordingly.
+
+#### **TC-6.2: Changing Streaming Quality (Negative Test - Unstable Connection)**
+- **Steps**:
+  1. Simulate an unstable internet connection.
+  2. Attempt to change the streaming quality to a higher resolution.
+- **Expected Result**: The app displays a message like “Unable to change quality due to network issues.”
+
+---
+
+### **Test Suite 7: Using DVR Features**
+
+#### **TC-7.1: Recording a Series (Happy Path)**
+- **Steps**:
+  1. Open the Philo app and navigate to a series.
+  2. Select “Record Series.”
+- **Expected Result**: The series is added to the DVR library.
+
+#### **TC-7.2: Recording a Series (Negative Test - DVR Storage Full)**
+- **Steps**:
+  1. Fill the DVR storage to capacity.
+  2. Attempt to record a new series.
+- **Expected Result**: The app displays a message like “DVR storage is full.”
+
+---
+
+### **Test Suite 8: Exiting the App**
+
+#### **TC-8.1: Exiting During Playback (Happy Path)**
+- **Steps**:
+  1. Open the Philo app and start watching content.
+  2. Pause playback and exit the app.
+- **Expected Result**: The app closes, and playback resumes from the same point when reopened.
+
+#### **TC-8.2: Exiting During Playback (Negative Test - App Crash)**
+- **Steps**:
+  1. Open the Philo app and start watching content.
+  2. Simulate an app crash.
+- **Expected Result**: The app closes unexpectedly, and playback resumes from the same point when reopened.
+
+---
+
+This document provides a comprehensive set of test cases, covering both **happy path** and **negative testing** scenarios for each use case. Each test case includes clear steps and expected results, making it easy to execute and validate.

@@ -140,6 +140,7 @@ npm run report
 2. **UI Hierarchy Dumps**
    ```bash
    adb shell uiautomator dump /sdcard/ui_dump.xml
+   adb pull /sdcard/ui_dump.xml 
    ```
 
 3. **Screenshots**
@@ -257,4 +258,3 @@ Each test run will generate an HTML report in the `reports` directory.
 ---
 *Note: This framework is designed for testing purposes only and should not be used for any unauthorized automation of the Philo app.* 
 
-adb pull /sdcard/ui_dump.xml 
