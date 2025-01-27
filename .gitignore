@@ -31,6 +31,7 @@ screenshots/difference/
 # Logs
 *.log
 logs/
+api_logs.json
 
 # Reports
 reports/
