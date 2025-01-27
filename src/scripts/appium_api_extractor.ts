@@ -5,6 +5,7 @@ import { fireTVCapabilities } from '../config/capabilities';
 import { spawn } from 'child_process';
 import { promisify } from 'util';
 import { LoggingInterceptor } from './loggingInterceptor';
+import { exec } from 'child_process';
 
 const execAsync = promisify(require('child_process').exec);
 
@@ -114,6 +115,9 @@ class AppiumAPIExtractor {
             console.log('Press Ctrl+C to stop capturing and save the logs.');
             
             await this.startContinuousLogging();
+
+            // Run Postman tests after capturing API data
+            await this.runPostmanTests();
         } catch (error) {
             console.error('Error during API capture:', error);
             throw error;
@@ -271,6 +275,23 @@ class AppiumAPIExtractor {
             logs.push(entry);
             fs.writeFile(this.logFilePath, JSON.stringify(logs, null, 2), (err) => {
                 if (err) throw err;
+            });
+        });
+    }
+
+    async runPostmanTests() {
+        return new Promise((resolve, reject) => {
+            exec('newman run path/to/your/postman_collection.json', (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`Error running Postman tests: ${error.message}`);
+                    return reject(error);
+                }
+                if (stderr) {
+                    console.error(`Postman test stderr: ${stderr}`);
+                    return reject(stderr);
+                }
+                console.log(`Postman test stdout: ${stdout}`);
+                resolve(stdout);
             });
         });
     }
