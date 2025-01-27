@@ -46,12 +46,7 @@ class AppiumAPIExtractor {
             console.error('Error saving logs:', error);
         }
     }
-    constructor() {
-        // Remove the OkHttpClient initialization
-        // this.httpClient = new OkHttpClient.Builder()
-        //     .addInterceptor(new LoggingInterceptor())
-        //     .build();
-    }   
+  
     async initializeAppium() {
         this.driver = await remote({
             path: '/wd/hub',
