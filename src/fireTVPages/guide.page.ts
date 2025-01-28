@@ -29,15 +29,29 @@ export class GuidePage extends BasePage {
     listViewBroadcasts = 'com.philo.philo:id/list_view_broadcasts';
     imageMask = 'com.philo.philo:id/image_mask';
     pressedOverlay = 'com.philo.philo:id/pressed_overlay';
+    //Details Page
     backgroundVideoContainer = 'com.philo.philo:id/background_video_container';
     metadataContainer = 'com.philo.philo:id/metadata_container';
     title = 'com.philo.philo:id/title';
     description = 'com.philo.philo:id/description';
     airDate = 'com.philo.philo:id/air_date';
     flagLive = 'com.philo.philo:id/flag_live';
+    allShowings = 'android=text("All showings")';
+    allEpisodes = 'android=text("All episodes")';
+    rating = 'com.philo.philo:id/rating';
+    runTime = 'com.philo.philo:id/run_time';
+    channelLabel = 'com.philo.philo:id/channel_label';
+    saveButton = 'android=text("Save")';
+    playButton = 'android=text("Play")';
+    unSaveButton = 'android=text("Unsave")';
+    savedButton = 'android=text("Saved")';
 
+    
     // New Selector for Free Channels
     freeChannels = 'android=text("Free channels")';
+
+    //Guide Channel Details Page
+
 
     constructor(driver: Browser<'async'>) {
         super(driver);

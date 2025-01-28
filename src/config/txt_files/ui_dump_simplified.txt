@@ -26,10 +26,6 @@ Element: undefined
                 bounds: [0,0][1920,1080]
 
               Element: android.widget.FrameLayout
-                resource-id: com.philo.philo:id/modal_fragment_host
-                bounds: [0,0][1920,1080]
-
-              Element: android.widget.FrameLayout
                 resource-id: com.philo.philo:id/dialog_fragment_host
                 bounds: [0,0][1920,1080]
 
@@ -37,127 +33,1086 @@ Element: undefined
                 resource-id: com.philo.philo:id/fragment_host
                 bounds: [0,0][1920,1080]
 
-                Element: android.widget.FrameLayout
-                  resource-id: com.philo.philo:id/fragment_grid_or_list
+                Element: android.view.ViewGroup
+                  resource-id: com.philo.philo:id/fragment_tile_group_list
                   bounds: [0,0][1920,1080]
 
-                  Element: android.widget.FrameLayout
-                    resource-id: com.philo.philo:id/grid_or_row_fragment_host
+                  Element: androidx.recyclerview.widget.RecyclerView
+                    resource-id: com.philo.philo:id/tile_groups
                     bounds: [0,0][1920,1080]
 
                     Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/fragment_tile_group_grid
-                      bounds: [0,0][1920,1080]
+                      resource-id: com.philo.philo:id/guide_tile_row
+                      bounds: [0,0][1920,502]
+
+                      Element: android.widget.ImageView
+                        resource-id: com.philo.philo:id/tile_group_row_header_background
+                        bounds: [0,0][370,502]
+
+                      Element: android.widget.LinearLayout
+                        resource-id: com.philo.philo:id/group_header_layout
+                        bounds: [50,186][1920,234]
+
+                        Element: android.widget.ImageView
+                          resource-id: com.philo.philo:id/group_header_icon
+                          bounds: [50,186][98,234]
+
+                        Element: android.widget.TextView
+                          resource-id: com.philo.philo:id/group_header_label
+                          bounds: [118,192][1900,228]
+                          text: Free channels
 
                       Element: androidx.recyclerview.widget.RecyclerView
-                        resource-id: com.philo.philo:id/tile_groups
-                        bounds: [0,0][1920,1080]
+                        resource-id: com.philo.philo:id/list_view_broadcasts
+                        bounds: [0,234][1920,502]
 
                         Element: android.view.ViewGroup
-                          resource-id: com.philo.philo:id/grid_row
-                          bounds: [0,0][1920,1080]
+                          bounds: [370,234][852,502]
+                          content-desc: Ms. T's Music Factory
 
-                          Element: android.view.ViewGroup
-                            resource-id: com.philo.philo:id/header_whitespace
-                            bounds: [0,0][1920,216]
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [380,244][842,492]
 
-                            Element: android.widget.ImageView
-                              resource-id: com.philo.philo:id/icon_tile_group
-                              bounds: [734,148][790,204]
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [380,244][842,492]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [380,244][842,492]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [408,264][744,442]
 
                             Element: android.widget.TextView
-                              resource-id: com.philo.philo:id/label_tile_group
-                              bounds: [816,151][1124,202]
-                              text: Browse by Genre
+                              resource-id: com.philo.philo:id/title
+                              bounds: [410,266][742,307]
+                              text: Ms. T's Music Factory
 
-                          Element: android.widget.GridView
-                            resource-id: com.philo.philo:id/list_view_broadcasts
-                            bounds: [180,232][1740,1080]
-                            content-desc: Browse by Genre
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [410,311][742,347]
+                              text: S1 | E3 Fight Night
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [410,351][742,384]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/icon_play_radial
+                            bounds: [744,264][808,328]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [412,442][497,472]
+                            text: 4:43pm
+
+                          Element: android.widget.LinearLayout
+                            bounds: [497,439][566,475]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/flag_live
+                              bounds: [505,439][558,475]
+                              text: Live
+
+                        Element: android.view.ViewGroup
+                          bounds: [852,234][1334,502]
+                          content-desc: Step It Up
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [862,244][1324,492]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [862,244][1324,492]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [862,244][1324,492]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [890,264][1226,442]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [892,266][1224,307]
+                              text: Step It Up
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [892,311][1224,347]
+                              text: S1 | E1 Do You Have What It Takes?
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [892,351][1224,384]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [894,442][977,472]
+                            text: 5:35pm
+
+                        Element: android.view.ViewGroup
+                          bounds: [1334,234][1816,502]
+                          content-desc: Step It Up
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [1344,244][1806,492]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [1344,244][1806,492]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [1344,244][1806,492]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [1372,264][1708,442]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [1374,266][1706,307]
+                              text: Step It Up
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [1374,311][1706,347]
+                              text: S1 | E2 Fake Sweat
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [1374,351][1706,384]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [1376,442][1461,472]
+                            text: 6:30pm
+
+                        Element: android.view.ViewGroup
+                          bounds: [1816,234][1920,502]
+                          content-desc: Step It Up
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [1826,244][1920,492]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [1826,244][1920,492]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [1826,244][1920,492]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [1854,264][1920,442]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [1856,266][1920,307]
+                              text: Step It Up
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [1856,311][1920,347]
+                              text: S1 | E3 Fix Your Face
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [1856,351][1920,384]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [1858,442][1920,472]
+                            text: 7:18pm
+
+                      Element: android.view.ViewGroup
+                        resource-id: com.philo.philo:id/tile_group_row_header_layout
+                        bounds: [60,234][358,502]
+                        content-desc: Go to channel profile for 4UV
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/button_tile_group
+                          bounds: [60,234][358,502]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [60,234][358,502]
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/channel_logo
+                            bounds: [145,304][273,432]
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/guide_tile_row
+                      bounds: [0,502][1920,770]
+
+                      Element: androidx.recyclerview.widget.RecyclerView
+                        resource-id: com.philo.philo:id/list_view_broadcasts
+                        bounds: [0,502][1920,770]
+
+                        Element: android.view.ViewGroup
+                          bounds: [370,502][852,770]
+                          content-desc: Love After Lockup
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [380,512][842,760]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [380,512][842,760]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [380,512][842,760]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [408,532][744,710]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [410,534][742,575]
+                              text: Love After Lockup
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [410,579][742,615]
+                              text: S3 | E27 Life After Lockup: Payback Is a Snitch
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [410,619][742,652]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/icon_play_radial
+                            bounds: [744,532][808,596]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [412,710][497,740]
+                            text: 4:42pm
+
+                          Element: android.widget.LinearLayout
+                            bounds: [497,707][566,743]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/flag_live
+                              bounds: [505,707][558,743]
+                              text: Live
+
+                        Element: android.view.ViewGroup
+                          bounds: [852,502][1334,770]
+                          content-desc: Love After Lockup
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [862,512][1324,760]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [862,512][1324,760]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [862,512][1324,760]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [890,532][1226,710]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [892,534][1224,575]
+                              text: Love After Lockup
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [892,579][1224,615]
+                              text: S3 | E28 Life After Lockup: Inmates & Playdates
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [892,619][1224,652]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [894,710][978,740]
+                            text: 5:30pm
+
+                        Element: android.view.ViewGroup
+                          bounds: [1334,502][1816,770]
+                          content-desc: Love After Lockup
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [1344,512][1806,760]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [1344,512][1806,760]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [1344,512][1806,760]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [1372,532][1708,710]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [1374,534][1706,575]
+                              text: Love After Lockup
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [1374,579][1706,615]
+                              text: S3 | E29 Life After Lockup: Good News, Bad News
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [1374,619][1706,652]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [1376,710][1461,740]
+                            text: 6:24pm
+
+                        Element: android.view.ViewGroup
+                          bounds: [1816,502][1920,770]
+                          content-desc: Love After Lockup
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [1826,512][1920,760]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [1826,512][1920,760]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [1826,512][1920,760]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [1854,532][1920,710]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [1856,534][1920,575]
+                              text: Love After Lockup
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [1856,579][1920,615]
+                              text: S3 | E30 Life After Lockup: Trick or Cheat?
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [1856,619][1920,652]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [1858,710][1920,740]
+                            text: 7:15pm
+
+                      Element: android.widget.ImageView
+                        resource-id: com.philo.philo:id/tile_group_row_header_background
+                        bounds: [0,502][370,770]
+
+                      Element: android.view.ViewGroup
+                        resource-id: com.philo.philo:id/tile_group_row_header_layout
+                        bounds: [60,502][358,770]
+                        content-desc: Go to channel profile for All Reality WE tv
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/button_tile_group
+                          bounds: [60,502][358,770]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [60,502][358,770]
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/channel_logo
+                            bounds: [145,572][273,700]
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/guide_tile_row
+                      bounds: [0,770][1920,1038]
+
+                      Element: androidx.recyclerview.widget.RecyclerView
+                        resource-id: com.philo.philo:id/list_view_broadcasts
+                        bounds: [0,770][1920,1038]
+
+                        Element: android.view.ViewGroup
+                          bounds: [370,770][852,1038]
+                          content-desc: Bridezillas
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [380,780][842,1028]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [380,780][842,1028]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [380,780][842,1028]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [408,800][744,978]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [410,802][742,843]
+                              text: Bridezillas
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [410,847][742,883]
+                              text: S10 | E7 Amanda and Miyesha
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [410,887][742,920]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/icon_play_radial
+                            bounds: [744,800][808,864]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [412,978][497,1008]
+                            text: 4:42pm
+
+                          Element: android.widget.LinearLayout
+                            bounds: [497,975][566,1011]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/flag_live
+                              bounds: [505,975][558,1011]
+                              text: Live
+
+                        Element: android.view.ViewGroup
+                          bounds: [852,770][1334,1038]
+                          content-desc: Bridezillas
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [862,780][1324,1028]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [862,780][1324,1028]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [862,780][1324,1028]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [890,800][1226,978]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [892,802][1224,843]
+                              text: Bridezillas
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [892,847][1224,883]
+                              text: S10 | E8 Miyesha and Stephanie
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [892,887][1224,920]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [894,978][978,1008]
+                            text: 5:30pm
+
+                        Element: android.view.ViewGroup
+                          bounds: [1334,770][1816,1038]
+                          content-desc: Bridezillas
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [1344,780][1806,1028]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [1344,780][1806,1028]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [1344,780][1806,1028]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [1372,800][1708,978]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [1374,802][1706,843]
+                              text: Bridezillas
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [1374,847][1706,883]
+                              text: S10 | E9 Stephanie and Taneema
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [1374,887][1706,920]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [1376,978][1461,1008]
+                            text: 6:24pm
+
+                        Element: android.view.ViewGroup
+                          bounds: [1816,770][1920,1038]
+                          content-desc: Bridezillas
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [1826,780][1920,1028]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [1826,780][1920,1028]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [1826,780][1920,1028]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [1854,800][1920,978]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [1856,802][1920,843]
+                              text: Bridezillas
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/subtitle
+                              bounds: [1856,847][1920,883]
+                              text: S10 | E10 Stephanie & Krystal
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/description
+                              bounds: [1856,887][1920,920]
+
+                          Element: android.widget.TextView
+                            resource-id: com.philo.philo:id/air_date
+                            bounds: [1858,978][1920,1008]
+                            text: 7:15pm
+
+                      Element: android.widget.ImageView
+                        resource-id: com.philo.philo:id/tile_group_row_header_background
+                        bounds: [0,770][370,1038]
+
+                      Element: android.view.ViewGroup
+                        resource-id: com.philo.philo:id/tile_group_row_header_layout
+                        bounds: [60,770][358,1038]
+                        content-desc: Go to channel profile for All Weddings WE tv
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/button_tile_group
+                          bounds: [60,770][358,1038]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [60,770][358,1038]
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/channel_logo
+                            bounds: [145,840][273,968]
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/guide_tile_row
+                      bounds: [0,1038][1920,1080]
+
+                      Element: androidx.recyclerview.widget.RecyclerView
+                        resource-id: com.philo.philo:id/list_view_broadcasts
+                        bounds: [0,1038][1920,1080]
+
+                        Element: android.view.ViewGroup
+                          bounds: [370,1038][852,1080]
+                          content-desc: Toya & Reginae
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [380,1048][842,1080]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [380,1048][842,1080]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [380,1048][842,1080]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [408,1068][744,1080]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [410,1070][742,1080]
+                              text: Toya & Reginae
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/icon_play_radial
+                            bounds: [744,1068][808,1080]
+
+                        Element: android.view.ViewGroup
+                          bounds: [852,1038][1334,1080]
+                          content-desc: Toya & Reginae
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [862,1048][1324,1080]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [862,1048][1324,1080]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [862,1048][1324,1080]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [890,1068][1226,1080]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [892,1070][1224,1080]
+                              text: Toya & Reginae
+
+                        Element: android.view.ViewGroup
+                          bounds: [1334,1038][1816,1080]
+                          content-desc: Toya & Reginae
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [1344,1048][1806,1080]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [1344,1048][1806,1080]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [1344,1048][1806,1080]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [1372,1068][1708,1080]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [1374,1070][1706,1080]
+                              text: Toya & Reginae
+
+                        Element: android.view.ViewGroup
+                          bounds: [1816,1038][1920,1080]
+                          content-desc: Toya & Reginae
+
+                          Element: android.widget.ImageView
+                            resource-id: com.philo.philo:id/image_mask
+                            bounds: [1826,1048][1920,1080]
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo:id/background_video_container
+                            bounds: [1826,1048][1920,1080]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [1826,1048][1920,1080]
+
+                          Element: android.widget.LinearLayout
+                            resource-id: com.philo.philo:id/metadata_container
+                            bounds: [1854,1068][1920,1080]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/title
+                              bounds: [1856,1070][1920,1080]
+                              text: Toya & Reginae
+
+                      Element: android.widget.ImageView
+                        resource-id: com.philo.philo:id/tile_group_row_header_background
+                        bounds: [0,1038][370,1080]
+
+                      Element: android.view.ViewGroup
+                        resource-id: com.philo.philo:id/tile_group_row_header_layout
+                        bounds: [60,1038][358,1080]
+                        content-desc: Go to channel profile for AllBlk Gems
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/button_tile_group
+                          bounds: [60,1038][358,1080]
+
+                          Element: android.view.View
+                            resource-id: com.philo.philo:id/pressed_overlay
+                            bounds: [60,1038][358,1080]
+
+              Element: android.widget.FrameLayout
+                resource-id: com.philo.philo:id/modal_fragment_host
+                bounds: [0,0][1920,1080]
+
+                Element: android.view.ViewGroup
+                  resource-id: com.philo.philo:id/fragment_big_tile_nested_scroll
+                  bounds: [0,0][1920,1080]
+
+                  Element: android.view.View
+                    resource-id: com.philo.philo:id/big_tile_fragment_background
+                    bounds: [0,0][1920,1080]
+
+                  Element: android.view.ViewGroup
+                    resource-id: com.philo.philo:id/big_tile_inner_fragment_host_coordinator
+                    bounds: [0,0][1920,1080]
+
+                    Element: android.widget.FrameLayout
+                      resource-id: com.philo.philo:id/big_tile_inner_fragment_host
+                      bounds: [0,929][1920,1080]
+
+                      Element: android.view.ViewGroup
+                        resource-id: com.philo.philo:id/inner_fragment_root_view
+                        bounds: [0,929][1920,1080]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/inner_fragment_views_container
+                          bounds: [0,929][1920,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/inner_fragment_list_container
+                            bounds: [0,929][1920,1080]
+
+                            Element: androidx.recyclerview.widget.RecyclerView
+                              resource-id: com.philo.philo:id/tile_groups
+                              bounds: [0,929][1920,1080]
+
+                              Element: android.view.ViewGroup
+                                resource-id: com.philo.philo:id/default_tile_row
+                                bounds: [0,929][1920,1080]
+
+                                Element: android.view.ViewGroup
+                                  resource-id: com.philo.philo:id/tile_group_row_header_layout
+                                  bounds: [100,929][1920,995]
+                                  content-desc: Expand collection All showings
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/button_tile_group
+                                    bounds: [100,939][1920,985]
+
+                                    Element: android.widget.TextView
+                                      resource-id: com.philo.philo:id/label_tile_group
+                                      bounds: [100,939][305,985]
+                                      text: All showings
+
+                                Element: androidx.recyclerview.widget.RecyclerView
+                                  resource-id: com.philo.philo:id/list_view_broadcasts
+                                  bounds: [0,995][1920,1080]
+                                  content-desc: All showings
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/widget_tile_wrapper
+                                    bounds: [80,995][384,1080]
+                                    content-desc: Ms. T's Music Factory
+
+                                    Element: android.widget.FrameLayout
+                                      resource-id: com.philo.philo:id/tile_view_wrapper
+                                      bounds: [80,995][384,1080]
+
+                                      Element: android.view.ViewGroup
+                                        resource-id: com.philo.philo:id/tile_view
+                                        bounds: [80,995][378,1080]
+
+                                        Element: android.widget.ImageView
+                                          bounds: [80,995][378,1080]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/pressed_overlay
+                                          bounds: [80,995][378,1080]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/channel_logo
+                                          bounds: [112,1027][176,1080]
+                                          content-desc: 4UV
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/icon_play_radial
+                                          bounds: [284,1027][348,1080]
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/widget_tile_wrapper
+                                    bounds: [384,995][688,1080]
+                                    content-desc: Ms. T's Music Factory
+
+                                    Element: android.widget.FrameLayout
+                                      resource-id: com.philo.philo:id/tile_view_wrapper
+                                      bounds: [384,995][688,1080]
+
+                                      Element: android.view.ViewGroup
+                                        resource-id: com.philo.philo:id/tile_view
+                                        bounds: [384,995][682,1080]
+
+                                        Element: android.widget.ImageView
+                                          bounds: [384,995][682,1080]
+
+                                        Element: android.view.View
+                                          resource-id: com.philo.philo:id/pressed_overlay
+                                          bounds: [384,995][682,1080]
+
+                                        Element: android.widget.ImageView
+                                          resource-id: com.philo.philo:id/channel_logo
+                                          bounds: [416,1027][480,1080]
+                                          content-desc: 4UV
+
+                  Element: androidx.recyclerview.widget.RecyclerView
+                    resource-id: com.philo.philo:id/big_tile_tile_groups
+                    bounds: [0,22][1920,1080]
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/big_tile_row
+                      bounds: [0,22][1920,1080]
+
+                      Element: androidx.recyclerview.widget.RecyclerView
+                        resource-id: com.philo.philo:id/list_view_broadcasts
+                        bounds: [0,22][1920,1080]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/big_tile_layout
+                          bounds: [60,22][1820,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/big_tile_background_container
+                            bounds: [60,30][1820,1080]
+
+                            Element: android.view.View
+                              resource-id: com.philo.philo:id/drop_shadow_shape
+                              bounds: [60,86][1820,1076]
+
+                            Element: android.view.View
+                              resource-id: com.philo.philo:id/big_tile_background_color_view
+                              bounds: [60,90][1820,1080]
+
+                            Element: android.widget.ImageView
+                              resource-id: com.philo.philo:id/big_tile_background_image_view
+                              bounds: [60,90][1820,1080]
+
+                            Element: android.view.View
+                              resource-id: com.philo.philo:id/big_tile_gradient_layer_view
+                              bounds: [60,90][1820,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/big_tile_item_details_container
+                            bounds: [60,30][1820,953]
 
                             Element: android.view.ViewGroup
-                              bounds: [196,232][678,500]
-                              content-desc: For Yellowstone Fans
+                              resource-id: com.philo.philo:id/big_tile_item_details
+                              bounds: [60,30][1820,921]
 
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [196,232][678,500]
+                              Element: android.view.ViewGroup
+                                resource-id: com.philo.philo:id/big_tile_item_details_top_layout
+                                bounds: [60,30][1820,921]
 
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [196,232][678,500]
+                                Element: android.widget.ImageView
+                                  resource-id: com.philo.philo:id/channel_logo
+                                  bounds: [140,249][240,349]
+                                  content-desc: More on this channel
 
-                            Element: android.view.ViewGroup
-                              bounds: [716,232][1198,500]
-                              content-desc: Crime & Drama
+                                Element: android.view.ViewGroup
+                                  resource-id: com.philo.philo:id/big_tile_flags_container
+                                  bounds: [140,357][193,393]
 
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [716,232][1198,500]
+                                  Element: android.view.View
+                                    resource-id: com.philo.philo:id/big_tile_flags_flow
+                                    bounds: [140,357][193,393]
 
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [716,232][1198,500]
+                                  Element: android.widget.TextView
+                                    resource-id: com.philo.philo:id/flag_live
+                                    bounds: [140,357][193,393]
+                                    text: Live
 
-                            Element: android.view.ViewGroup
-                              bounds: [1236,232][1718,500]
-                              content-desc: Reality
+                                Element: android.widget.TextView
+                                  resource-id: com.philo.philo:id/show_title
+                                  bounds: [140,409][1222,453]
+                                  text: Ms. T's Music Factory
 
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [1236,232][1718,500]
+                                Element: android.widget.TextView
+                                  resource-id: com.philo.philo:id/show_subtitle
+                                  bounds: [140,453][1222,553]
+                                  text: S1 | E3 Fight Night
 
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [1236,232][1718,500]
+                                Element: android.widget.TextView
+                                  resource-id: com.philo.philo:id/show_description
+                                  bounds: [140,553][1222,661]
+                                  text: Temmora teaches the students all about stage presence; a student is selected for a showcase performing on a "360 Degree" stage at the Fitz Casino during a prize boxing match; Momma Jessie informs Temmora that Miesha went on a date.
 
-                            Element: android.view.ViewGroup
-                              bounds: [196,532][678,800]
-                              content-desc: Home & Lifestyle
+                                Element: android.view.ViewGroup
+                                  resource-id: com.philo.philo:id/other_information_container
+                                  bounds: [140,661][1222,741]
 
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [196,532][678,800]
+                                  Element: android.view.View
+                                    resource-id: com.philo.philo:id/big_tile_info_and_flags_flow
+                                    bounds: [140,661][1222,741]
 
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [196,532][678,800]
+                                  Element: android.widget.TextView
+                                    resource-id: com.philo.philo:id/run_time
+                                    bounds: [140,685][227,717]
+                                    text: 52m
 
-                            Element: android.view.ViewGroup
-                              bounds: [716,532][1198,800]
-                              content-desc: Documentary
+                                  Element: android.widget.TextView
+                                    resource-id: com.philo.philo:id/rating
+                                    bounds: [243,684][329,718]
+                                    text: TV-PG
 
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [716,532][1198,800]
+                                Element: android.view.ViewGroup
+                                  resource-id: com.philo.philo:id/big_tile_buttons_container
+                                  bounds: [1294,349][1820,781]
 
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [716,532][1198,800]
+                                  Element: android.widget.LinearLayout
+                                    resource-id: com.philo.philo:id/button_play
+                                    bounds: [1294,357][1502,453]
 
-                            Element: android.view.ViewGroup
-                              bounds: [1236,532][1718,800]
-                              content-desc: Comedy
+                                    Element: android.view.View
+                                      resource-id: com.philo.philo:id/icon_play
+                                      bounds: [1318,381][1366,429]
 
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [1236,532][1718,800]
+                                    Element: android.widget.TextView
+                                      resource-id: com.philo.philo:id/label_play
+                                      bounds: [1398,383][1462,426]
+                                      text: Play
 
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [1236,532][1718,800]
+                                  Element: android.widget.FrameLayout
+                                    resource-id: com.philo.philo:id/button_save
+                                    bounds: [1294,461][1503,557]
 
-                            Element: android.view.ViewGroup
-                              bounds: [196,832][678,1080]
-                              content-desc: Family
+                                    Element: android.view.ViewGroup
+                                      resource-id: com.philo.philo:id/root_save
+                                      bounds: [1294,461][1503,557]
 
-                              Element: android.widget.ImageView
-                                resource-id: com.philo.philo:id/background_image
-                                bounds: [196,832][678,1080]
+                                      Element: android.widget.TextView
+                                        resource-id: com.philo.philo:id/label_save
+                                        bounds: [1294,461][1503,557]
+                                        content-desc: Save
+                                        text: Save
 
-                              Element: android.view.View
-                                resource-id: com.philo.philo:id/pressed_overlay
-                                bounds: [196,832][678,1080]
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/button_episodes
+                                    bounds: [1294,573][1616,669]
+
+                                    Element: android.widget.ImageView
+                                      resource-id: com.philo.philo:id/icon_episodes
+                                      bounds: [1310,585][1382,657]
+
+                                    Element: android.widget.TextView
+                                      resource-id: com.philo.philo:id/label_episodes
+                                      bounds: [1398,600][1584,643]
+                                      text: All episodes
+
+                                  Element: android.view.ViewGroup
+                                    resource-id: com.philo.philo:id/button_channel
+                                    bounds: [1294,677][1627,773]
+
+                                    Element: android.widget.ImageView
+                                      resource-id: com.philo.philo:id/icon_channel
+                                      bounds: [1306,689][1378,761]
+
+                                    Element: android.widget.TextView
+                                      resource-id: com.philo.philo:id/label_channel
+                                      bounds: [1394,704][1595,747]
+                                      text: More on 4UV
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/big_tile_layout
+                          bounds: [1840,22][1920,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/big_tile_background_container
+                            bounds: [1840,30][1920,1080]
+
+                            Element: android.view.View
+                              resource-id: com.philo.philo:id/drop_shadow_shape
+                              bounds: [1840,86][1920,1076]
+
+                            Element: android.view.View
+                              resource-id: com.philo.philo:id/big_tile_background_color_view
+                              bounds: [1840,90][1920,1080]
+
+                            Element: android.widget.ImageView
+                              resource-id: com.philo.philo:id/big_tile_background_image_view
+                              bounds: [1840,90][1920,1080]
+
+                            Element: android.view.View
+                              resource-id: com.philo.philo:id/big_tile_gradient_layer_view
+                              bounds: [1840,90][1920,1080]
+
+                            Element: android.widget.FrameLayout
+                              resource-id: com.philo.philo:id/big_tile_background_video_view
+                              bounds: [1840,90][1920,1080]
+
+                              Element: android.widget.FrameLayout
+                                resource-id: com.philo.philo:id/exo_ad_overlay
+                                bounds: [1840,90][1920,1080]
+
+                              Element: android.widget.FrameLayout
+                                resource-id: com.philo.philo:id/exo_overlay
+                                bounds: [1840,90][1920,1080]
+
+                              Element: android.widget.FrameLayout
+                                resource-id: com.philo.philo:id/exo_content_frame
+                                bounds: [1840,90][1920,1080]
+
+                                Element: android.view.View
+                                  bounds: [1840,90][1920,1080]
+
+                                Element: android.view.View
+                                  resource-id: com.philo.philo:id/exo_shutter
+                                  bounds: [1840,90][1920,1080]
+
+                                Element: android.widget.ImageView
+                                  resource-id: com.philo.philo:id/exo_artwork
+                                  bounds: [1840,90][1920,1080]
+
+                                Element: android.widget.FrameLayout
+                                  resource-id: com.philo.philo:id/exo_subtitles
+                                  bounds: [1840,90][1920,1080]
+
+                                  Element: android.view.View
+                                    bounds: [1840,90][1920,1080]
+
+                  Element: android.view.ViewGroup
+                    resource-id: com.philo.philo:id/big_tile_top_buttons_container
+                    bounds: [0,108][1920,182]
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/big_tile_top_buttons_layout
+                      bounds: [0,108][1920,182]
+
+                      Element: android.widget.TextView
+                        resource-id: com.philo.philo:id/big_tile_dismiss_text
+                        bounds: [927,108][993,182]
+                        text: Guide
 
               Element: android.widget.FrameLayout
                 resource-id: com.philo.philo:id/fragment_tabs
@@ -167,70 +1122,15 @@ Element: undefined
                   resource-id: com.philo.philo:id/widget_tabs
                   bounds: [0,0][1920,244]
 
-                  Element: android.widget.LinearLayout
-                    resource-id: com.philo.philo:id/tab_bar
-                    bounds: [482,50][1439,146]
+                  Element: android.widget.FrameLayout
+                    resource-id: com.philo.philo:id/tab_bar_menu_layout
+                    bounds: [0,0][1920,244]
 
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_home
-                      bounds: [490,58][661,138]
-
-                      Element: android.widget.TextView
-                        resource-id: com.philo.philo:id/label_tab
-                        bounds: [526,74][625,122]
-                        text: Home
-
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_guide
-                      bounds: [661,58][832,138]
+                    Element: android.widget.FrameLayout
+                      resource-id: com.philo.philo:id/tab_bar_menu_button
+                      bounds: [895,57][1025,187]
 
                       Element: android.widget.TextView
-                        resource-id: com.philo.philo:id/label_tab
-                        bounds: [697,74][796,122]
-                        text: Guide
-
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_top
-                      bounds: [832,58][964,138]
-
-                      Element: android.widget.TextView
-                        resource-id: com.philo.philo:id/label_tab
-                        bounds: [868,74][928,122]
-                        text: Top
-
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_saved
-                      bounds: [964,58][1138,138]
-
-                      Element: android.widget.TextView
-                        resource-id: com.philo.philo:id/label_tab
-                        bounds: [1000,74][1102,122]
-                        text: Saved
-
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_search
-                      bounds: [1138,58][1327,138]
-
-                      Element: android.widget.TextView
-                        resource-id: com.philo.philo:id/label_tab
-                        bounds: [1174,74][1291,122]
-                        text: Search
-
-                    Element: android.view.ViewGroup
-                      resource-id: com.philo.philo:id/tab_profile
-                      bounds: [1327,62][1399,134]
-
-                      Element: android.widget.ImageView
-                        resource-id: com.philo.philo:id/icon_tab
-                        bounds: [1327,62][1399,134]
-                        content-desc: Settings Page
-
-                  Element: android.widget.LinearLayout
-                    resource-id: com.philo.philo:id/tab_bar_time
-                    bounds: [1588,50][1772,146]
-
-                    Element: android.widget.TextView
-                      resource-id: com.philo.philo:id/tab_bar_time_label
-                      bounds: [1620,50][1740,146]
-                      text: 10:43a
+                        bounds: [929,85][991,159]
+                        text: Menu
 
