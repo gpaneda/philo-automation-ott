@@ -19,7 +19,12 @@
 - [ ] Troubleshoot Stop Run button - does not work
 - [ ] Device should be disabled when it is running a test
 - [ ] Landing page status not updating
-
+- [ ] Add android TV to .env file and capabilities file
+  APP_ACTIVITY=com.philo.philo.ui.activity.MainTabbedActivity
+  APP_PACKAGE=com.philo.philo.google
+  ANDROID_TV_IP=10.0.0.130
+  ANDROID_TV_PORT=5555
+Test Credentials:
 
 ### Notes for the Dashboard UI
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the Test History page
