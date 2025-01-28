@@ -1,12 +1,12 @@
 import { AppHelper } from '../helpers/app.helper';
 import { Browser } from 'webdriverio';
-import { HomeScreenPage } from '../pages/homescreen.page';
-import { SettingsPage } from '../pages/settings.page';
-import { TopPage } from '../pages/top.page';
+import { HomeScreenPage } from '../fireTVPages/homescreen.page';
+import { SettingsPage } from '../fireTVPages/settings.page';
+import { TopPage } from '../fireTVPages/top.page';
 import WebSocketHelper from '../utils/WebSocketHelper';
-import { CategoriesPage } from '../pages/categories.page';
-import { MoviesDetailsPage } from '../pages/moviesDetails.page';
-import { SearchPage } from '../pages/search.page';
+import { CategoriesPage } from '../fireTVPages/categories.page';
+import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
+import { SearchPage } from '../fireTVPages/search.page';
 import { preProcessFile } from 'typescript';
 
 let driver: Browser<'async'>;

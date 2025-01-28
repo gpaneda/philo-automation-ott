@@ -1,11 +1,11 @@
 import { Browser } from 'webdriverio';
-import { HomeScreenPage } from '../pages/homescreen.page';
-import { PlayerPage } from '../pages/player.page';
+import { HomeScreenPage } from '../fireTVPages/homescreen.page';
+import { PlayerPage } from '../fireTVPages/player.page';
 import { AppHelper } from '../helpers/app.helper';
-import { CategoriesPage } from '../pages/categories.page';
-import { TopPage } from '../pages/top.page';
-import { SeriesDetailsPage } from '../pages/seriesDetails.page';
-import { MoviesDetailsPage } from '../pages/moviesDetails.page';
+import { CategoriesPage } from '../fireTVPages/categories.page';
+import { TopPage } from '../fireTVPages/top.page';
+import { SeriesDetailsPage } from '../fireTVPages/seriesDetails.page';
+import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
 import path from 'path';
 
 describe('Playback Tests', () => {

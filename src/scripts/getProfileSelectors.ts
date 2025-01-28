@@ -1,5 +1,5 @@
 import { AppHelper } from '../helpers/app.helper';
-import { ProfilePage } from '../pages/profile.page';
+import { ProfilePage } from '../fireTVPages/profile.page';
 import { AdbHelper } from '../helpers/adb.helper';
 
 async function getProfileSelectors() {

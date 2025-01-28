@@ -2,7 +2,7 @@ import { remote, Browser } from 'webdriverio';
 import { fireTVCapabilities } from '../config/capabilities';
 import { exec } from 'child_process';
 import { GmailHelper } from './gmail.helper';
-import { LoginPage } from '../pages/login.page';
+import { LoginPage } from '../fireTVPages/login.page';
 
 export class AppHelper {
     private static driver: Browser<'async'>;

@@ -1,13 +1,13 @@
 import { AppHelper } from '../helpers/app.helper';
 import { Browser } from 'webdriverio';
-import { HomeScreenPage } from '../pages/homescreen.page';
-import { GuidePage } from '../pages/guide.page';
-import { SettingsPage } from '../pages/settings.page';
-import { TopPage } from '../pages/top.page';
+import { HomeScreenPage } from '../fireTVPages/homescreen.page';
+import { GuidePage } from '../fireTVPages/guide.page';
+import { SettingsPage } from '../fireTVPages/settings.page';
+import { TopPage } from '../fireTVPages/top.page';
 import path from 'path';
 import fs from 'fs/promises';
-import { CategoriesPage } from '../pages/categories.page';
-import { MoviesDetailsPage } from '../pages/moviesDetails.page';
+import { CategoriesPage } from '../fireTVPages/categories.page';
+import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
 
 let driver: Browser<'async'>;
 let homeScreen: HomeScreenPage;

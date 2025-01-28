@@ -1,8 +1,8 @@
 import { AppHelper } from '../helpers/app.helper';
 import { Browser } from 'webdriverio';
-import { HomeScreenPage } from '../pages/homescreen.page';
-import { CategoriesPage } from '../pages/categories.page';
-import { SeriesDetailsPage } from '../pages/seriesDetails.page';
+import { HomeScreenPage } from '../fireTVPages/homescreen.page';
+import { CategoriesPage } from '../fireTVPages/categories.page';
+import { SeriesDetailsPage } from '../fireTVPages/seriesDetails.page';
 import dotenv from 'dotenv';
 import path from 'path';
 

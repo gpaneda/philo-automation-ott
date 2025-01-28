@@ -1,6 +1,6 @@
 import { Browser } from 'webdriverio';
-import { HomeScreenPage } from '../pages/homescreen.page';
-import { LandingPage } from '../pages/landing.page';
+import { HomeScreenPage } from '../fireTVPages/homescreen.page';
+import { LandingPage } from '../fireTVPages/landing.page';
 import { AppHelper } from '../helpers/app.helper';
 
 describe('Landing Page Tests', () => {

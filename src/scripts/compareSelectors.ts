@@ -1,6 +1,6 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { ProfilePage } from '../pages/profile.page';
+import { ProfilePage } from '../fireTVPages/profile.page';
 
 async function compareSelectors() {
     try {
