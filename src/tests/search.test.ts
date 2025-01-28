@@ -71,11 +71,11 @@ beforeEach(async () => {
         throw error;
     }
 });
-//afterAll(async () => {
+afterAll(async () => {
     // Clean up app data after test
-    //console.log('Clearing app data after test...');
-    //await AppHelper.clearAppData();
-    //webSocketHelper.close();
+    console.log('Clearing app data after test...');
+    await AppHelper.clearAppData();
+    webSocketHelper.close();
 //});
 
 describe('Search Test', () => {
