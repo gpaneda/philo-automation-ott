@@ -76,7 +76,7 @@ afterAll(async () => {
     console.log('Clearing app data after test...');
     await AppHelper.clearAppData();
     webSocketHelper.close();
-//});
+});
 
 describe('Search Test', () => {
     test('TC501 - should display Search Results for Series', async () => {
