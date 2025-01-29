@@ -30,6 +30,14 @@ export class GmailService {
       accessToken: isSecondDevice ? process.env.GMAIL_2_ACCESS_TOKEN! : process.env.GMAIL_ACCESS_TOKEN!,
       redirectUri: isSecondDevice ? process.env.GMAIL_2_REDIRECT_URI! : process.env.GMAIL_REDIRECT_URI!
     };
+    const isThirdDevice = email === process.env.PHILO_EMAIL_3;
+    return {
+      clientId: isThirdDevice ? process.env.GMAIL_3_CLIENT_ID! : process.env.GMAIL_CLIENT_ID!,
+      clientSecret: isThirdDevice ? process.env.GMAIL_3_CLIENT_SECRET! : process.env.GMAIL_CLIENT_SECRET!,
+      refreshToken: isThirdDevice ? process.env.GMAIL_3_REFRESH_TOKEN! : process.env.GMAIL_REFRESH_TOKEN!,
+      accessToken: isThirdDevice ? process.env.GMAIL_3_ACCESS_TOKEN! : process.env.GMAIL_ACCESS_TOKEN!,
+      redirectUri: isThirdDevice ? process.env.GMAIL_3_REDIRECT_URI! : process.env.GMAIL_REDIRECT_URI!
+    };
   }
 
   async getPhiloVerificationCode(): Promise<string> {

@@ -67,6 +67,16 @@ const mockSessions: TestSession[] = [
     totalTests: 1,
     passedTests: 1,
     failedTests: 0,
+  },
+  {
+    id: '7',
+    name: 'Search Tests',
+    status: 'passed',
+    startTime: new Date(Date.now() - 4500000).toISOString(),
+    duration: 1200000,
+    totalTests: 1,
+    passedTests: 1,
+    failedTests: 0,
   }
 ];
 

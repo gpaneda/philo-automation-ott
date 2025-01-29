@@ -1,38 +1,38 @@
-import { Browser } from 'webdriverio';
 import { BasePage } from './base.page';
+import { Browser } from 'webdriverio';
 
-export class SeriesDetailsPage extends BasePage {
+export class SettingsPage extends BasePage {
+    [x: string]: any;
+    clickTopNavSettingsButtonElement() {
+        throw new Error('Method not implemented.');
+    }
+    verifySettingsPage() {
+        throw new Error('Method not implemented.');
+    }
     public selectors = {
-        // Series Information
-        seriesTitle: 'android=className("android.widget.TextView").textMatches(".*").index(1)',  // Title text
-        seriesDescription: 'android=className("android.widget.TextView").clickable(true)',  // Long description text
-        releaseYear: 'android=className("android.widget.TextView").textMatches("\\d{4}")',  // Year (e.g., "2019")
-        seasonCount: 'android=className("android.widget.TextView").textMatches(".*Seasons.*")',  // "X Seasons"
-        rating: 'android=className("android.widget.TextView").textMatches("TV-.*|PG.*|G|R|NC-17")',  // TV rating
-        seriesPoster: 'android=className("android.widget.ImageView").descriptionMatches(".*")',  // Series poster with description
+        // Header
+        settingsHeader: 'android=resourceId("com.philo.philo.google:id/settings_header")',
+        backButton: 'android=resourceId("com.philo.philo.google:id/back_button")',
         
-        // Channel Information
-        channelButton: 'android=className("android.view.View").descriptionContains("View")',
-        channelName: 'android=className("android.widget.TextView").textMatches(".*").index(0)',
+        // Account Section
+        signInInformation: 'android=text("Sign-in information")',
+        addMobileNumber: 'android=text("Add mobile number")',
+        addProfiles: 'android=text("Add profiles")',
         
-        // Action Buttons
-        playButton: 'android=className("android.view.View").descriptionContains("Play")',
-        saveButton: 'android=className("android.view.View").descriptionContains("Save")',
+        // Edit Options
+        editButton: 'android=text("Edit")',
         
-        // Navigation Tabs
-        episodesTab: 'android=className("android.widget.TextView").text("Episodes")',
-        scheduleTab: 'android=className("android.widget.TextView").text("Schedule")',
-        relatedTab: 'android=className("android.widget.TextView").text("Related")',
-        extrasTab: 'android=className("android.widget.TextView").text("Extras")',
-        detailsTab: 'android=className("android.widget.TextView").text("Details")',
+        // Playback Settings
+        playbackSection: 'android=text("Playback")',
+        startChannelPlayback: 'android=text("Start channel playback from...")',
+        programBeginning: 'android=text("Program beginning")',
         
-        // Background Elements
-        backgroundImage: 'android=className("android.widget.ImageView").descriptionMatches(".*")',
+        // Version Info
+        versionInfo: 'android=resourceId("com.philo.philo.google:id/version_info")',
+        appVersion: 'android=resourceId("com.philo.philo.google:id/app_version")',
         
-        // Container Elements
-        detailsContainer: 'android=className("android.view.View").index(1).focusable(true)',
-        buttonsContainer: 'android=className("android.view.View").index(6)',
-        tabContainer: 'android=className("android.view.View").index(7)'
+        // Sign Out
+        signOutButton: 'android=text("Sign out")'
     };
 
     constructor(driver: Browser<'async'>) {
@@ -40,124 +40,160 @@ export class SeriesDetailsPage extends BasePage {
     }
 
     /**
-     * Gets the series title
-     * @returns Promise<string> The series title
+     * Verify settings page elements are displayed
      */
-    async getSeriesTitle(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.seriesTitle);
-        return element.getText();
+    async verifySettingsPageElements(): Promise<void> {
+        //wait until the page is stable
+        await this.driver.pause(15000);
+        // Verify header elements
+        await this.verifyElementDisplayed(this.selectors.backButton);
+
+        // Verify account section
+        await this.verifyElementDisplayed(this.selectors.signInInformation);
+        await this.verifyElementDisplayed(this.selectors.addMobileNumber);
+        await this.verifyElementDisplayed(this.selectors.addProfiles);
+        await this.verifyElementDisplayed(this.selectors.editButton);
+
+        // Verify version info
+        await this.verifyElementDisplayed(this.selectors.versionInfo);
+        await this.verifyElementDisplayed(this.selectors.appVersion);
+
+        // Verify sign out button
+        await this.verifyElementDisplayed(this.selectors.signOutButton);
     }
 
     /**
-     * Gets the series description
-     * @returns Promise<string> The series description
+     * Navigate back
      */
-    async getSeriesDescription(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.seriesDescription);
-        return element.getText();
+    async goBack(): Promise<void> {
+        await this.click(this.selectors.backButton);
     }
 
     /**
-     * Gets the release year
-     * @returns Promise<string> The release year
+     * Sign out
      */
-    async getReleaseYear(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.releaseYear);
-        return element.getText();
+    async signOut(): Promise<void> {
+        await this.click(this.selectors.signOutButton);
+        // You might want to add handling for confirmation dialog here
     }
 
     /**
-     * Gets the number of seasons
-     * @returns Promise<string> The season count
+     * Get app version
      */
-    async getSeasonCount(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.seasonCount);
-        return element.getText();
+    async getAppVersion(): Promise<string> {
+        const element = await this.driver.$(this.selectors.appVersion);
+        return await element.getText();
+    }
+    /**
+     * Verify settings page is displayed
+     */
+    async verifySettingsPageDisplayed(): Promise<void> {
+        try {
+            // Wait for the page to be stable
+            await this.driver.pause(5000);
+
+            // Verify account section elements
+            await this.verifyElementDisplayed(this.selectors.signInInformation);
+            await this.verifyElementDisplayed(this.selectors.addMobileNumber);
+            await this.verifyElementDisplayed(this.selectors.addProfiles);
+            await this.verifyElementDisplayed(this.selectors.editButton);
+
+            // Verify playback section
+            await this.verifyElementDisplayed(this.selectors.playbackSection);
+            await this.verifyElementDisplayed(this.selectors.startChannelPlayback);
+            await this.verifyElementDisplayed(this.selectors.programBeginning);
+
+            // Verify version info
+            await this.verifyElementDisplayed(this.selectors.versionInfo);
+            await this.verifyElementDisplayed(this.selectors.appVersion);
+
+            // Verify sign out button
+            await this.verifyElementDisplayed(this.selectors.signOutButton);
+        } catch (error) {
+            console.error('Error verifying settings page elements:', error);
+            throw error;
+        }
     }
 
     /**
-     * Gets the content rating
-     * @returns Promise<string> The content rating
+     * Click edit button
      */
-    async getContentRating(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.rating);
-        return element.getText();
+    async clickEdit(): Promise<void> {
+        await this.click(this.selectors.editButton);
     }
 
     /**
-     * Clicks the play button
+     * Open start channel playback settings
      */
-    async clickPlay(): Promise<void> {
-        await this.click(this.selectors.playButton);
+    async openStartChannelPlayback(): Promise<void> {
+        await this.click(this.selectors.startChannelPlayback);
     }
 
     /**
-     * Clicks the save button
+     * Select program beginning option
      */
-    async clickSave(): Promise<void> {
-        await this.click(this.selectors.saveButton);
+    async selectProgramBeginning(): Promise<void> {
+        await this.click(this.selectors.programBeginning);
     }
 
     /**
-     * Clicks the channel button
+     * Open sign-in information
      */
-    async clickChannel(): Promise<void> {
-        await this.click(this.selectors.channelButton);
+    async openSignInInformation(): Promise<void> {
+        await this.click(this.selectors.signInInformation);
     }
 
     /**
-     * Navigates to Episodes tab
+     * Verify sign in information is displayed
      */
-    async goToEpisodes(): Promise<void> {
-        await this.click(this.selectors.episodesTab);
+    async isSignInInformationDisplayed(): Promise<boolean> {
+        try {
+            await this.verifyElementDisplayed(this.selectors.signInInformation);
+            return true;
+        } catch (error) {
+            return false;
+        }
     }
 
     /**
-     * Navigates to Schedule tab
+     * Add mobile number
      */
-    async goToSchedule(): Promise<void> {
-        await this.click(this.selectors.scheduleTab);
+    async addMobileNumber(): Promise<void> {
+        await this.click(this.selectors.addMobileNumber);
     }
 
     /**
-     * Navigates to Related tab
+     * Open add profiles
      */
-    async goToRelated(): Promise<void> {
-        await this.click(this.selectors.relatedTab);
+    async openAddProfiles(): Promise<void> {
+        await this.click(this.selectors.addProfiles);
+    }
+
+    async isStartChannelPlaybackDisplayed(): Promise<boolean> {
+        try {
+            await this.verifyElementDisplayed(this.selectors.startChannelPlayback);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    // Method to get the start channel playback selector
+    public getStartChannelPlaybackSelector(): string {
+        return this.selectors.startChannelPlayback;
     }
 
     /**
-     * Navigates to Extras tab
+     * Check if an element is visible
+     * @param selector The selector of the element to check
      */
-    async goToExtras(): Promise<void> {
-        await this.click(this.selectors.extrasTab);
-    }
-
-    /**
-     * Navigates to Details tab
-     */
-    async goToDetails(): Promise<void> {
-        await this.click(this.selectors.detailsTab);
-    }
-
-    /**
-     * Verifies if the series details page is displayed
-     * @returns Promise<boolean> True if the series details page is displayed
-     */
-    async isDisplayed(): Promise<boolean> {
-        return await this.isElementDisplayed(this.selectors.seriesTitle);
-    }
-
-    /**
-     * Waits for the series details page to be fully loaded
-     */
-    async waitForLoaded(): Promise<void> {
-        await this.waitForElement(this.selectors.seriesTitle);
-    }
-    /**
-     * Clicks on the series poster
-     */
-    async clickOnSeries(): Promise<void> {
-        await this.click(this.selectors.seriesPoster);
+    async isElementVisible(selector: string): Promise<boolean> {
+        try {
+            const element = await this.driver.$(selector);
+            return await element.isDisplayed(); // Check if the element is displayed
+        } catch (error) {
+            console.error(`Error checking visibility of element: ${error}`);
+            return false; // Return false if there's an error
+        }
     }
 } 

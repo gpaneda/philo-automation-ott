@@ -2,11 +2,14 @@ import { Browser } from 'webdriverio';
 import { HomeScreenPage } from '../fireTVPages/homescreen.page';
 import { LandingPage } from '../fireTVPages/landing.page';
 import { AppHelper } from '../helpers/app.helper';
+import { HomeScreenPage as AndroidHomeScreenPage } from '../androidTVPages/homescreen.page';
+import { LandingPage as AndroidLandingPage } from '../androidTVPages/landing.page';
 
 describe('Landing Page Tests', () => {
     let driver: Browser<'async'>;
-    let landingPage: LandingPage;
-    let homeScreenPage: HomeScreenPage;
+    let landingPage: LandingPage | AndroidLandingPage;
+    let homeScreenPage: HomeScreenPage | AndroidHomeScreenPage;
+    let appPackage: string;
 
     beforeAll(async () => {
         try {
@@ -17,8 +20,19 @@ describe('Landing Page Tests', () => {
 
             // Initialize driver and page objects
             driver = await AppHelper.launchPhiloApp();
-            landingPage = new LandingPage(driver);
-            homeScreenPage = new HomeScreenPage(driver);
+            
+            // Set up correct page objects and app package based on device type
+            if (AppHelper.deviceType === 'androidTV') {
+                console.log('Using Android TV page objects');
+                landingPage = new AndroidLandingPage(driver);
+                homeScreenPage = new AndroidHomeScreenPage(driver);
+                appPackage = 'com.philo.philo.google';
+            } else {
+                console.log('Using Fire TV page objects');
+                landingPage = new LandingPage(driver);
+                homeScreenPage = new HomeScreenPage(driver);
+                appPackage = 'com.philo.philo';
+            }
         } catch (error) {
             console.error('Error in beforeAll:', error);
             throw error;
@@ -32,7 +46,7 @@ describe('Landing Page Tests', () => {
             await AppHelper.clearAppData();
 
             if (driver) {
-                await driver.terminateApp('com.philo.philo');
+                await driver.terminateApp(appPackage);
                 await driver.pause(2000);
                 await driver.deleteSession();
                 await new Promise(resolve => setTimeout(resolve, 10000));
@@ -44,9 +58,9 @@ describe('Landing Page Tests', () => {
 
     beforeEach(async () => {
         try {
-            await driver.terminateApp('com.philo.philo');
+            await driver.terminateApp(appPackage);
             await driver.pause(2000);
-            await driver.activateApp('com.philo.philo');
+            await driver.activateApp(appPackage);
             await driver.pause(20000); // Longer wait for app to fully load
         } catch (error) {
             console.error('Error in beforeEach:', error);
@@ -62,7 +76,7 @@ describe('Landing Page Tests', () => {
         await landingPage.verifyLandingPageElements();
         await homeScreenPage.pressDownButton();
         await driver.pause(5000);
-        await landingPage.verifyLandingPage2Elements();
+        await landingPage.verifyLandingPageElements();
         await driver.pause(2000);
         await landingPage.verifyChannelsDisplayed();
     }, 60000);

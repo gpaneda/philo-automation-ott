@@ -2,9 +2,9 @@ const { google } = require('googleapis');
 require('dotenv').config();
 
 const oauth2Client = new google.auth.OAuth2(
-    process.env.GMAIL_2_CLIENT_ID,
-    process.env.GMAIL_2_CLIENT_SECRET,
-    process.env.GMAIL_2_REDIRECT_URI
+    process.env.GMAIL_3_CLIENT_ID,
+    process.env.GMAIL_3_CLIENT_SECRET,
+    process.env.GMAIL_3_REDIRECT_URI
 );
 
 // Generate the URL for authorization
@@ -25,8 +25,8 @@ if (process.argv[2]) {
     const code = process.argv[2];
     oauth2Client.getToken(code).then(({ tokens }) => {
         console.log('\nHere are your tokens:\n');
-        console.log('GMAIL_2_REFRESH_TOKEN=' + tokens.refresh_token);
-        console.log('GMAIL_2_ACCESS_TOKEN=' + tokens.access_token);
+        console.log('GMAIL_3_REFRESH_TOKEN=' + tokens.refresh_token);
+        console.log('GMAIL_3_ACCESS_TOKEN=' + tokens.access_token);
     }).catch(error => {
         console.error('Error getting tokens:', error);
     });

@@ -99,3 +99,13 @@ By following these steps, you can successfully add new devices to your dashboard
 - User chooses 
 
 
+https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/gmail.readonly&access_type=offline&include_granted_scopes=true&response_type=code&redirect_uri=urn:ietf:wg:oauth:2.0:oob&client_id=956039011085-f89cdcov6mncuedfkqaflhfa0gfoh629.apps.googleusercontent.com
+
+ curl --request POST \
+       --url https://oauth2.googleapis.com/token \
+       --header 'Content-Type: application/x-www-form-urlencoded' \
+       --data 'code=4/1ASVgi3JLRQe2YG4xMZE2XjnOiyuq9ciA8UI8lNOtwtMkINx92ZkiL1r2Q60' \
+       --data 'client_id=956039011085-f89cdcov6mncuedfkqaflhfa0gfoh629.apps.googleusercontent.com' \
+       --data 'client_secret=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' \
+       --data 'redirect_uri=urn:ietf:wg:oauth:2.0:oob' \
+       --data 'grant_type=authorization_code'

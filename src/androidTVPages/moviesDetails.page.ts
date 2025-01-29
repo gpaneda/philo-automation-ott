@@ -1,59 +1,55 @@
-import { Browser, Element } from 'webdriverio';
+import { Browser } from 'webdriverio';
 import { BasePage } from './base.page';
+import path from 'path';
 
 export class MoviesDetailsPage extends BasePage {
     public selectors = {
-        // Movie Information
-        movieTitle: 'android=className("android.widget.TextView").textMatches(".*")',
-        movieDescription: 'android=className("android.widget.TextView").clickable(true).textMatches(".*")',
-        moviePoster: 'android=className("android.widget.ImageView").descriptionMatches(".*")',
-        movieRating: 'android=className("android.widget.TextView").textMatches("TV-.*|PG.*|G|R|NC-17")',
-        releaseDate: 'android=className("android.widget.TextView").textMatches("\\d{4}")',
-        ratingAdvisories: 'android=className("android.widget.TextView").textMatches(".*Seasons.*|.*Episodes.*")',
-        
-        // Action Buttons Container
-        buttonsContainer: 'android=className("android.view.View").index(6)',
-        
-        // Action Buttons
-        playButton: 'android=className("android.view.View").descriptionContains("Play")',
-        playLabel: 'android=className("android.widget.TextView").textContains("Play")',
-        saveButton: 'android=className("android.view.View").descriptionContains("Save")',
-        saveLabel: 'android=className("android.widget.TextView").text("Save")',
-        channelButton: 'android=className("android.view.View").descriptionContains("View")',
-        
-        // Navigation Tabs Container
-        tabContainer: 'android=className("android.view.View").index(7)',
-        
-        // Navigation Tabs
-        episodesTab: 'android=className("android.widget.TextView").text("Episodes")',
-        scheduleTab: 'android=className("android.widget.TextView").text("Schedule")',
-        relatedTab: 'android=className("android.widget.TextView").text("Related")',
-        detailsTab: 'android=className("android.widget.TextView").text("Details")',
-        watchOptionsTab: 'android=className("android.widget.TextView").text("Watch Options")',
+        movieTitle: 'android=new UiSelector().className("android.widget.TextView").index(1)',
+        movieDescription: [
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/description")',
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/movie_description")',
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_description")',
+            'android=new UiSelector().className("android.widget.TextView").index(2)',
+            'android=new UiSelector().className("android.widget.TextView").textContains(".")'
+        ],
+        movieRating: [
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/rating")',
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_rating")',
+            'android=new UiSelector().className("android.widget.TextView").textMatches("^[A-Z0-9-]+$")'
+        ],
+        movieRatingAdvisories: [
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/rating_advisories")',
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_advisories")',
+            'android=new UiSelector().className("android.widget.TextView").textContains("violence")',
+            'android=new UiSelector().className("android.widget.TextView").textContains("language")'
+        ],
+        movieDuration: [
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/duration")',
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_duration")',
+            'android=new UiSelector().className("android.widget.TextView").textMatches(".*[0-9]+ min.*")'
+        ],
+        movieReleaseYear: [
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/release_year")',
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_year")',
+            'android=new UiSelector().className("android.widget.TextView").textMatches("^[0-9]{4}$")'
+        ],
+        movieChannelName: [
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/channel_name")',
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_channel")',
+            'android=new UiSelector().className("android.widget.TextView").textContains("Channel")'
+        ],
 
-        // Content Container
-        contentContainer: 'android=className("android.view.View").index(1).focusable(true)',
-        
-        // Background Elements
-        backgroundImage: 'android=className("android.widget.ImageView").descriptionMatches(".*")',
-        
-        // Container Elements
-        mainContainer: 'android=className("android.view.View").focusable(true)',
-        detailsContainer: 'android=className("android.view.View").index(1).focusable(true)',
-        
-        // Related View Elements
-        contentGrid: 'android=className("android.view.View").scrollable(true)',
-        gridItem: 'android=className("android.view.View").clickable(true).focusable(true)',
-        relatedItemTitle: 'android=className("android.widget.TextView").clickable(false)',
-        relatedItemContainer: 'android=className("android.view.View").clickable(true).focusable(true)',
-        
-        // Watch Options Elements
-        watchOptionsContainer: 'android=className("android.view.View").index(1).focusable(true)',
-        watchOptionItem: 'android=className("android.view.View").clickable(true)',
-        watchOptionLogo: 'android=className("android.view.View").descriptionMatches(".*")',
-        watchOptionTitle: 'android=className("android.widget.TextView").textMatches(".*")',
-        watchOptionDuration: 'android=className("android.widget.TextView").textMatches(".*[hm].*")',
-        watchOptionRating: 'android=className("android.widget.TextView").textMatches("TV-.*|PG.*|G|R|NC-17")'
+        playButton: 'android=new UiSelector().description("Play")',
+        playButtonByDesc: 'android=new UiSelector().description("Play")',
+        playButtonByText: 'android=new UiSelector().text("Play")',
+        resumeButton: 'android=new UiSelector().text("Resume")',
+        saveButton: 'android=new UiSelector().description("Save")',
+        channelButton: 'android=new UiSelector().description("View Christmas Plus page")',
+        dismissButton: 'android=new UiSelector().text("Back")',
+
+        releaseDate: 'android=new UiSelector().resourceId("com.philo.philo.google:id/release_year")',
+        ratingAdvisories: 'android=new UiSelector().resourceId("com.philo.philo.google:id/rating_advisories")',
+        channelName: 'android=new UiSelector().resourceId("com.philo.philo.google:id/channel_name")'
     };
 
     constructor(driver: Browser<'async'>) {
@@ -61,49 +57,343 @@ export class MoviesDetailsPage extends BasePage {
     }
 
     /**
+     * Waits for the movie details page to be fully loaded
+     */
+    async waitForLoaded(): Promise<void> {
+        try {
+            console.log('Waiting for movie details page to load...');
+
+            // Try different selectors to find the title
+            const selectors = [
+                this.selectors.movieTitle,
+                'android=new UiSelector().resourceId("com.philo.philo.google:id/title")',
+                'android=new UiSelector().resourceId("com.philo.philo.google:id/show_title")',
+                'android=new UiSelector().className("android.widget.TextView").textMatches(".*")',
+                'android=new UiSelector().className("android.widget.TextView").index(0)',
+                'android=new UiSelector().className("android.widget.TextView").index(1)',
+                'android=new UiSelector().className("android.widget.TextView").index(2)'
+            ];
+
+            let foundElement = false;
+            for (const selector of selectors) {
+                try {
+                    console.log(`Trying selector: ${selector}`);
+                    const element = await this.driver.$(selector);
+                    const isDisplayed = await element.isDisplayed();
+                    if (isDisplayed) {
+                        const text = await element.getText();
+                        console.log(`Found element with text: "${text}"`);
+                        foundElement = true;
+                        break;
+                    }
+                    console.log(`Element found but not displayed: ${selector}`);
+                } catch (error: any) {
+                    console.log(`Selector ${selector} not found:`, error.message);
+                }
+            }
+
+            if (!foundElement) {
+                console.log('Attempting to find any visible TextView...');
+                const textViews = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+                for (const element of textViews) {
+                    try {
+                        const isDisplayed = await element.isDisplayed();
+                        if (isDisplayed) {
+                            const text = await element.getText();
+                            if (text && text.length > 0) {
+                                console.log(`Found TextView with text: "${text}"`);
+                                foundElement = true;
+                                break;
+                            }
+                        }
+                    } catch (error: any) {
+                        console.log('Error checking TextView:', error.message);
+                    }
+                }
+            }
+
+            if (!foundElement) {
+                // Take a screenshot for debugging
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                const screenshotPath = path.join(process.cwd(), 'screenshots', 'errors', `movie-details-${timestamp}.png`);
+                await this.driver.saveScreenshot(screenshotPath);
+                console.log(`Screenshot saved to: ${screenshotPath}`);
+
+                throw new Error('Could not find movie title element with any selector');
+            }
+
+            // Wait a bit more for any animations
+            await this.driver.pause(2000);
+        } catch (error) {
+            console.error('Error waiting for movie details page:', error);
+            throw error;
+        }
+    }
+
+    /**
      * Gets the movie title text
      * @returns Promise<string> The movie title
      */
     async getMovieTitle(): Promise<string> {
-        const element = await this.driver.$(this.selectors.movieTitle);
-        return await element.getAttribute('content-desc');
+        try {
+            console.log('Attempting to get movie title using generic text selector...');
+
+            // Try different approaches to find the title
+            const textElements = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+
+            // The movie title is usually the first text element on the page
+            for (const element of textElements) {
+                if (await element.isDisplayed()) {
+                    const text = await element.getText();
+                    if (text && text.length > 0) {
+                        console.log(`Found title text: "${text}"`);
+                        return text;
+                    }
+                }
+            }
+
+            throw new Error('Could not find movie title with any selector strategy');
+        } catch (error) {
+            console.error('Error getting movie title:', error);
+            throw error;
+        }
     }
 
     /**
-     * Gets the movie poster description
-     * @returns Promise<string> The movie poster description
+     * Gets the movie description text
+     * @returns Promise<string> The movie description
      */
-    async getMoviePosterDescription(): Promise<string> {
-        const element = await this.driver.$(this.selectors.moviePoster);
-        return await element.getAttribute('content-desc');
+    async getMovieDescription(): Promise<string> {
+        try {
+            console.log('Attempting to get movie description...');
+
+            // Try each selector in the array
+            for (const selector of this.selectors.movieDescription) {
+                try {
+                    console.log(`Trying description selector: ${selector}`);
+                    const element = await this.driver.$(selector);
+                    const exists = await element.isDisplayed();
+                    if (exists) {
+                        const text = await element.getText();
+                        if (text && text.length > 0) {
+                            console.log(`Found description with selector ${selector}: "${text}"`);
+                            return text;
+                        }
+                    }
+                } catch (error) {
+                    console.log(`Selector ${selector} not found or not accessible`);
+                }
+            }
+
+            // If no specific selector worked, try finding any TextView with substantial text
+            console.log('Trying to find description in any TextView...');
+            const textViews = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+            for (const element of textViews) {
+                try {
+                    const isDisplayed = await element.isDisplayed();
+                    if (isDisplayed) {
+                        const text = await element.getText();
+                        if (text && text.length > 50) { // Description is usually longer than 50 characters
+                            console.log(`Found potential description in TextView: "${text}"`);
+                            return text;
+                        }
+                    }
+                } catch (error) {
+                    console.log('Error checking TextView:', error);
+                }
+            }
+
+            throw new Error('Could not find movie description with any selector');
+        } catch (error) {
+            console.error('Error getting movie description:', error);
+            throw error;
+        }
     }
 
     /**
-     * Gets all related content titles
-     * @returns Promise<string[]> Array of related content titles
+     * Gets the movie rating (e.g., "R", "PG-13")
+     * @returns Promise<string> The movie rating
      */
-    async getRelatedContentTitles(): Promise<string[]> {
-        const elements = await this.driver.$$(this.selectors.relatedItemTitle);
-        const titles = await Promise.all(
-            elements.map(async (element: Element<'async'>) => await element.getAttribute('content-desc'))
-        );
-        return titles.filter((title: string | null): title is string => title !== null);
+    async getMovieRating(): Promise<string> {
+        try {
+            console.log('Attempting to get movie rating...');
+
+            // Try each selector in the array
+            for (const selector of this.selectors.movieRating) {
+                try {
+                    console.log(`Trying rating selector: ${selector}`);
+                    const element = await this.driver.$(selector);
+                    const exists = await element.isDisplayed();
+                    if (exists) {
+                        const text = await element.getText();
+                        if (text && text.length > 0) {
+                            console.log(`Found rating with selector ${selector}: "${text}"`);
+                            return text;
+                        }
+                    }
+                } catch (error) {
+                    console.log(`Selector ${selector} not found or not accessible`);
+                }
+            }
+
+            throw new Error('Could not find movie rating with any selector');
+        } catch (error) {
+            console.error('Error getting movie rating:', error);
+            throw error;
+        }
     }
 
     /**
-     * Clicks a related content item by its title
-     * @param title The title of the content to click
+     * Gets the movie release date
+     * @returns Promise<string> The release date
      */
-    async clickRelatedContent(title: string): Promise<void> {
-        const selector = `android=className("android.view.View").descriptionContains("${title}")`;
-        await this.click(selector);
+    async getReleaseDate(): Promise<string> {
+        try {
+            console.log('Attempting to get release date...');
+
+            // Try each selector in the array
+            for (const selector of this.selectors.movieReleaseYear) {
+                try {
+                    console.log(`Trying release date selector: ${selector}`);
+                    const element = await this.driver.$(selector);
+                    const exists = await element.isDisplayed();
+                    if (exists) {
+                        const text = await element.getText();
+                        if (text && text.length > 0) {
+                            console.log(`Found release date with selector ${selector}: "${text}"`);
+                            return text;
+                        }
+                    }
+                } catch (error) {
+                    console.log(`Selector ${selector} not found or not accessible`);
+                }
+            }
+
+            throw new Error('Could not find release date with any selector');
+        } catch (error) {
+            console.error('Error getting release date:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Gets the rating advisories (content warnings)
+     * @returns Promise<string> The rating advisories
+     */
+    async getRatingAdvisories(): Promise<string> {
+        try {
+            console.log('Attempting to get rating advisories...');
+
+            // Try each selector in the array
+            for (const selector of this.selectors.movieRatingAdvisories) {
+                try {
+                    console.log(`Trying rating advisories selector: ${selector}`);
+                    const element = await this.driver.$(selector);
+                    const exists = await element.isDisplayed();
+                    if (exists) {
+                        const text = await element.getText();
+                        if (text && text.length > 0) {
+                            console.log(`Found rating advisories with selector ${selector}: "${text}"`);
+                            return text;
+                        }
+                    }
+                } catch (error) {
+                    console.log(`Selector ${selector} not found or not accessible`);
+                }
+            }
+
+            throw new Error('Could not find rating advisories with any selector');
+        } catch (error) {
+            console.error('Error getting rating advisories:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Gets the channel name
+     * @returns Promise<string> The channel name
+     */
+    async getChannelName(): Promise<string> {
+        console.log('Attempting to get channel name...');
+        try {
+            // Get all TextViews
+            console.log('Finding all TextViews...');
+            const textViews = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+            console.log(`Found ${textViews.length} TextViews`);
+
+            // Get text from each TextView
+            for (const textView of textViews) {
+                try {
+                    const text = await textView.getText();
+                    console.log('TextView text:', text);
+
+                    // Look for text that might be a channel name (e.g., "Lifetime", "AMC", etc.)
+                    if (text && text.length > 0 && text.length < 30) { // Channel names are usually short
+                        console.log('Potential channel name found:', text);
+                        return text;
+                    }
+                } catch (error) {
+                    console.log('Error getting text from TextView:', error);
+                }
+            }
+
+            throw new Error('Could not find channel name with any selector');
+        } catch (error) {
+            console.error('Error getting channel name:', error);
+            throw error;
+        }
     }
 
     /**
      * Clicks the play button to start the movie
      */
     async clickPlay(): Promise<void> {
-        await this.click(this.selectors.playButton);
+        try {
+            console.log('Attempting to click play button...');
+
+            // Try different play button selectors first
+            const playSelectors = [
+                this.selectors.playButton,
+                this.selectors.playButtonByDesc,
+                this.selectors.playButtonByText
+            ];
+
+            for (const selector of playSelectors) {
+                try {
+                    console.log(`Trying play button selector: ${selector}`);
+                    const element = await this.driver.$(selector);
+                    const exists = await element.isDisplayed();
+                    if (exists) {
+                        console.log(`Found play button with selector: ${selector}`);
+                        await element.click();
+                        return;
+                    }
+                } catch (error) {
+                    console.log(`Selector ${selector} not found or not clickable`);
+                }
+            }
+
+            // If play button not found, try resume as fallback
+            try {
+                console.log('Checking for resume button...');
+                const resumeElement = await this.driver.$(this.selectors.resumeButton);
+                const resumeExists = await resumeElement.isDisplayed();
+                if (resumeExists) {
+                    console.log('Resume button found, clicking it...');
+                    await resumeElement.click();
+                    return;
+                }
+            } catch (error) {
+                console.log('No resume button found');
+            }
+
+            // If we get here, no playable button was found
+            throw new Error('Could not find any playable button');
+
+        } catch (error) {
+            console.error('Error clicking play:', error);
+            throw error;
+        }
     }
 
     /**
@@ -121,24 +411,10 @@ export class MoviesDetailsPage extends BasePage {
     }
 
     /**
-     * Clicks the related tab
+     * Dismisses the movie details page and returns to the previous screen
      */
-    async clickRelatedTab(): Promise<void> {
-        await this.click(this.selectors.relatedTab);
-    }
-
-    /**
-     * Clicks the watch options tab
-     */
-    async clickWatchOptionsTab(): Promise<void> {
-        await this.click(this.selectors.watchOptionsTab);
-    }
-
-    /**
-     * Clicks the details tab
-     */
-    async clickDetailsTab(): Promise<void> {
-        await this.click(this.selectors.detailsTab);
+    async dismiss(): Promise<void> {
+        await this.click(this.selectors.dismissButton);
     }
 
     /**
@@ -146,46 +422,50 @@ export class MoviesDetailsPage extends BasePage {
      * @returns Promise<boolean> True if the movie details page is displayed
      */
     async isDisplayed(): Promise<boolean> {
-        return await this.isElementDisplayed(this.selectors.moviePoster);
+        try {
+            // Look for any TextView that contains the movie title
+            const textElements = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+            for (const element of textElements) {
+                if (await element.isDisplayed()) {
+                    const text = await element.getText();
+                    if (text && text.length > 0) {
+                        console.log('Found text element:', text);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        } catch (error) {
+            console.error('Error checking if details page is displayed:', error);
+            return false;
+        }
     }
 
     /**
-     * Waits for the movie details page to be fully loaded
+     * Verifies if the movie title is displayed
+     * @returns Promise<boolean> True if the movie title is displayed
      */
-    async waitForLoaded(): Promise<void> {
-        await this.waitForElement(this.selectors.moviePoster);
+    async isShowTitleDisplayed(): Promise<boolean> {
+        return await this.isElementDisplayed(this.selectors.movieTitle);
     }
 
     /**
-     * Gets all watch options for the movie
-     * @returns Promise<string[]> Array of watch option descriptions
+     * Waits for the movie title to be fully loaded
      */
-    async getWatchOptions(): Promise<string[]> {
-        const elements = await this.driver.$$(this.selectors.watchOptionItem);
-        const options = await Promise.all(
-            elements.map(async (element: Element<'async'>) => await element.getAttribute('content-desc'))
-        );
-        return options.filter((option: string | null): option is string => option !== null);
+    async waitForShowTitle(): Promise<void> {
+        await this.waitForElement(this.selectors.movieTitle);
     }
 
-    /**
-     * Gets all watch option channels/providers
-     * @returns Promise<string[]> Array of channel/provider names
-     */
-    async getWatchOptionProviders(): Promise<string[]> {
-        const elements = await this.driver.$$(this.selectors.watchOptionLogo);
-        const providers = await Promise.all(
-            elements.map(async (element: Element<'async'>) => await element.getAttribute('content-desc'))
-        );
-        return providers.filter((provider: string | null): provider is string => provider !== null);
+    async findPlayableMovie(maxAttempts: number = 5): Promise<boolean> {
+        console.log('Looking for a movie with Play or Resume button...');
+        return await this.findPlayableTitle(maxAttempts);
     }
 
-    /**
-     * Clicks a specific watch option by its description
-     * @param description The content description of the watch option to click
-     */
-    async clickWatchOption(description: string): Promise<void> {
-        const selector = `android=className("android.view.View").descriptionContains("${description}")`;
-        await this.click(selector);
+    async isResumeButtonVisible(): Promise<boolean> {
+        return await this.isElementDisplayed(this.selectors.resumeButton);
+    }
+
+    async clickResume(): Promise<void> {
+        await this.click(this.selectors.resumeButton);
     }
 } 
