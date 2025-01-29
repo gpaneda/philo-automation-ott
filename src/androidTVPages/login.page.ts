@@ -31,7 +31,7 @@ export class LoginPage extends BasePage {
         comShortcut: 'android=resourceId("com.philo.philo.google:id/keypad_com_key")',
         
         // Special Characters
-        atSymbol: 'android=resourceId("com.philo.philo:id/keypad_at")',
+        atSymbol: 'android=resourceId("com.philo.philo.google:id/keypad_at")',
         dot: 'android=resourceId("com.philo.philo.google:id/keypad_dot")',
         underscore: 'android=resourceId("com.philo.philo.google:id/keypad_underscore")',
         plus: 'android=resourceId("com.philo.philo.google:id/keypad_plus")',
@@ -94,9 +94,9 @@ export class LoginPage extends BasePage {
             } else if (char === '_') {
                 await this.click(this.selectors.underscore);
             } else if (char.match(/[a-z]/)) {
-                await this.click(`android=resourceId("com.philo.philo:id/keypad_${char}")`);
+                await this.click(`android=resourceId("com.philo.philo.google:id/keypad_${char}")`);
             } else if (char.match(/[0-9]/)) {
-                await this.click(`android=resourceId("com.philo.philo:id/keypad_${char}")`);
+                await this.click(`android=resourceId("com.philo.philo.google:id/keypad_${char}")`);
             }
             await this.pause(100); // Small pause between keypresses
         }
@@ -181,7 +181,7 @@ export class LoginPage extends BasePage {
         
         // Type each digit of the code
         for (const digit of code) {
-            await this.click(`android=resourceId("com.philo.philo:id/keypad_${digit}")`);
+            await this.click(`android=resourceId("com.philo.philo.google:id/keypad_${digit}")`);
             await this.pause(100);
         }
     }

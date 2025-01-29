@@ -1,18 +1,45 @@
-export class SearchPage {
+import { Browser } from "webdriverio";
+import { BasePage } from "./base.page";
+import { HomeScreenPage } from "./homescreen.page";
+
+type ChannelShowResultsElementNames =
+    | 'fearTheWalkingDead'
+    | 'theWalkingDead'
+    | 'theWalkingDeadUniverse'
+    | 'theWalkingDeadDarylDixon'
+    | 'theWalkingDeadWorldBeyond'
+    | 'topShowsWalkingDeadChannel'
+    | 'bigTileTopButtons'
+    | 'topShowsWalkingDeadUniverse'
+    | 'episodeTitle'
+    | 'airDate'
+    | 'playButton'
+    | 'channelLogo';
+
+export class SearchPage extends BasePage {
+    theWalkingDeadUniverse(theWalkingDeadUniverse: any): boolean | PromiseLike<boolean> {
+        throw new Error('Method not implemented.');
+    }
+    constructor(driver: Browser<'async'>) {
+        super(driver);
+        // Initialization code
+        this.driver = driver;
+    }
+
     // Define properties for each UI element based on resource IDs
     actionBarRoot = 'com.philo.philo.google:id/action_bar_root';
     content = 'android:id/content';
-    searchInput = 'com.philo.philo.google:id/search_src_text';
-    searchButton = 'com.philo.philo.google:id/tab_search';
+    searchInput = 'com.philo.philo.google:id/search_input';
+    searchButton = 'com.philo.philo.google:id/search_button';
     searchResultsList = 'com.philo.philo.google:id/search_results_list';
-    emptyStateContainer = 'com.philo.philo.google:id/alternate_view_empty';
+    emptyStateContainer = 'com.philo.philo.google:id/empty_state_container';
     resultItemTitle = 'com.philo.philo.google:id/result_item_title';
     resultItemDescription = 'com.philo.philo.google:id/result_item_description';
     resultItemThumbnail = 'com.philo.philo.google:id/result_item_thumbnail';
-    clearSearchButton = 'com.philo.philo.google:id/button_clear';
+    clearSearchButton = 'com.philo.philo.google:id/clear_search_button';
 
     // Keypad elements
-    keypadContainer = 'com.philo.philo.google:id/keypad';
+    keypadContainer = 'com.philo.philo.google:id/keypad_container';
     keypadButtonA = 'com.philo.philo.google:id/keypad_a';
     keypadButtonB = 'com.philo.philo.google:id/keypad_b';
     keypadButtonC = 'com.philo.philo.google:id/keypad_c';
@@ -52,6 +79,93 @@ export class SearchPage {
     keypadButtonSpace = 'com.philo.philo.google:id/keypad_space';
     keypadButtonClear = 'com.philo.philo.google:id/button_clear';
     keypadButtonBackspace = 'com.philo.philo.google:id/keypad_backspace';
+
+    // Add these new elements
+    tileGroups = 'com.philo.philo.google:id/tile_groups';
+    defaultTileRow = 'com.philo.philo.google:id/default_tile_row';
+    tileGroupRowHeaderLayout = 'com.philo.philo.google:id/tile_group_row_header_layout';
+    buttonTileGroup = 'com.philo.philo.google:id/button_tile_group';
+    labelTileGroup = 'com.philo.philo.google:id/label_tile_group';
+    listViewBroadcasts = 'com.philo.philo.google:id/list_view_broadcasts';
+    widgetTileWrapper = 'com.philo.philo.google:id/widget_tile_wrapper';
+    tileViewWrapper = 'com.philo.philo.google:id/tile_view_wrapper';
+    tileView = 'com.philo.philo.google:id/tile_view';
+    pressedOverlay = 'com.philo.philo.google:id/pressed_overlay';
+    channelLogo = 'com.philo.philo.google:id/channel_logo';
+    favoriteIcon = 'com.philo.philo.google:id/favorite_icon';
+    backgroundImage = 'com.philo.philo.google:id/background_image';
+    iconPlayRadial = 'com.philo.philo.google:id/icon_play_radial';
+    title = 'com.philo.philo.google:id/title';
+    expandToGridIcon = 'com.philo.philo.google:id/expand_to_grid_icon';
+
+    //Channel Show Results Elements
+    channelShowResultsElements = {
+        // New elements added from ui_dump_formatted.xml
+        "fearTheWalkingDead": {
+            "selector": "com.philo.philo.google:id/widget_tile_wrapper",
+            "description": "Fear the Walking Dead",
+            "type": "view"
+        },
+        "theWalkingDead": {
+            "selector": "com.philo.philo.google:id/widget_tile_wrapper",
+            "description": "The Walking Dead",
+            "type": "view"
+        },
+
+        "theWalkingDeadUniverse": {
+            "selector": "com.philo.philo.google:id/widget_tile_wrapper",
+            "description": "The Walking Dead Universe",
+            "type": "view"
+        },
+        "theWalkingDeadDarylDixon": {
+            "selector": "com.philo.philo.google:id/widget_tile_wrapper",
+            "description": "The Walking Dead: Daryl Dixon",
+            "type": "view"
+        },
+        "theWalkingDeadWorldBeyond": {
+            "selector": "com.philo.philo.google:id/widget_tile_wrapper",
+            "description": "The Walking Dead: World Beyond",
+            "type": "view"
+        },
+        "topShowsWalkingDeadChannel": {
+            "selector": "com.philo.philo.google:id/list_view_broadcasts",
+            "description": "Top shows on The Walking Dead Channel",
+            "type": "recyclerView"
+        },
+
+        "topShowsWalkingDeadUniverse": {
+            "selector": "com.philo.philo.google:id/list_view_broadcasts",
+            "description": "Top shows on The Walking Dead Universe",
+            "type": "recyclerView"
+        },
+        "bigTileTopButtons": {
+            "selector": "com.philo.philo.google:id/big_tile_top_buttons_container",
+            "description": "Top buttons for big tile",
+            "type": "view"
+        },
+        episodeTitle: {
+            description: "Episode Title",
+            selector: "com.philo.philo.google:id/title",
+            type: "textView"
+        },
+        airDate: {
+            description: "Air Date",
+            selector: "com.philo.philo.google:id/air_date",
+            type: "textView"
+        },
+        playButton: {
+            description: "Play Button",
+            selector: "com.philo.philo.google:id/icon_play_radial",
+            type: "imageView"
+        },
+        channelLogo: {
+            description: "Channel Logo",
+            selector: "com.philo.philo.google:id/channel_logo",
+            type: "imageView"
+        },
+
+
+    }
 
     // Method to get the action bar root element
     getActionBarRootElement() {
@@ -112,4 +226,117 @@ export class SearchPage {
     getKeypadButtonElement(buttonId: string) {
         return `//android.widget.Button[@resource-id='${buttonId}']`;
     }
-} 
+
+    // Add corresponding getter methods
+    getTileGroupsElement() {
+        return `//androidx.recyclerview.widget.RecyclerView[@resource-id='${this.tileGroups}']`;
+    }
+
+    getDefaultTileRowElement() {
+        return `//android.view.ViewGroup[@resource-id='${this.defaultTileRow}']`;
+    }
+
+    getLabelTileGroupElement() {
+        return `//android.widget.TextView[@resource-id='${this.labelTileGroup}']`;
+    }
+
+    getListViewBroadcastsElement() {
+        return `//androidx.recyclerview.widget.RecyclerView[@resource-id='${this.listViewBroadcasts}']`;
+    }
+
+    getTileViewElement() {
+        return `//android.view.ViewGroup[@resource-id='${this.tileView}']`;
+    }
+
+    getChannelLogoElement() {
+        return `//android.widget.ImageView[@resource-id='${this.channelLogo}']`;
+    }
+
+    getTitleElement() {
+        return `//android.widget.TextView[@resource-id='${this.title}']`;
+    }
+
+    async enterSearchTerm(term: string): Promise<void> {
+        // Convert the term to uppercase since the keyboard has uppercase letters
+        const upperTerm = term.toUpperCase();
+
+        for (const char of upperTerm) {
+            if (char === ' ') {
+                await this.click(this.keypadButtonSpace);
+            } else if (/[0-9]/.test(char)) {
+                await this.click(`com.philo.philo:id/keypad_${char}`);
+            } else {
+                await this.click(`com.philo.philo:id/keypad_${char.toLowerCase()}`);
+            }
+            await this.pause(100); // Small delay between keypresses
+        }
+    }
+
+    async clearInput(): Promise<void> {
+        const input = await this.driver.$(this.searchInput);
+        const text = await input.getText();
+        for (let i = 0; i < text.length; i++) {
+            await this.click(this.keypadButtonBackspace);
+            await this.pause(100);
+        }
+    }
+
+    // Add these helper methods
+    async click(elementId: string): Promise<void> {
+        const element = await this.driver.$(`//*[@resource-id='${elementId}']`);
+        await element.click();
+    }
+
+    async pause(ms: number): Promise<void> {
+        await new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async isElementDisplayed(elementId: string): Promise<boolean> {
+        try {
+            const element = await this.driver.$(`//*[@resource-id='${elementId}']`);
+            return await element.isDisplayed();
+        } catch (error) {
+            return false;
+        }
+    }
+
+    async getHeaderText(): Promise<string[]> {
+        try {
+            const elements = await this.driver.$$(`//*[@resource-id='${this.labelTileGroup}']`);
+            const texts = await Promise.all(elements.map(element => element.getText()));
+            return texts;
+        } catch (error) {
+            console.error('Failed to get header texts:', error);
+            return [];
+        }
+    }
+    async navigateToSearchAndVerify() {
+        const homeScreen = new HomeScreenPage(this.driver);
+        await homeScreen.pressUpButton();
+        await this.pause(3000);
+        await homeScreen.navigateToSearch();
+        expect(await homeScreen.isElementDisplayed(homeScreen.selectors.topNavSearch)).toBe(true);
+    }
+
+    async interactWithSearchResults() {
+        const homeScreen = new HomeScreenPage(this.driver);
+        expect(await this.isElementDisplayed(this.expandToGridIcon)).toBe(true);
+        await homeScreen.pressLeftButton(); // Assuming homeScreen is accessible
+        await homeScreen.pressEnterButton();
+        await this.driver.pause(3000); // Assuming driver is accessible
+    }
+    getElement(elementName: ChannelShowResultsElementNames) {
+        const element = this.channelShowResultsElements[elementName];
+        if (element) {
+            return this.driver.$(`//*[@resource-id='${element.selector}' or @content-desc='${element.description}']`);
+        }
+        throw new Error(`Element ${elementName} not found`);
+    }
+
+    // Example usage of get and verify methods
+    async verifyAllElements() {
+        for (const key in this.channelShowResultsElements) {
+            await this.verifyElementDisplayed(key);
+        }
+    }
+}

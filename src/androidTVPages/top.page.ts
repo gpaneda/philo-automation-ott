@@ -16,7 +16,6 @@ export class TopPage {
     // Define properties for each UI element based on resource IDs
     actionBarRoot = 'com.philo.philo.google:id/action_bar_root';
     content = 'android:id/content';
-    activityHost = 'com.philo.philo.google:id/activity_host';
     playerFragmentHost = 'com.philo.philo.google:id/player_fragment_host';
     modalFragmentHost = 'com.philo.philo.google:id/modal_fragment_host';
     dialogFragmentHost = 'com.philo.philo.google:id/dialog_fragment_host';
@@ -36,20 +35,6 @@ export class TopPage {
     backgroundImage = 'com.philo.philo.google:id/background_image';
     title = 'com.philo.philo.google:id/title';
     description = 'com.philo.philo.google:id/description';
-    flagNew = 'com.philo.philo.google:id/flag_new';
-    fragmentTabs = 'com.philo.philo.google:id/fragment_tabs';
-    widgetTabs = 'com.philo.philo.google:id/widget_tabs';
-    tabBar = 'com.philo.philo.google:id/tab_bar';
-    tabHome = 'com.philo.philo.google:id/tab_home';
-    tabGuide = 'com.philo.philo.google:id/tab_guide';
-    tabTop = 'com.philo.philo.google:id/tab_top';
-    tabSaved = 'com.philo.philo.google:id/tab_saved';
-    tabSearch = 'com.philo.philo.google:id/tab_search';
-    tabProfile = 'com.philo.philo.google:id/tab_profile';
-    labelTab = 'com.philo.philo.google:id/label_tab';
-    iconTab = 'com.philo.philo.google:id/icon_tab';
-    tabBarTime = 'com.philo.philo.google:id/tab_bar_time';
-    tabBarTimeLabel = 'com.philo.philo.google:id/tab_bar_time_label';
 
     // Method to get the action bar root element
     getActionBarRootElement() {
@@ -155,11 +140,11 @@ export class TopPage {
     getDescriptionElement() {
         return `//android.widget.TextView[@resource-id='${this.description}']`;
     }
-    
+
     //create a method to verify all elements and selectors are visible
     verifyAllElementsVisible() {
         return `//android.widget.TextView[@resource-id='${this.title}']`;
-    }  
+    }
 
     /**
      * Get all image elements from the page
@@ -180,7 +165,7 @@ export class TopPage {
     async verifyImageElements() {
         const images = await this.getImageElements();
         const results: { [key: string]: boolean } = {};
-        
+
         for (const [key, selector] of Object.entries(images)) {
             try {
                 const element = await this.driver.$(selector);
@@ -190,7 +175,7 @@ export class TopPage {
                 console.error(`Error checking ${key}: ${error}`);
             }
         }
-        
+
         return results;
     }
 
@@ -239,15 +224,15 @@ export class TopPage {
      */
     async verifyChannelLogo(channelName?: string): Promise<boolean> {
         const logos = await this.getChannelLogos();
-        
+
         for (const logo of logos) {
             if (!channelName) {
                 if (await logo.element.isDisplayed()) {
                     return true;
                 }
-            } else if (logo.contentDesc && 
-                      logo.contentDesc.toLowerCase().includes(channelName.toLowerCase()) && 
-                      await logo.element.isDisplayed()) {
+            } else if (logo.contentDesc &&
+                logo.contentDesc.toLowerCase().includes(channelName.toLowerCase()) &&
+                await logo.element.isDisplayed()) {
                 return true;
             }
         }
@@ -261,9 +246,9 @@ export class TopPage {
      */
     async getChannelLogoPosition(channelName: string): Promise<string | null> {
         const logos = await this.getChannelLogos();
-        
+
         for (const logo of logos) {
-            if (logo.contentDesc && 
+            if (logo.contentDesc &&
                 logo.contentDesc.toLowerCase().includes(channelName.toLowerCase())) {
                 return logo.bounds;
             }
@@ -279,7 +264,7 @@ export class TopPage {
     parseBounds(bounds: string) {
         const matches = bounds.match(/\[(\d+),(\d+)\]\[(\d+),(\d+)\]/);
         if (!matches) return null;
-        
+
         return {
             topLeft: {
                 x: parseInt(matches[1]),
@@ -316,11 +301,11 @@ export class TopPage {
     isWithinBounds(x: number, y: number, bounds: string): boolean {
         const coords = this.parseBounds(bounds);
         if (!coords) return false;
-        
-        return x >= coords.topLeft.x && 
-               x <= coords.bottomRight.x && 
-               y >= coords.topLeft.y && 
-               y <= coords.bottomRight.y;
+
+        return x >= coords.topLeft.x &&
+            x <= coords.bottomRight.x &&
+            y >= coords.topLeft.y &&
+            y <= coords.bottomRight.y;
     }
 
     /**
@@ -343,14 +328,14 @@ export class TopPage {
     async takeElementScreenshot(selector: string, fileName: string): Promise<string> {
         const element = await this.driver.$(selector);
         const screenshotDir = path.join(process.cwd(), 'screenshots');
-        
+
         // Create screenshots directory if it doesn't exist
         try {
             await fs.access(screenshotDir);
         } catch {
             await fs.mkdir(screenshotDir, { recursive: true });
         }
-        
+
         const filePath = path.join(screenshotDir, fileName);
         await element.saveScreenshot(filePath);
         return filePath;
@@ -410,7 +395,7 @@ export class TopPage {
     }> {
         // Get channel logo position
         const logos = await this.getChannelLogos();
-        const targetLogo = logos.find(logo => 
+        const targetLogo = logos.find(logo =>
             logo.contentDesc?.toLowerCase().includes(channelName.toLowerCase())
         );
 
@@ -453,7 +438,7 @@ export class TopPage {
                 this.getChannelLogoElement(),
                 fileName
             );
-            
+
             results.push({
                 path: screenshotPath,
                 bounds: logo.bounds,

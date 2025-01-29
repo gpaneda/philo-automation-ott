@@ -1,8 +1,5 @@
 {
-  "/api/test-history/route": "app/api/test-history/route.js",
-  "/test-history/page": "app/test-history/page.js",
-  "/page": "app/page.js",
-  "/test-dry-run/page": "app/test-dry-run/page.js",
-  "/settings/page": "app/settings/page.js",
-  "/reports/page": "app/reports/page.js"
+  "/api/device-control/connect/route": "app/api/device-control/connect/route.js",
+  "/api/execute-suite/route": "app/api/execute-suite/route.js",
+  "/test-suites/page": "app/test-suites/page.js"
 }

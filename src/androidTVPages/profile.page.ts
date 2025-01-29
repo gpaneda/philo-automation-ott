@@ -4,32 +4,30 @@ import { Browser, Element } from 'webdriverio';
 export class ProfilePage extends BasePage {
     public selectors = {
         // Profile Header
-        profileHeader: 'com.philo.philo.google:id/fragment_user_settings',
-        userAvatar: 'com.philo.philo.google:id/user_avatar',
-        userName: 'com.philo.philo.google:id/user_name',
+        profileHeader: 'android=text("Profile")',
+        accountName: 'android=text("Account")',
         
         // Account Info
-        emailLabel: 'com.philo.philo.google:id/sign_in_info_email',
-        signInInfoLabel: 'android=text("Sign-in information")',
+        emailLabel: 'android=text("Email")',
+        subscriptionLabel: 'android=text("Subscription")',
         
-        // Buttons
-        editProfileButton: 'android=text("Edit")',
-        editEmailButton: 'android=text("Edit")',
-        addMobileNumberButton: 'android=text("Add mobile number")',
-        signOutButton: 'android=text("Sign out")',
-        addProfilesButton: 'android=text("Add profiles")',
+        // Menu Items
+        settingsButton: 'android=text("Settings")',
+        helpButton: 'android=text("Help")',
+        signOutButton: 'android=text("Sign Out")',
         
         // Navigation
-        homeTab: 'android=text("Home")',
-        
-        // Playback Settings
-        startAtLiveLabel: 'android=text("Start channel playback from…")',
-        startAtLiveButton: 'android=text("Program beginning")',
+        backButton: 'android=text("Back")',
+        homeButton: 'android=text("Home")',
+
+        // Additional Menu Items
+        deviceManagement: 'android=text("Device Management")',
+        billingHistory: 'android=text("Billing History")',
+        privacyPolicy: 'android=text("Privacy Policy")',
+        termsOfService: 'android=text("Terms of Service")',
         
         // Version Info
-        deviceInfo: 'com.philo.philo.google:id/device_info',
-        helpText: 'android=text("Need help? Visit help.philo.com.")',
-        legalText: 'com.philo.philo.google:id/legal_text'
+        versionLabel: 'android=text("Version")'
     };
 
     constructor(driver: Browser<'async'>) {
@@ -41,16 +39,16 @@ export class ProfilePage extends BasePage {
      */
     async verifyProfilePageElements(): Promise<void> {
         await this.verifyElementDisplayed(this.selectors.profileHeader);
-        await this.verifyElementDisplayed(this.selectors.userName);
+        await this.verifyElementDisplayed(this.selectors.accountName);
         await this.verifyElementDisplayed(this.selectors.emailLabel);
-        await this.verifyElementDisplayed(this.selectors.signInInfoLabel);
+        await this.verifyElementDisplayed(this.selectors.settingsButton);
     }
 
     /**
      * Get profile name
      */
     async getProfileName(): Promise<string> {
-        const element = await this.driver.$(this.selectors.userName);
+        const element = await this.driver.$(this.selectors.accountName);
         return await element.getText();
     }
 
@@ -63,24 +61,17 @@ export class ProfilePage extends BasePage {
     }
 
     /**
-     * Click edit profile button
+     * Click settings button
      */
-    async editProfile(): Promise<void> {
-        await this.click(this.selectors.editProfileButton);
+    async openSettings(): Promise<void> {
+        await this.click(this.selectors.settingsButton);
     }
 
     /**
-     * Click edit email button
+     * Click help button
      */
-    async editEmail(): Promise<void> {
-        await this.click(this.selectors.editEmailButton);
-    }
-
-    /**
-     * Add mobile number
-     */
-    async addMobileNumber(): Promise<void> {
-        await this.click(this.selectors.addMobileNumberButton);
+    async openHelp(): Promise<void> {
+        await this.click(this.selectors.helpButton);
     }
 
     /**
@@ -88,27 +79,34 @@ export class ProfilePage extends BasePage {
      */
     async signOut(): Promise<void> {
         await this.click(this.selectors.signOutButton);
+        // Wait for confirmation dialog if needed
     }
 
     /**
-     * Add profiles
+     * Navigate back
      */
-    async addProfiles(): Promise<void> {
-        await this.click(this.selectors.addProfilesButton);
+    async goBack(): Promise<void> {
+        await this.click(this.selectors.backButton);
     }
 
     /**
      * Navigate to home
      */
     async goHome(): Promise<void> {
-        await this.click(this.selectors.homeTab);
+        await this.click(this.selectors.homeButton);
     }
 
     /**
-     * Get device info
+     * Open device management
      */
-    async getDeviceInfo(): Promise<string> {
-        const element = await this.driver.$(this.selectors.deviceInfo);
-        return await element.getText();
+    async openDeviceManagement(): Promise<void> {
+        await this.click(this.selectors.deviceManagement);
+    }
+
+    /**
+     * Open billing history
+     */
+    async openBillingHistory(): Promise<void> {
+        await this.click(this.selectors.billingHistory);
     }
 } 

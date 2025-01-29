@@ -54,8 +54,8 @@ export class CategoriesPage extends HomeScreenPage {
 
             // Movie Tile Elements - Updated to match XML structure
             movieTileWrapper: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).focusable(true)',
-            movieBackgroundImage: 'android=resourceId("com.philo.philo:id/background_image").className("android.widget.ImageView")',
-            moviePressedOverlay: 'android=resourceId("com.philo.philo:id/pressed_overlay").className("android.view.View")',
+            movieBackgroundImage: 'android=resourceId("com.philo.philo.google:id/background_image").className("android.widget.ImageView")',
+            moviePressedOverlay: 'android=resourceId("com.philo.philo.google:id/pressed_overlay").className("android.view.View")',
 
             // Category Headers
             topFreeMovies: 'android=text("Top Free Movies")',
