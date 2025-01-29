@@ -192,7 +192,7 @@ export class LoginPage extends BasePage {
     async completeVerification(): Promise<void> {
         // Wait for email and process sign-in
         console.log('Processing sign-in email...');
-        const success = await GmailHelper.processSignInEmail();
+        const success = await GmailHelper.processSignInEmail(process.env.ANDROID_TV_IP);
         if (!success) {
             throw new Error('Failed to process sign-in email');
         }

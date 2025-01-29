@@ -8,45 +8,52 @@ export class GmailHelper {
     private static gmail = google.gmail('v1');
     private static axiosInstance: AxiosInstance;
     private static currentEmail: string;
-
     /**
-     * Get Gmail credentials based on email
+     * Initialize Gmail client with the appropriate credentials.
+     * @param deviceIp - The IP address of the device (optional).
+     * @param email - The email address to use (optional).
      */
-    private static getGmailCredentials(email: string): {
-        clientId: string;
-        clientSecret: string;
-        refreshToken: string;
-        redirectUri: string;
-    } {
-        // Use the appropriate credentials based on the email
-        const isSecondDevice = email === process.env.PHILO_EMAIL_2;
-        return {
-            clientId: isSecondDevice ? process.env.GMAIL_2_CLIENT_ID! : process.env.GMAIL_CLIENT_ID!,
-            clientSecret: isSecondDevice ? process.env.GMAIL_2_CLIENT_SECRET! : process.env.GMAIL_CLIENT_SECRET!,
-            refreshToken: isSecondDevice ? process.env.GMAIL_2_REFRESH_TOKEN! : process.env.GMAIL_REFRESH_TOKEN!,
-            redirectUri: isSecondDevice ? process.env.GMAIL_2_REDIRECT_URI! : process.env.GMAIL_REDIRECT_URI!
-        };
+   
 
-        // Use the appropriate credentials based on the email
-        const isThirdDevice = email === process.env.PHILO_EMAIL_3;
-        return {
-            clientId: isThirdDevice ? process.env.GMAIL_3_CLIENT_ID! : process.env.GMAIL_CLIENT_ID!,
-            clientSecret: isThirdDevice ? process.env.GMAIL_3_CLIENT_SECRET! : process.env.GMAIL_CLIENT_SECRET!,
-            refreshToken: isThirdDevice ? process.env.GMAIL_3_REFRESH_TOKEN! : process.env.GMAIL_REFRESH_TOKEN!,
-            redirectUri: isThirdDevice ? process.env.GMAIL_3_REDIRECT_URI! : process.env.GMAIL_REDIRECT_URI!
-        };
-    }
-
-    /**
-     * Initialize Gmail API client and configure axios instance
-     */
-    private static async initializeGmailClient(email: string = process.env.PHILO_EMAIL!): Promise<void> {
+    public static async initializeGmailClient(deviceIp: string, email?: string): Promise<void> {
         try {
+            console.log('Device IP received:', deviceIp);
+            // If email is not provided, determine it based on the device IP
+            let selectedEmail = email || process.env.PHILO_EMAIL;
+            if (!selectedEmail) {
+                const androidTvIp = process.env.ANDROID_TV_IP || '';
+                const fireTvIp = process.env.FIRE_TV_IP || '';
+                
+                console.log('Comparing device IPs:');
+                console.log('Current device IP:', deviceIp);
+                console.log('Fire TV IP:', fireTvIp);
+                console.log('Android TV IP:', androidTvIp);
+                
+                switch (deviceIp) {
+                    case androidTvIp:
+                        console.log('Matched Android TV IP');
+                        selectedEmail = process.env.PHILO_EMAIL_3 || ''; // Use the third device's email
+                        break;
+                    case fireTvIp:
+                        console.log('Matched Fire TV IP');
+                        selectedEmail = process.env.PHILO_EMAIL || ''; // Use the first device's email
+                        break;
+                    default:
+                        console.log('No IP match, using default email');
+                        selectedEmail = process.env.PHILO_EMAIL || ''; // Default to the first device's email
+                        break;
+                }
+            }
+
+            if (!selectedEmail) {
+                throw new Error('No email address configured for device');
+            }
+
             console.log('=== Starting Gmail Client Initialization ===');
-            console.log('Initializing for email:', email);
+            console.log('Initializing for email:', selectedEmail);
             
-            const credentials = this.getGmailCredentials(email);
-            this.currentEmail = email;
+            const credentials = this.getGmailCredentials(selectedEmail);
+            this.currentEmail = selectedEmail;
             
             this.oauth2Client = new OAuth2Client(
                 credentials.clientId,
@@ -80,6 +87,45 @@ export class GmailHelper {
             throw error;
         }
     }
+    /**
+    * Get Gmail credentials based on email
+    */
+    private static getGmailCredentials(email: string): {
+        clientId: string;
+        clientSecret: string;
+        refreshToken: string;
+        redirectUri: string;
+    } {
+        // Use the appropriate credentials based on the email
+        const isFirstDevice = email === process.env.PHILO_EMAIL;
+        const isSecondDevice = email === process.env.PHILO_EMAIL_2;
+        const isThirdDevice = email === process.env.PHILO_EMAIL_3;
+
+        if (isFirstDevice) {
+            return {
+                clientId: process.env.GMAIL_CLIENT_ID!,
+                clientSecret: process.env.GMAIL_CLIENT_SECRET!,
+                refreshToken: process.env.GMAIL_REFRESH_TOKEN!,
+                redirectUri: process.env.GMAIL_REDIRECT_URI!
+            };
+        } else if (isSecondDevice) {
+            return {
+                clientId: process.env.GMAIL_2_CLIENT_ID!,
+                clientSecret: process.env.GMAIL_2_CLIENT_SECRET!,
+                refreshToken: process.env.GMAIL_2_REFRESH_TOKEN!,
+                redirectUri: process.env.GMAIL_2_REDIRECT_URI!
+            };
+        } else if (isThirdDevice) {
+            return {
+                clientId: process.env.GMAIL_3_CLIENT_ID!,
+                clientSecret: process.env.GMAIL_3_CLIENT_SECRET!,
+                refreshToken: process.env.GMAIL_3_REFRESH_TOKEN!,
+                redirectUri: process.env.GMAIL_3_REDIRECT_URI!
+            };
+        } else {
+            throw new Error('Email does not match any configured devices');
+        }
+    }
 
     /**
      * Extract all form fields from HTML
@@ -110,10 +156,14 @@ export class GmailHelper {
     /**
      * Process Philo sign-in email and follow through the complete sign-in flow
      */
-    static async processSignInEmail(email?: string): Promise<boolean> {
+    static async processSignInEmail(deviceIp?: string): Promise<boolean> {
         try {
             console.log('\n=== Processing Philo Sign-in Email ===');
-            await this.initializeGmailClient(email);
+            if (deviceIp) {
+                await this.initializeGmailClient(deviceIp);
+            } else {
+                throw new Error('Device IP is required for email processing');
+            }
 
             // Try different search queries
             const queries = [
@@ -329,10 +379,11 @@ export class GmailHelper {
     /**
      * Search for Philo sign-in emails
      */
-    static async searchPhiloEmails(): Promise<void> {
+    static async searchPhiloEmails(deviceIp: string): Promise<void> {
         try {
+            await this.initializeGmailClient(deviceIp);
+
             console.log('\n=== Searching for Philo Sign-in Emails ===');
-            await this.initializeGmailClient();
 
             // Try different search queries
             const queries = [

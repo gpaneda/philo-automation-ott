@@ -24,7 +24,11 @@ beforeAll(async () => {
             'GMAIL_CLIENT_ID',
             'GMAIL_CLIENT_SECRET',
             'GMAIL_REFRESH_TOKEN',
-            'GMAIL_REDIRECT_URI'
+            'GMAIL_REDIRECT_URI',
+            'PHILO_EMAIL_2',
+            'PHILO_EMAIL_3',
+            'ANDROID_TV_IP',
+            'ANDROID_TV_PORT'
         ];
 
         for (const envVar of requiredEnvVars) {
