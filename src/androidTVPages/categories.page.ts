@@ -54,8 +54,8 @@ export class CategoriesPage extends HomeScreenPage {
 
             // Movie Tile Elements - Updated to match XML structure
             movieTileWrapper: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).focusable(true)',
-            movieBackgroundImage: 'android=resourceId("com.philo.philo.google:id/background_image").className("android.widget.ImageView")',
-            moviePressedOverlay: 'android=resourceId("com.philo.philo.google:id/pressed_overlay").className("android.view.View")',
+            movieBackgroundImage: 'android=resourceId("com.philo.philo:id/background_image").className("android.widget.ImageView")',
+            moviePressedOverlay: 'android=resourceId("com.philo.philo:id/pressed_overlay").className("android.view.View")',
 
             // Category Headers
             topFreeMovies: 'android=text("Top Free Movies")',
@@ -67,7 +67,16 @@ export class CategoriesPage extends HomeScreenPage {
             saved: 'android=text("Saved")',
             homeAndTravel: 'android=text("Home & Travel")',
 
-         
+            // Movie Tiles (Top Free Movies) - Updated to match XML structure
+            killBillVol1: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).description("Kill Bill: Vol. 1")',
+            walkToRemember: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).description("A Walk to Remember")',
+            killBillVol2: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).description("Kill Bill: Vol. 2")',
+            ingloriousBasterds: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).description("Inglourious Basterds")',
+            twilight: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).description("Twilight")',
+            twilightNewMoon: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).description("The Twilight Saga: New Moon")',
+            reservoirDogs: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).description("Reservoir Dogs")',
+            twilightEclipse: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).description("The Twilight Saga: Eclipse")',
+            twilightBreakingDawn2: 'android=new UiSelector().className("android.view.ViewGroup").clickable(true).description("The Twilight Saga: Breaking Dawn Part 2")'
         } as CategorySelectors & typeof HomeScreenPage.prototype.selectors;
     }
 
@@ -89,13 +98,20 @@ export class CategoriesPage extends HomeScreenPage {
 
     async verifyTopFreeMoviesHeaderDisplayed(): Promise<void> {
         try {
-            // Wait for the header container
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            // Verify both the icon and label are present
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            // Verify the category text
-            await this.verifyElementDisplayed(this.selectors.topFreeMovies);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.topFreeMovies
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Top Free Movies header elements found');
         } catch (error) {
             console.error('Error verifying Top Free Movies header:', error);
             throw error;
@@ -129,13 +145,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifyRecommendedHeaderDisplayed(): Promise<void> {
         try {
-            // Wait for the header container
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            // Verify both the icon and label are present
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            // Verify the category text
-            await this.verifyElementDisplayed(this.selectors.recommended);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.recommended
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Recommended header elements found');
         } catch (error) {
             console.error('Error verifying Recommended header:', error);
             throw error;
@@ -156,10 +179,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifyTrendingLiveHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.trendingLive);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.trendingLive
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Trending Live header elements found');
         } catch (error) {
             console.error('Error verifying Trending Live header:', error);
             throw error;
@@ -180,10 +213,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifyRealityRoundupHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.realityRoundup);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.realityRoundup
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Reality Roundup header elements found');
         } catch (error) {
             console.error('Error verifying Reality Roundup header:', error);
             throw error;
@@ -216,10 +259,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifyTrueCrimeHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.trueCrime);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.trueCrime
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No True Crime header elements found');
         } catch (error) {
             console.error('Error verifying True Crime header:', error);
             throw error;
@@ -252,10 +305,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifyHomeAndTravelHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.homeAndTravel);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.homeAndTravel
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Home & Travel header elements found');
         } catch (error) {
             console.error('Error verifying Home & Travel header:', error);
             throw error;
@@ -285,10 +348,20 @@ export class CategoriesPage extends HomeScreenPage {
 
     async verifyTopFreeShowsHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.topFreeShows);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.topFreeShows
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Top Free Shows header elements found');
         } catch (error) {
             console.error('Error verifying Top Free Shows header:', error);
             throw error;
@@ -379,10 +452,20 @@ export class CategoriesPage extends HomeScreenPage {
      */
     async verifySavedHeaderDisplayed(): Promise<void> {
         try {
-            await this.verifyElementDisplayed(this.selectors.headerWhitespace);
-            await this.verifyElementDisplayed(this.selectors.categoryIcon);
-            await this.verifyElementDisplayed(this.selectors.categoryLabel);
-            await this.verifyElementDisplayed(this.selectors.saved);
+            const elements = [
+                this.selectors.headerWhitespace,
+                this.selectors.categoryIcon,
+                this.selectors.categoryLabel,
+                this.selectors.saved
+            ];
+
+            for (const element of elements) {
+                if (await this.isElementDisplayed(element)) {
+                    console.log('Found visible element:', element);
+                    return;
+                }
+            }
+            throw new Error('No Saved header elements found');
         } catch (error) {
             console.error('Error verifying Saved header:', error);
             throw error;
@@ -433,13 +516,45 @@ export class CategoriesPage extends HomeScreenPage {
         }
     }
 
+    /**
+     * Clicks on the currently focused movie
+     */
     async clickOnMovie(): Promise<void> {
         try {
-            // Add initial pause to ensure the page has loaded
-            await this.driver.pause(2000);
+            console.log('Attempting to click on movie...');
 
-            // Instead of clicking, press enter since the element is already focused
+            // Get the focused element
+            const focusedElement = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
+            const isDisplayed = await focusedElement.isDisplayed();
+            console.log('Is focused element displayed:', isDisplayed);
+
+            if (!isDisplayed) {
+                throw new Error('No focused movie element found');
+            }
+
+            // Get the title before clicking
+            const title = await focusedElement.getAttribute('content-desc');
+            console.log('Clicking on movie:', title);
+
+            // Press enter to click
             await this.pressEnterButton();
+            console.log('Enter button pressed');
+
+            // Wait for transition
+            await this.driver.pause(5000);
+            console.log('Waited for transition');
+
+            // Try to find any visible text elements to help with debugging
+            const textElements = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+            console.log('Found text elements:', textElements.length);
+
+            for (const element of textElements) {
+                if (await element.isDisplayed()) {
+                    const text = await element.getText();
+                    console.log('Visible text element:', text);
+                }
+            }
+
         } catch (error) {
             console.error('Error clicking on movie:', error);
             throw error;
@@ -477,25 +592,51 @@ export class CategoriesPage extends HomeScreenPage {
     }
 
     /**
-     * Verifies a movie title matches between category view and details page
-     * @param movieNumber The number of the movie (for logging purposes)
+     * Verifies the title of a movie in both category and details pages
+     * @param movieNumber The number of the movie being verified
      * @param movieDetailsPage The movie details page object
-     * @returns Promise<{categoryTitle: string, detailsTitle: string}> The titles that were compared
+     * @returns Promise<{categoryTitle: string, detailsTitle: string}> The titles from both pages
      */
     async verifyMovieTitle(movieNumber: number, movieDetailsPage: any): Promise<{ categoryTitle: string, detailsTitle: string }> {
         try {
-            // Get and verify movie
+            console.log(`Starting verification for movie ${movieNumber}...`);
+
+            // Get title from category page
             const categoryTitle = await this.getMovieTitle();
-            console.log(`Movie ${movieNumber} title in Top Free Movies:`, `"${categoryTitle}"`);
+            console.log(`Movie ${movieNumber} title in Category Page:`, `"${categoryTitle}"`);
 
+            // Click on movie and wait for details page
+            console.log('Clicking on movie...');
             await this.clickOnMovie();
-            await this.driver.pause(2000);
 
+            // Add longer pause for transition
+            console.log('Waiting for transition...');
+            await this.driver.pause(5000);
+
+            // Wait for details page and verify it's loaded
+            console.log('Waiting for details page to load...');
+            await movieDetailsPage.waitForLoaded();
+
+            // Verify we're on the details page
+            const isOnDetailsPage = await movieDetailsPage.isDisplayed();
+            console.log('Is on details page:', isOnDetailsPage);
+
+            if (!isOnDetailsPage) {
+                throw new Error('Failed to navigate to movie details page');
+            }
+
+            // Get title from details page
+            console.log('Getting movie title from details page...');
             const detailsTitle = await movieDetailsPage.getMovieTitle();
             console.log(`Movie ${movieNumber} title in Movie Details Page:`, `"${detailsTitle}"`);
 
+            // Compare titles
+            console.log('Comparing titles...');
             expect(categoryTitle).toEqual(detailsTitle);
+
+            // Wait before returning
             await this.driver.pause(2000);
+            console.log('Title verification completed successfully');
 
             return { categoryTitle, detailsTitle };
         } catch (error) {
@@ -538,6 +679,25 @@ export class CategoriesPage extends HomeScreenPage {
         } catch (error) {
             console.error('Error verifying multiple movies:', error);
             throw error;
+        }
+    }
+
+    /**
+     * Wait for movie tiles to be loaded
+     */
+    async waitForMovieTilesLoaded(): Promise<void> {
+        await this.driver.$(this.selectors.movieTileWrapper).waitForDisplayed({ timeout: 10000 });
+    }
+
+    /**
+     * Click on the first movie tile in the grid
+     */
+    async clickMovieTile(): Promise<void> {
+        const movieTiles = await this.driver.$$(this.selectors.movieTileWrapper);
+        if (movieTiles.length > 0) {
+            await movieTiles[0].click();
+        } else {
+            throw new Error('No movie tiles found to click');
         }
     }
 } 

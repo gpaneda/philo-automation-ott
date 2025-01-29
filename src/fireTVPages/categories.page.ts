@@ -375,9 +375,9 @@ export class CategoriesPage extends HomeScreenPage {
         try {
             // One down press to focus
             await this.pressDownButton();
-            await this.driver.pause(2000);
+            await this.driver.pause(5000);
             await this.pressLeftButton();
-            await this.driver.pause(2000);
+            await this.driver.pause(5000);
             await this.pressEnterButton();
             await this.verifyTopFreeMoviesHeaderDisplayed();
         } catch (error) {

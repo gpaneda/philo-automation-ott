@@ -8,10 +8,31 @@ import { LoginPage as AndroidLoginPage } from '../androidTVPages/login.page';
 export class AppHelper {
     private static driver: Browser<'async'>;
     private static currentDeviceType: 'fireTV' | 'androidTV' | null = null;
+    static appPackage: string = 'com.philo.philo'; // Default to Fire TV package
 
     // Public getter for device type
     static get deviceType(): 'fireTV' | 'androidTV' | null {
         return this.currentDeviceType;
+    }
+
+    // Get the current device ID based on device type
+    static getDeviceId(): string {
+        if (!this.currentDeviceType) {
+            throw new Error('Device type not detected');
+        }
+
+        const ip = this.currentDeviceType === 'fireTV' 
+            ? process.env.FIRE_TV_IP 
+            : process.env.ANDROID_TV_IP;
+        const port = this.currentDeviceType === 'fireTV'
+            ? process.env.FIRE_TV_PORT
+            : process.env.ANDROID_TV_PORT;
+
+        if (!ip || !port) {
+            throw new Error(`${this.currentDeviceType} device IP or port not set in environment variables`);
+        }
+
+        return `${ip}:${port}`;
     }
 
     static async detectDeviceType(): Promise<'fireTV' | 'androidTV' | null> {
@@ -24,6 +45,7 @@ export class AppHelper {
                 if (!error && !stdout.includes('failed')) {
                     console.log('Android TV device detected');
                     this.currentDeviceType = 'androidTV';
+                    this.appPackage = 'com.philo.philo.google';
                     resolve('androidTV');
                 } else {
                     // Try Fire TV if Android TV fails
@@ -31,6 +53,7 @@ export class AppHelper {
                         if (!error && !stdout.includes('failed')) {
                             console.log('Fire TV device detected');
                             this.currentDeviceType = 'fireTV';
+                            this.appPackage = 'com.philo.philo';
                             resolve('fireTV');
                         } else {
                             console.log('No supported device detected');
@@ -85,9 +108,11 @@ export class AppHelper {
                 console.log('Launching Android TV app...');
                 console.log('Package: com.philo.philo.google');
                 
+                const deviceId = this.getDeviceId();
+                
                 // First check if the app is installed
                 const isInstalled = await new Promise((resolve) => {
-                    exec(`adb -s ${process.env.ANDROID_TV_IP}:${process.env.ANDROID_TV_PORT} shell pm list packages com.philo.philo.google`, (error, stdout) => {
+                    exec(`adb -s ${deviceId} shell pm list packages com.philo.philo.google`, (error, stdout) => {
                         resolve(!error && stdout.includes('com.philo.philo.google'));
                     });
                 });
@@ -101,7 +126,7 @@ export class AppHelper {
                 try {
                     await new Promise((resolve, reject) => {
                         exec(
-                            `adb -s ${process.env.ANDROID_TV_IP}:${process.env.ANDROID_TV_PORT} shell monkey -p com.philo.philo.google -c android.intent.category.LAUNCHER 1`,
+                            `adb -s ${deviceId} shell monkey -p com.philo.philo.google -c android.intent.category.LAUNCHER 1`,
                             (error, stdout, stderr) => {
                                 if (error) {
                                     console.error('Failed to launch app via monkey:', stderr);
@@ -138,10 +163,7 @@ export class AppHelper {
             await this.detectDeviceType();
         }
         
-        const deviceId = this.currentDeviceType === 'fireTV' 
-            ? `${process.env.FIRE_TV_IP}:${process.env.FIRE_TV_PORT}`
-            : `${process.env.ANDROID_TV_IP}:${process.env.ANDROID_TV_PORT}`;
-            
+        const deviceId = this.getDeviceId();
         const packageName = this.currentDeviceType === 'fireTV' 
             ? 'com.philo.philo'
             : 'com.philo.philo.google';

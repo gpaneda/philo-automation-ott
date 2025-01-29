@@ -4,52 +4,26 @@ import path from 'path';
 
 export class MoviesDetailsPage extends BasePage {
     public selectors = {
-        movieTitle: 'android=new UiSelector().className("android.widget.TextView").index(1)',
-        movieDescription: [
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/description")',
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/movie_description")',
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_description")',
-            'android=new UiSelector().className("android.widget.TextView").index(2)',
-            'android=new UiSelector().className("android.widget.TextView").textContains(".")'
-        ],
-        movieRating: [
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/rating")',
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_rating")',
-            'android=new UiSelector().className("android.widget.TextView").textMatches("^[A-Z0-9-]+$")'
-        ],
-        movieRatingAdvisories: [
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/rating_advisories")',
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_advisories")',
-            'android=new UiSelector().className("android.widget.TextView").textContains("violence")',
-            'android=new UiSelector().className("android.widget.TextView").textContains("language")'
-        ],
-        movieDuration: [
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/duration")',
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_duration")',
-            'android=new UiSelector().className("android.widget.TextView").textMatches(".*[0-9]+ min.*")'
-        ],
-        movieReleaseYear: [
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/release_year")',
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_year")',
-            'android=new UiSelector().className("android.widget.TextView").textMatches("^[0-9]{4}$")'
-        ],
-        movieChannelName: [
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/channel_name")',
-            'android=new UiSelector().resourceId("com.philo.philo.google:id/content_channel")',
-            'android=new UiSelector().className("android.widget.TextView").textContains("Channel")'
-        ],
-
-        playButton: 'android=new UiSelector().description("Play")',
+        // Navigation buttons and common text elements
+        playButton: 'android=new UiSelector().text("Play")',
         playButtonByDesc: 'android=new UiSelector().description("Play")',
         playButtonByText: 'android=new UiSelector().text("Play")',
+        saveButton: 'android=new UiSelector().text("Save")',
+        relatedButton: 'android=new UiSelector().text("Related")',
+        watchOptionsButton: 'android=new UiSelector().text("Watch Options")',
+        detailsButton: 'android=new UiSelector().text("Details")',
         resumeButton: 'android=new UiSelector().text("Resume")',
-        saveButton: 'android=new UiSelector().description("Save")',
-        channelButton: 'android=new UiSelector().description("View Christmas Plus page")',
         dismissButton: 'android=new UiSelector().text("Back")',
+        channelButton: 'android=new UiSelector().text("View Channel")',
 
-        releaseDate: 'android=new UiSelector().resourceId("com.philo.philo.google:id/release_year")',
-        ratingAdvisories: 'android=new UiSelector().resourceId("com.philo.philo.google:id/rating_advisories")',
-        channelName: 'android=new UiSelector().resourceId("com.philo.philo.google:id/channel_name")'
+        // Content elements using generic patterns
+        movieTitle: 'android=new UiSelector().className("android.widget.TextView").index(1)',
+        movieDescription: 'android=new UiSelector().className("android.widget.TextView").textMatches(".{20,}")',
+        movieDuration: 'android=new UiSelector().className("android.widget.TextView").textMatches("^(\\d+\\s*h\\s*)?(\\d+\\s*m)?$")',
+        movieReleaseYear: 'android=new UiSelector().className("android.widget.TextView").textMatches("^\\d{4}$")',
+        movieRating: 'android=new UiSelector().className("android.widget.TextView").textMatches("^(G|PG|PG-13|R|TV-Y|TV-Y7|TV-G|TV-PG|TV-14|TV-MA|NR)$")',
+        ratingAdvisories: 'android=new UiSelector().className("android.widget.TextView").textMatches(".*(violence|language|gore|nudity|adult|sex|drug|substance|mild|moderate|strong).*")',
+        channelName: 'android=new UiSelector().className("android.widget.TextView").textMatches(".*(Channel|Network|TV|Plus).*")'
     };
 
     constructor(driver: Browser<'async'>) {
@@ -285,7 +259,7 @@ export class MoviesDetailsPage extends BasePage {
             console.log('Attempting to get rating advisories...');
 
             // Try each selector in the array
-            for (const selector of this.selectors.movieRatingAdvisories) {
+            for (const selector of this.selectors.ratingAdvisories) {
                 try {
                     console.log(`Trying rating advisories selector: ${selector}`);
                     const element = await this.driver.$(selector);
@@ -468,4 +442,8 @@ export class MoviesDetailsPage extends BasePage {
     async clickResume(): Promise<void> {
         await this.click(this.selectors.resumeButton);
     }
-} 
+
+    async getMovieDuration(): Promise<string> {
+        return await this.getMovieDuration();
+    }
+}
