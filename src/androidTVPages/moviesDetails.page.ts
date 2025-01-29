@@ -192,21 +192,12 @@ export class MoviesDetailsPage extends BasePage {
         try {
             console.log('Attempting to get movie rating...');
 
-            // Try each selector in the array
-            for (const selector of this.selectors.movieRating) {
-                try {
-                    console.log(`Trying rating selector: ${selector}`);
-                    const element = await this.driver.$(selector);
-                    const exists = await element.isDisplayed();
-                    if (exists) {
-                        const text = await element.getText();
-                        if (text && text.length > 0) {
-                            console.log(`Found rating with selector ${selector}: "${text}"`);
-                            return text;
-                        }
-                    }
-                } catch (error) {
-                    console.log(`Selector ${selector} not found or not accessible`);
+            const elements = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+            for (const element of elements) {
+                const text = await element.getText();
+                if (["G", "PG", "PG-13", "R", "TV-Y", "TV-Y7", "TV-G", "TV-PG", "TV-14", "TV-MA", "NR"].includes(text.trim())) {
+                    console.log(`Found matching rating: "${text}"`);
+                    return text;
                 }
             }
 
@@ -225,21 +216,12 @@ export class MoviesDetailsPage extends BasePage {
         try {
             console.log('Attempting to get release date...');
 
-            // Try each selector in the array
-            for (const selector of this.selectors.movieReleaseYear) {
-                try {
-                    console.log(`Trying release date selector: ${selector}`);
-                    const element = await this.driver.$(selector);
-                    const exists = await element.isDisplayed();
-                    if (exists) {
-                        const text = await element.getText();
-                        if (text && text.length > 0) {
-                            console.log(`Found release date with selector ${selector}: "${text}"`);
-                            return text;
-                        }
-                    }
-                } catch (error) {
-                    console.log(`Selector ${selector} not found or not accessible`);
+            const elements = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+            for (const element of elements) {
+                const text = await element.getText();
+                if (/^\d{4}$/.test(text.trim())) {
+                    console.log(`Found matching release year: "${text}"`);
+                    return text;
                 }
             }
 
@@ -317,7 +299,7 @@ export class MoviesDetailsPage extends BasePage {
             throw error;
         }
     }
-
+    
     /**
      * Clicks the play button to start the movie
      */
@@ -442,8 +424,28 @@ export class MoviesDetailsPage extends BasePage {
     async clickResume(): Promise<void> {
         await this.click(this.selectors.resumeButton);
     }
+    
+    /**
+     * Fetches the movie duration
+     * @returns Promise<string> The movie duration
+     */
+    async fetchMovieDuration(): Promise<string> {
+        try {
+            console.log('Attempting to get movie duration...');
 
-    async getMovieDuration(): Promise<string> {
-        return await this.getMovieDuration();
+            const elements = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+            for (const element of elements) {
+                const text = await element.getText();
+                if (/^\d{1,2}h\s*\d{1,2}m$/.test(text.trim())) {
+                    console.log(`Found matching movie duration: "${text}"`);
+                    return text;
+                }
+            }
+
+            throw new Error('Could not find movie duration with any selector');
+        } catch (error) {
+            console.error('Error getting movie duration:', error);
+            throw error;
+        }
     }
 }

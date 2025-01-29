@@ -33,7 +33,11 @@ beforeAll(async () => {
             'GMAIL_CLIENT_ID',
             'GMAIL_CLIENT_SECRET',
             'GMAIL_REFRESH_TOKEN',
-            'GMAIL_REDIRECT_URI'
+            'GMAIL_REDIRECT_URI',
+            'PHILO_EMAIL_2',
+            'PHILO_EMAIL_3',
+            'ANDROID_TV_IP',
+            'ANDROID_TV_PORT'
         ];
 
         for (const envVar of requiredEnvVars) {
@@ -82,20 +86,20 @@ beforeEach(async () => {
     }
 });
 
-//afterEach(async () => {
-    //try {
-        //await driver.terminateApp(AppHelper.appPackage);
-        //await driver.pause(2000);
-    //} catch (error) {
-        //console.error('Error in afterEach:', error);
-    //}
-//});
+afterEach(async () => {
+    try {
+        await driver.terminateApp(AppHelper.appPackage);
+        await driver.pause(2000);
+    } catch (error) {
+        console.error('Error in afterEach:', error);
+    }
+});
 
-//afterAll(async () => {
+afterAll(async () => {
     // Clean up app data after test
-    //console.log('Clearing app data after test...');
-    //await AppHelper.clearAppData();
-//});
+    console.log('Clearing app data after test...');
+    await AppHelper.clearAppData();
+});
 
 // Test cases will be added here
 describe('Movies Details Page', () => {
@@ -123,7 +127,7 @@ describe('Movies Details Page', () => {
         expect(titleAfterClick).toBe(titleBeforeClick);
     });
 
-    test.only('TC125 - should get the movie description, rating, rating advisories, release date, and channel name', async () => {
+    test('TC125 - should get the movie description, rating, rating advisories, release date, and channel name', async () => {
         await driver.pause(5000);
         await categoriesPage.goToTopFreeMovies();
         await categoriesPage.waitForMovieTilesLoaded();
@@ -145,22 +149,47 @@ describe('Movies Details Page', () => {
         // Wait for movie details page to load
         await moviesDetailsPage.waitForLoaded();
 
-        //Verify that the movie title is displayed
-        const movieTitle = await moviesDetailsPage.getMovieTitle();
-        expect(movieTitle).toBe(titleBefore);
-        //Verify that the movie description is displayed
-        const movieDescription = await moviesDetailsPage.getMovieDescription();
-        expect(movieDescription).toBeTruthy();
-        //Verify that the movie release year is displayed
-        const movieReleaseYear = await moviesDetailsPage.getReleaseDate();
-        expect(movieReleaseYear).toBeTruthy();
-     
+        // Get movie details with retries
+        let description, rating, releaseDate, duration;
+        
+        for (let i = 0; i < 3; i++) {
+            try {
+                if (!description) description = await moviesDetailsPage.getMovieDescription();
+                if (!rating) rating = await moviesDetailsPage.getMovieRating();
+                
+                if (!releaseDate) releaseDate = await moviesDetailsPage.getReleaseDate();
+                if (!duration) {
+                    if ('fetchMovieDuration' in moviesDetailsPage) {
+                        duration = await moviesDetailsPage.fetchMovieDuration();
+                    } else {
+                        throw new Error('fetchMovieDuration method does not exist on moviesDetailsPage');
+                    }
+                }
+                
+                // If we got all values, break the loop
+                if (description && rating && releaseDate && duration) break;
+                
+                // Wait before retrying
+                await driver.pause(2000);
+            } catch (error) {
+                console.log(`Attempt ${i + 1} failed:`, error);
+                if (i === 2) throw error; // Throw on last attempt
+                await driver.pause(2000); // Wait before retry
+            }
+        }
 
+        // Log all found values
+        console.log('Found movie details:', {
+            description,
+            rating,
+            releaseDate,
+            duration
+        });
 
-        //add a screenshot then save it to screenshots/debug
-        const screenshot = await driver.takeScreenshot();   
-        const screenshotPath = path.join(process.cwd(), 'screenshots', 'debug', 'moviesDetails.png');
-        fs.writeFileSync(screenshotPath, screenshot);
-        await driver.pause(5000);
+        // Verify that we got all the details
+        expect(description).toBeTruthy();
+        expect(rating).toBeTruthy();
+        expect(releaseDate).toBeTruthy();
+        expect(duration).toBeTruthy();
     });
 });

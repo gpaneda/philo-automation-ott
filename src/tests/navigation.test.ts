@@ -43,7 +43,11 @@ beforeAll(async () => {
             'GMAIL_CLIENT_ID',
             'GMAIL_CLIENT_SECRET',
             'GMAIL_REFRESH_TOKEN',
-            'GMAIL_ACCESS_TOKEN'
+            'GMAIL_ACCESS_TOKEN',
+            'PHILO_EMAIL_2',
+            'PHILO_EMAIL_3',
+            'ANDROID_TV_IP',
+            'ANDROID_TV_PORT'
         ];
 
         // Verify all required environment variables are set

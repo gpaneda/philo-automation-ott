@@ -16,7 +16,13 @@ describe('Open Philo App', () => {
             'GMAIL_CLIENT_SECRET',
             'GMAIL_REDIRECT_URI',
             'GMAIL_REFRESH_TOKEN',
-            'PHILO_EMAIL'
+            'PHILO_EMAIL',
+            'PHILO_EMAIL_2',
+            'PHILO_EMAIL_3',
+            'ANDROID_TV_IP',
+            'ANDROID_TV_PORT',
+            'FIRE_TV_IP',
+            'FIRE_TV_PORT'
         ];
 
         requiredEnvVars.forEach(envVar => {

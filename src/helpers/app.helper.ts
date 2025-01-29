@@ -40,26 +40,33 @@ export class AppHelper {
         const androidTVIP = process.env.ANDROID_TV_IP;
 
         return new Promise((resolve) => {
-            // Try to connect to Android TV first
-            exec(`adb connect ${androidTVIP}:${process.env.ANDROID_TV_PORT}`, (error, stdout) => {
-                if (!error && !stdout.includes('failed')) {
+            // Get list of connected devices
+            exec('adb devices', (error, stdout) => {
+                if (error) {
+                    console.error('Error checking connected devices:', error);
+                    resolve(null);
+                    return;
+                }
+
+                console.log('Connected devices:', stdout);
+
+                // Check if Fire TV is connected
+                if (stdout.includes(`${fireTVIP}:${process.env.FIRE_TV_PORT}`)) {
+                    console.log('Fire TV device detected');
+                    this.currentDeviceType = 'fireTV';
+                    this.appPackage = 'com.philo.philo';
+                    resolve('fireTV');
+                }
+                // Check if Android TV is connected
+                else if (stdout.includes(`${androidTVIP}:${process.env.ANDROID_TV_PORT}`)) {
                     console.log('Android TV device detected');
                     this.currentDeviceType = 'androidTV';
                     this.appPackage = 'com.philo.philo.google';
                     resolve('androidTV');
-                } else {
-                    // Try Fire TV if Android TV fails
-                    exec(`adb connect ${fireTVIP}:${process.env.FIRE_TV_PORT}`, (error, stdout) => {
-                        if (!error && !stdout.includes('failed')) {
-                            console.log('Fire TV device detected');
-                            this.currentDeviceType = 'fireTV';
-                            this.appPackage = 'com.philo.philo';
-                            resolve('fireTV');
-                        } else {
-                            console.log('No supported device detected');
-                            resolve(null);
-                        }
-                    });
+                }
+                else {
+                    console.log('No supported device detected');
+                    resolve(null);
                 }
             });
         });
@@ -190,7 +197,15 @@ export class AppHelper {
             
             // Search for existing emails first
             console.log('Step 1: Searching for existing Philo emails...');
-            await GmailHelper.searchPhiloEmails();
+            const deviceIp = this.currentDeviceType === 'fireTV' 
+                ? process.env.FIRE_TV_IP 
+                : process.env.ANDROID_TV_IP;
+
+            if (!deviceIp) {
+                throw new Error('Device IP not found in environment variables');
+            }
+
+            await GmailHelper.searchPhiloEmails(deviceIp);
             
             console.log('\nStep 2: Triggering sign-in email...');
             await driver.pause(2000);
@@ -210,7 +225,7 @@ export class AppHelper {
             await driver.pause(10000);
             
             console.log('\nStep 3: Processing sign-in email...');
-            const success = await GmailHelper.processSignInEmail();
+            const success = await GmailHelper.processSignInEmail(deviceIp);
             
             if (success) {
                 console.log('✅ Successfully processed sign-in email');

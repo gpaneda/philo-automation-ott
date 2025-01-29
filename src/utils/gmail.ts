@@ -22,22 +22,37 @@ export class GmailService {
   }
 
   private getGmailCredentials(email: string) {
+    const isFirstDevice = email === process.env.PHILO_EMAIL;
     const isSecondDevice = email === process.env.PHILO_EMAIL_2;
-    return {
-      clientId: isSecondDevice ? process.env.GMAIL_2_CLIENT_ID! : process.env.GMAIL_CLIENT_ID!,
-      clientSecret: isSecondDevice ? process.env.GMAIL_2_CLIENT_SECRET! : process.env.GMAIL_CLIENT_SECRET!,
-      refreshToken: isSecondDevice ? process.env.GMAIL_2_REFRESH_TOKEN! : process.env.GMAIL_REFRESH_TOKEN!,
-      accessToken: isSecondDevice ? process.env.GMAIL_2_ACCESS_TOKEN! : process.env.GMAIL_ACCESS_TOKEN!,
-      redirectUri: isSecondDevice ? process.env.GMAIL_2_REDIRECT_URI! : process.env.GMAIL_REDIRECT_URI!
-    };
     const isThirdDevice = email === process.env.PHILO_EMAIL_3;
-    return {
-      clientId: isThirdDevice ? process.env.GMAIL_3_CLIENT_ID! : process.env.GMAIL_CLIENT_ID!,
-      clientSecret: isThirdDevice ? process.env.GMAIL_3_CLIENT_SECRET! : process.env.GMAIL_CLIENT_SECRET!,
-      refreshToken: isThirdDevice ? process.env.GMAIL_3_REFRESH_TOKEN! : process.env.GMAIL_REFRESH_TOKEN!,
-      accessToken: isThirdDevice ? process.env.GMAIL_3_ACCESS_TOKEN! : process.env.GMAIL_ACCESS_TOKEN!,
-      redirectUri: isThirdDevice ? process.env.GMAIL_3_REDIRECT_URI! : process.env.GMAIL_REDIRECT_URI!
-    };
+
+    if (isFirstDevice) {
+        return {
+            clientId: process.env.GMAIL_CLIENT_ID!,
+            clientSecret: process.env.GMAIL_CLIENT_SECRET!,
+            refreshToken: process.env.GMAIL_REFRESH_TOKEN!,
+            accessToken: process.env.GMAIL_ACCESS_TOKEN!,
+            redirectUri: process.env.GMAIL_REDIRECT_URI!
+        };
+    } else if (isSecondDevice) {
+        return {
+            clientId: process.env.GMAIL_2_CLIENT_ID!,
+            clientSecret: process.env.GMAIL_2_CLIENT_SECRET!,
+            refreshToken: process.env.GMAIL_2_REFRESH_TOKEN!,
+            accessToken: process.env.GMAIL_2_ACCESS_TOKEN!,
+            redirectUri: process.env.GMAIL_2_REDIRECT_URI!
+        };
+    } else if (isThirdDevice) {
+        return {
+            clientId: process.env.GMAIL_3_CLIENT_ID!,
+            clientSecret: process.env.GMAIL_3_CLIENT_SECRET!,
+            refreshToken: process.env.GMAIL_3_REFRESH_TOKEN!,
+            accessToken: process.env.GMAIL_3_ACCESS_TOKEN!,
+            redirectUri: process.env.GMAIL_3_REDIRECT_URI!
+        };
+    } else {
+        throw new Error('Email does not match any configured devices');
+    }
   }
 
   async getPhiloVerificationCode(): Promise<string> {
