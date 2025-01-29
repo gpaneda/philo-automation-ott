@@ -17,6 +17,8 @@
 - [ ] Need to create test cases for live channels
 - [ ] Include historical run both in Test Suite Page and Test History page 
 - [ ] Troubleshoot Stop Run button - does not work
+- [ ] Pass Failed state not updating in test suite page
+- [ ] Not all tests are logged into the test history page
 - [ ] Device should be disabled when it is running a test
 - [ ] Landing page status not updating
 - [ ] Add android TV to .env file and capabilities file
@@ -24,13 +26,18 @@
   APP_PACKAGE=com.philo.philo.google
   ANDROID_TV_IP=10.0.0.130
   ANDROID_TV_PORT=5555
-Test Credentials:
+- logs need to be cleared on dashbboard after each run
+- [ ] Create an excel google sheets for test cases seen in the use_cases.md file
+
 
 ### Notes for the Dashboard UI
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the Test History page
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the Pie Chart page
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the  Reports page
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the Test Execution page
+- test suite runs should be retained in the dashboard after they are run
+- logs should not be too verbose - only failed errors should be displayed or if the test passed
+- [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the Test Suite page
 
 ### Notes for Performance Testing
 - [ ] Research on common performance testing tools and frameworks
@@ -90,3 +97,5 @@ By following these steps, you can successfully add new devices to your dashboard
 - User clicks on profile picture
 - User pressed up button
 - User chooses 
+
+
