@@ -29,7 +29,9 @@
     "test:appium-api-extractor": "ts-node src/scripts/appium_api_extractor.ts",
     "test:fluctuating-connection": "NODE_OPTIONS=--experimental-vm-modules jest src/scripts/fluctuatingConnection.test.ts",
     "test:no-connection": "NODE_OPTIONS=--experimental-vm-modules jest src/scripts/noConnectionf.test.ts",
-    "test:decreased-bandwidth": "NODE_OPTIONS=--experimental-vm-modules jest src/scripts/decreasedBandwidth.test.ts"
+    "test:decreased-bandwidth": "NODE_OPTIONS=--experimental-vm-modules jest src/scripts/decreasedBandwidth.test.ts",
+    "test:vizio": "ts-node src/vizioSmartCast.ts",
+    "test:vizio-key-events": "ts-node src/vizioKeyEvents.ts"
   },
   "dependencies": {
     "@appium/base-driver": "^9.15.0",
@@ -41,13 +43,16 @@
     "dotenv": "^16.4.7",
     "google-auth-library": "^9.6.3",
     "googleapis": "^133.0.0",
+    "msw": "^2.7.0",
+    "network-scanner": "^0.0.2",
+    "node-ssdp": "^4.0.1",
     "open": "^10.1.0",
     "postcss": "^8.5.1",
     "resemblejs": "^5.0.0",
     "tailwindcss": "^4.0.0",
+    "vizio-smart-cast": "^1.4.0",
     "webdriverio": "^7.40.0",
-    "ws": "^8.18.0",
-    "msw": "^2.7.0"
+    "ws": "^8.18.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",
