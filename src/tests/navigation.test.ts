@@ -4,19 +4,24 @@ import { HomeScreenPage } from '../fireTVPages/homescreen.page';
 import { GuidePage } from '../fireTVPages/guide.page';
 import { SettingsPage } from '../fireTVPages/settings.page';
 import { TopPage } from '../fireTVPages/top.page';
+import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
 import path from 'path';
 import fs from 'fs/promises';
 import { CategoriesPage } from '../fireTVPages/categories.page';
-import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
+import { HomeScreenPage as AndroidHomeScreenPage } from '../androidTVPages/homescreen.page';
+import { CategoriesPage as AndroidCategoriesPage } from '../androidTVPages/categories.page';
+import { GuidePage as AndroidGuidePage } from '../androidTVPages/guide.page';
+import { SettingsPage as AndroidSettingsPage } from '../androidTVPages/settings.page';
+import { TopPage as AndroidTopPage } from '../androidTVPages/top.page';
+import { MoviesDetailsPage as AndroidMoviesDetailsPage } from '../androidTVPages/moviesDetails.page';
 
 let driver: Browser<'async'>;
-let homeScreen: HomeScreenPage;
-let guidePage: GuidePage;
-let settingsPage: SettingsPage;
-let topPage: TopPage;
-let categoriesPage: CategoriesPage;
-let movieDetailsPage: MoviesDetailsPage;
-
+let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
+let guidePage: GuidePage | AndroidGuidePage;
+let settingsPage: SettingsPage | AndroidSettingsPage;
+let topPage: TopPage | AndroidTopPage;
+let categoriesPage: CategoriesPage | AndroidCategoriesPage;
+let movieDetailsPage: MoviesDetailsPage | AndroidMoviesDetailsPage;
 // Define screenshot directories
 const SCREENSHOT_BASE_DIR = path.join(process.cwd(), 'screenshots');
 const REFERENCE_DIR = path.join(SCREENSHOT_BASE_DIR, 'reference');
@@ -66,13 +71,22 @@ beforeAll(async () => {
 
         // Initialize driver and page objects
         driver = await AppHelper.initializeDriver();
-        homeScreen = new HomeScreenPage(driver);
-        guidePage = new GuidePage(driver);
-        settingsPage = new SettingsPage(driver);
-        topPage = new TopPage(driver);
-        categoriesPage = new CategoriesPage(driver);
-        movieDetailsPage = new MoviesDetailsPage(driver);
-
+        // Set up correct page objects and app package based on device type
+        if (AppHelper.deviceType === 'androidTV') {
+            homeScreen = new AndroidHomeScreenPage(driver);
+            categoriesPage = new AndroidCategoriesPage(driver);
+            settingsPage = new AndroidSettingsPage(driver);
+            topPage = new AndroidTopPage(driver);
+            guidePage = new AndroidGuidePage(driver);
+            movieDetailsPage = new AndroidMoviesDetailsPage(driver);
+        } else {
+            homeScreen = new HomeScreenPage(driver);
+            categoriesPage = new CategoriesPage(driver);
+            guidePage = new GuidePage(driver);
+            settingsPage = new SettingsPage(driver);
+            topPage = new TopPage(driver);
+            movieDetailsPage = new MoviesDetailsPage(driver);
+        }
     } catch (error) {
         console.error('Error in beforeAll:', error);
         throw error;
@@ -81,9 +95,9 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     try {
-        await driver.terminateApp('com.philo.philo');
+        await driver.terminateApp(AppHelper.appPackage);
         await driver.pause(2000);
-        await driver.activateApp('com.philo.philo');
+        await driver.activateApp(AppHelper.appPackage);
         await driver.pause(5000);
     } catch (error) {
         console.error('Error in beforeEach:', error);
@@ -164,10 +178,11 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test('TC111 - should display the Top Free Movies category', async () => {
+    test.only('TC111 - should display the Top Free Movies category', async () => {
         try {
             // Step 1: Navigate to and verify Top Free Movies category
             console.log('Step 1: Navigating to and verifying Top Free Movies category');
+            await driver.pause(5000);
             await homeScreen.verifyTopFreeMovies(categoriesPage, topPage);
         } catch (error) {
             console.error('Top Free Movies category was not displayed:', error);
@@ -175,10 +190,11 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test('TC112 - should display the Top Free Shows category', async () => {
+    test.only('TC112 - should display the Top Free Shows category', async () => {
         try {
             // Step 1: Navigate to and verify Top Free Shows category
             console.log('Step 1: Navigating to and verifying Top Free Shows category');
+            await driver.pause(5000);
             await homeScreen.verifyTopFreeShows(categoriesPage, topPage);
         } catch (error) {
             console.error('Top Free Shows category was not displayed:', error);
@@ -219,10 +235,11 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test('TC116 - should display the Movie Details Page', async () => {
+    test.only('TC116 - should display the Movie Details Page', async () => {
         try {
             // Step 1: Verify multiple movies and their details
             console.log('Step 1: Verifying multiple movies and their details');
+            await driver.pause(5000);
             const verifiedTitles = await categoriesPage.verifyMultipleMovies(3, movieDetailsPage);
             
             // Step 2: Verify the number of movies checked
