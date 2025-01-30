@@ -14,10 +14,10 @@ import fs from 'fs';
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-let driver: Browser<'async'>;
-let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
-let categoriesPage: CategoriesPage | AndroidCategoriesPage;
-let moviesDetailsPage: MoviesDetailsPage | AndroidMoviesDetailsPage;
+export let driver: Browser<'async'>;
+export let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
+export let categoriesPage: CategoriesPage | AndroidCategoriesPage;
+export let moviesDetailsPage: MoviesDetailsPage | AndroidMoviesDetailsPage;
 
 beforeAll(async () => {
     try {
