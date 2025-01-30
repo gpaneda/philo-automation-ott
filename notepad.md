@@ -98,7 +98,8 @@ By following these steps, you can successfully add new devices to your dashboard
 - User pressed up button
 - User chooses 
 
-
+**Google OAuth2.0**
+**Get an authorization code**
 https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/gmail.readonly&access_type=offline&include_granted_scopes=true&response_type=code&redirect_uri=urn:ietf:wg:oauth:2.0:oob&client_id=956039011085-f89cdcov6mncuedfkqaflhfa0gfoh629.apps.googleusercontent.com
 
  curl --request POST \
@@ -109,3 +110,18 @@ https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/au
        --data 'client_secret=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' \
        --data 'redirect_uri=urn:ietf:wg:oauth:2.0:oob' \
        --data 'grant_type=authorization_code'
+
+**Playback Tests**
+**Function to check if the play or resume button is visible**
+       For playback tests, it needs to account for choosing a content that does not have a play or resume button and should exit, go to the next movie or series, then check if the play or resume button is visible then proceed with the test
+
+       - If movie or series does not have play or resume button, 
+       then it should go back to the last screen where the movies or series are listed, 
+       press the right button, enter the next movie or series, 
+       then check if the play or resume button is visible then proceed with the test
+
+       - This should be a helper function that can be called in the playback tests
+
+       - Should be able to insert it into other methods like startMoviePlayback, startSeriesPlayback, etc.
+
+**Migrate methods from the playback tests to the playback page**

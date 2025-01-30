@@ -48,30 +48,30 @@ Element: undefined
 
                       Element: android.widget.ImageView
                         bounds: [0,0][1920,1080]
-                        content-desc: Hostel Part II
+                        content-desc: Clerks II
 
                       Element: android.widget.TextView
-                        bounds: [116,450][464,526]
-                        text: Hostel Part II
+                        bounds: [116,450][339,526]
+                        text: Clerks II
 
                       Element: android.widget.ImageView
                         bounds: [116,554][140,578]
 
                       Element: android.widget.TextView
                         bounds: [148,550][226,582]
-                        text: 1h 45m
+                        text: 1h 56m
 
                       Element: android.widget.TextView
-                        bounds: [242,550][299,582]
-                        text: 2007
+                        bounds: [242,550][301,582]
+                        text: 2006
 
                       Element: android.widget.TextView
-                        bounds: [315,550][375,582]
+                        bounds: [317,550][377,582]
                         text: TV-14
 
                       Element: android.widget.TextView
                         bounds: [116,606][1012,726]
-                        text: Beth (Lauren German), Lorna (Heather Matarazzo) and Whitney (Bijou Phillips), three young American women traveling abroad in Rome, decide to take a weekend excursion. Lured from their intended destination by a beautiful acquaintance (Vera Jordanova), the women anticipate a stay at a luxurious spa. Instead, they become pawns in a grisly game designed to entertain wealthy deviants from around the world.
+                        text: Now in their 30s, slackers Dante (Brian O'Halloran) and Randal (Jeff Anderson) find that they must change their lives and expand their horizons beyond pop culture and sex. After a disaster at their convenience store ends their employment there, they find new jobs at Mooby's, a fast-food empire.
 
                       Element: android.view.View
                         bounds: [116,762][531,834]
@@ -81,7 +81,7 @@ Element: undefined
 
                           Element: android.view.View
                             bounds: [293,774][341,822]
-                            content-desc: Save Hostel Part II
+                            content-desc: Save Clerks II
 
                           Element: android.widget.TextView
                             bounds: [357,780][419,816]
@@ -95,7 +95,7 @@ Element: undefined
 
                           Element: android.view.View
                             bounds: [471,774][519,822]
-                            content-desc: View OuterSphere by Lionsgate page
+                            content-desc: View MovieSphere by Lionsgate page
 
                           Element: android.widget.Button
                             bounds: [459,762][531,834]

@@ -6,16 +6,22 @@ import { CategoriesPage } from '../fireTVPages/categories.page';
 import { TopPage } from '../fireTVPages/top.page';
 import { SeriesDetailsPage } from '../fireTVPages/seriesDetails.page';
 import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
+import { HomeScreenPage as AndroidHomeScreenPage } from '../androidTVPages/homescreen.page';
+import { CategoriesPage as AndroidCategoriesPage } from '../androidTVPages/categories.page';
+import { TopPage as AndroidTopPage } from '../androidTVPages/top.page';
+import { SeriesDetailsPage as AndroidSeriesDetailsPage } from '../androidTVPages/seriesDetails.page';
+import { MoviesDetailsPage as AndroidMoviesDetailsPage } from '../androidTVPages/moviesDetails.page';
+import { PlayerPage as AndroidPlayerPage } from '../androidTVPages/player.page';
 import path from 'path';
 
 describe('Playback Tests', () => {
     let driver: Browser<'async'>;
-    let homeScreenPage: HomeScreenPage;
-    let playerPage: PlayerPage;
-    let categoriesPage: CategoriesPage;
-    let topPage: TopPage;
-    let seriesDetails: SeriesDetailsPage;
-    let moviesDetails: MoviesDetailsPage;
+    let homeScreenPage: HomeScreenPage | AndroidHomeScreenPage;
+    let categoriesPage: CategoriesPage | AndroidCategoriesPage;
+    let topPage: TopPage | AndroidTopPage;
+    let seriesDetails: SeriesDetailsPage | AndroidSeriesDetailsPage;
+    let moviesDetails: MoviesDetailsPage | AndroidMoviesDetailsPage;
+    let playerPage: PlayerPage | AndroidPlayerPage;
 
     // Helper methods for common playback operations
     
@@ -31,8 +37,8 @@ describe('Playback Tests', () => {
             await homeScreenPage.pressEnterButton();
             await driver.pause(5000);
             await moviesDetails.clickPlay();
+            await driver.pause(15000);  // Wait for player to load
             await playerPage.waitForAdsToFinish();
-            await playerPage.verifyMoviePlayback();
         } catch (error) {
             console.error('Failed to start movie playback:', error);
             throw new Error(`Movie playback initialization failed: ${error.message}`);
@@ -46,6 +52,7 @@ describe('Playback Tests', () => {
      */
     async function startSeriesPlayback() {
         try {
+            await driver.pause(5000);
             await categoriesPage.goToTopFreeShows();
             await driver.pause(3000);
             await homeScreenPage.pressDownButton();
@@ -53,6 +60,7 @@ describe('Playback Tests', () => {
             await homeScreenPage.pressEnterButton();
             await driver.pause(3000);
             await seriesDetails.clickPlay();
+            await driver.pause(15000);  // Wait for player to load
             await playerPage.waitForAdsToFinish();
         } catch (error) {
             console.error('Failed to start series playback:', error);
@@ -124,14 +132,47 @@ describe('Playback Tests', () => {
      */
     async function verifyPlayerControls() {
         try {
-            const playerFragment = await driver.$('android=resourceId("com.philo.philo:id/player_fragment_host")');
+            console.log('Starting player controls verification...');
+            
+            // Determine the platform type
+            const isAndroidTV = AppHelper.deviceType === 'androidTV';
+            console.log(`Device type: ${isAndroidTV ? 'Android TV' : 'Fire TV'}`);
+
+            // Use platform-specific identifiers for player_fragment_host
+            const playerFragmentSelector = isAndroidTV 
+                ? 'android=resourceId("com.philo.philo.google:id/player_fragment_host")' 
+                : 'android=resourceId("com.philo.philo:id/player_fragment_host")';
+
+            console.log('Waiting for player fragment...');
+            const playerFragment = await driver.$(playerFragmentSelector);
             await playerFragment.waitForDisplayed({ timeout: 30000 });
+            console.log('Player fragment found');
+            
+            // Give the player UI time to stabilize
             await driver.pause(5000);
 
-            const seekbarVisible = await playerPage.waitForSeekbarVisible();
+            // Show player controls explicitly
+            console.log('Showing player controls...');
+            await playerPage.showPlayerControls();
+            await driver.pause(2000);
+
+            // Try multiple times to get the seekbar visible
+            console.log('Checking seekbar visibility...');
+            const seekbarVisible = await playerPage.waitForSeekbarVisible(10); // Increased max attempts
+            
             if (!seekbarVisible) {
-                throw new Error('Seekbar not visible after waiting');
+                console.log('Seekbar not visible, trying one more time...');
+                // Try one more time with a fresh controls display
+                await playerPage.showPlayerControls();
+                await driver.pause(2000);
+                const secondAttempt = await playerPage.waitForSeekbarVisible(5);
+                
+                if (!secondAttempt) {
+                    throw new Error('Seekbar not visible after multiple attempts');
+                }
             }
+
+            console.log('Player controls verification completed successfully');
         } catch (error) {
             console.error('Failed to verify player controls:', error);
             throw new Error(`Player controls verification failed: ${error.message}`);
@@ -145,7 +186,11 @@ describe('Playback Tests', () => {
                 'GMAIL_CLIENT_SECRET',
                 'GMAIL_REDIRECT_URI',
                 'GMAIL_REFRESH_TOKEN',
-                'PHILO_EMAIL'
+                'PHILO_EMAIL',
+                'PHILO_EMAIL_2',
+                'PHILO_EMAIL_3',
+                'ANDROID_TV_IP',
+                'ANDROID_TV_PORT'
             ];
 
             requiredEnvVars.forEach(envVar => {
@@ -161,6 +206,7 @@ describe('Playback Tests', () => {
 
             // Use the Apphelper to login to philo
             await AppHelper.loginToPhilo();
+            
             await new Promise(resolve => setTimeout(resolve, 5000));
 
             // Initialize driver and page objects with retry logic
@@ -176,12 +222,21 @@ describe('Playback Tests', () => {
                     }
                     
                     // Initialize page objects
-                    homeScreenPage = new HomeScreenPage(driver);
-                    playerPage = new PlayerPage(driver);
-                    categoriesPage = new CategoriesPage(driver);
-                    topPage = new TopPage(driver);
-                    seriesDetails = new SeriesDetailsPage(driver);
-                    moviesDetails = new MoviesDetailsPage(driver);
+                    if (AppHelper.deviceType === 'androidTV') {
+                        homeScreenPage = new AndroidHomeScreenPage(driver);
+                        categoriesPage = new AndroidCategoriesPage(driver);
+                        topPage = new AndroidTopPage(driver);
+                        seriesDetails = new AndroidSeriesDetailsPage(driver);
+                        moviesDetails = new AndroidMoviesDetailsPage(driver);
+                        playerPage = new AndroidPlayerPage(driver);  // Add playerPage initialization for Android TV
+                    } else {
+                        homeScreenPage = new HomeScreenPage(driver);
+                        playerPage = new PlayerPage(driver);
+                        categoriesPage = new CategoriesPage(driver);
+                        topPage = new TopPage(driver);
+                        seriesDetails = new SeriesDetailsPage(driver);
+                        moviesDetails = new MoviesDetailsPage(driver);
+                    }
                     
                     // Wait for app to be fully loaded
                     await new Promise(resolve => setTimeout(resolve, 10000));
@@ -205,16 +260,34 @@ describe('Playback Tests', () => {
     beforeEach(async () => {
         try {
             console.log('Terminating app...');
-            await driver.terminateApp('com.philo.philo');
+            await driver.terminateApp(AppHelper.appPackage);
             await new Promise(resolve => setTimeout(resolve, 5000));
             
             console.log('Activating app...');
-            await driver.activateApp('com.philo.philo');
+            await driver.activateApp(AppHelper.appPackage);
             await new Promise(resolve => setTimeout(resolve, 10000));
             
             // Verify driver connection is still active
             if (!driver.sessionId) {
                 throw new Error('Lost driver session');
+            }
+
+            // Reinitialize page objects after app restart
+            console.log('Reinitializing page objects...');
+            if (AppHelper.deviceType === 'androidTV') {
+                homeScreenPage = new AndroidHomeScreenPage(driver);
+                categoriesPage = new AndroidCategoriesPage(driver);
+                topPage = new AndroidTopPage(driver);
+                seriesDetails = new AndroidSeriesDetailsPage(driver);
+                moviesDetails = new AndroidMoviesDetailsPage(driver);
+                playerPage = new AndroidPlayerPage(driver);
+            } else {
+                homeScreenPage = new HomeScreenPage(driver);
+                playerPage = new PlayerPage(driver);
+                categoriesPage = new CategoriesPage(driver);
+                topPage = new TopPage(driver);
+                seriesDetails = new SeriesDetailsPage(driver);
+                moviesDetails = new MoviesDetailsPage(driver);
             }
         } catch (error) {
             console.error('Error in beforeEach:', error);
@@ -223,6 +296,23 @@ describe('Playback Tests', () => {
                 await driver.deleteSession();
                 driver = await AppHelper.initializeDriver();
                 await new Promise(resolve => setTimeout(resolve, 5000));
+                
+                // Reinitialize page objects after session recovery
+                if (AppHelper.deviceType === 'androidTV') {
+                    homeScreenPage = new AndroidHomeScreenPage(driver);
+                    categoriesPage = new AndroidCategoriesPage(driver);
+                    topPage = new AndroidTopPage(driver);
+                    seriesDetails = new AndroidSeriesDetailsPage(driver);
+                    moviesDetails = new AndroidMoviesDetailsPage(driver);
+                    playerPage = new AndroidPlayerPage(driver);
+                } else {
+                    homeScreenPage = new HomeScreenPage(driver);
+                    playerPage = new PlayerPage(driver);
+                    categoriesPage = new CategoriesPage(driver);
+                    topPage = new TopPage(driver);
+                    seriesDetails = new SeriesDetailsPage(driver);
+                    moviesDetails = new MoviesDetailsPage(driver);
+                }
             } catch (recoveryError) {
                 console.error('Failed to recover session:', recoveryError);
                 throw error;
@@ -230,16 +320,17 @@ describe('Playback Tests', () => {
         }
     }, 120000);
 
-    afterAll(async () => {
+    //afterAll(async () => {
         // Clean up app data after test
-        console.log('Clearing app data after test...');
-        await AppHelper.clearAppData();
-    });
+        //console.log('Clearing app data after test...');
+        //await AppHelper.clearAppData();
+    //});
 
     describe('Basic Playback Controls', () => {
         test('TC201 - should verify content playback', async () => {
             try {
                 await startMoviePlayback();
+                await verifyPlayerControls();
             } catch (error) {
                 console.error('Error in TC201:', error);
                 throw error;
@@ -261,8 +352,22 @@ describe('Playback Tests', () => {
                 await startMoviePlayback();
                 await driver.pause(10000);
 
-                const { initial: initialPosition, final: finalPosition } = await performSeekOperation('forward');
-                
+                // Get initial position
+                await playerPage.showPlayerControls();
+                await driver.pause(2000);
+                const initialPosition = await playerPage.getCurrentPosition();
+                console.log('Initial position:', initialPosition);
+
+                // Perform fast forward
+                await playerPage.fastForward();
+                await driver.pause(5000);
+
+                // Get final position
+                await playerPage.showPlayerControls();
+                await driver.pause(2000);
+                const finalPosition = await playerPage.getCurrentPosition();
+                console.log('Final position:', finalPosition);
+
                 expect(initialPosition).toBeGreaterThanOrEqual(0);
                 expect(initialPosition).toBeLessThanOrEqual(100);
                 expect(finalPosition).toBeGreaterThan(initialPosition);
