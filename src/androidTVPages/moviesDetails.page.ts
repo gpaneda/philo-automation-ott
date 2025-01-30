@@ -23,7 +23,42 @@ export class MoviesDetailsPage extends BasePage {
         movieReleaseYear: 'android=new UiSelector().className("android.widget.TextView").textMatches("^\\d{4}$")',
         movieRating: 'android=new UiSelector().className("android.widget.TextView").textMatches("^(G|PG|PG-13|R|TV-Y|TV-Y7|TV-G|TV-PG|TV-14|TV-MA|NR)$")',
         ratingAdvisories: 'android=new UiSelector().className("android.widget.TextView").textMatches(".*(violence|language|gore|nudity|adult|sex|drug|substance|mild|moderate|strong).*")',
-        channelName: 'android=new UiSelector().className("android.widget.TextView").textMatches(".*(Channel|Network|TV|Plus).*")'
+        channelName: 'android=new UiSelector().className("android.widget.TextView").textMatches(".*(Channel|Network|TV|Plus).*")',
+
+        // Subtitles
+        subtitlesContainer: 'android=resourceId("com.philo.philo.google:id/subtitles_container")',
+
+        // Video Elements
+        videoFrame: 'android=resourceId("com.philo.philo.google:id/video_frame")',
+        videoSurface: 'android=resourceId("com.philo.philo.google:id/video_surface")',
+        playbackRoot: 'android=resourceId("com.philo.philo.google:id/playback_root")',
+
+        // Player UI Elements
+        playerActivityRoot: 'android=resourceId("com.philo.philo.google:id/player_activity_root")',
+        playerControlsRoot: 'android=resourceId("com.philo.philo.google:id/playerControls_root")',
+        composeViewWrapper: 'android=resourceId("com.philo.philo.google:id/compose_view_wrapper")',
+
+        // Seekbar Elements
+        seekbarRoot: 'android=resourceId("com.philo.philo.google:id/seekbar_root")',
+        seekbar3: 'android=new UiSelector().resourceId("com.philo.philo.google:id/seekbar_seekbar3").className("com.philo.philo.playerCranston.ui.SeekBar3")',
+        seekbarContainer: 'android=resourceId("com.philo.philo.google:id/seekbar")',
+
+        // Content Info Elements
+        showTitle: 'android=resourceId("com.philo.philo.google:id/show_title").className("android.widget.TextView")',
+        episodeInfo: 'android=resourceId("com.philo.philo.google:id/subtitle")',
+
+        // Action Buttons
+        saveShowButton: 'android=content-desc("Save show")',
+        moreInfoButton: 'android=content-desc("More info")',
+        optionsButton: 'android=content-desc("Options")',
+        startOverButton: 'android=content-desc("Start over")',
+        jumpToLiveButton: 'android=content-desc("Jump to live")',
+
+        // Ad Elements
+        adOverlayRoot: 'android=resourceId("com.philo.philo.google:id/ad_overlay_root")',
+        adText: 'android=resourceId("com.philo.philo.google:id/advertisements")',
+        adRemainingTime: 'android=resourceId("com.philo.philo.google:id/remaining_time")',
+        adFfwdDisabled: 'android=resourceId("com.philo.philo.google:id/icon_ffwd_disable")',
     };
 
     constructor(driver: Browser<'async'>) {
@@ -305,6 +340,7 @@ export class MoviesDetailsPage extends BasePage {
      */
     async clickPlay(): Promise<void> {
         try {
+            await this.driver.pause(5000);
             console.log('Attempting to click play button...');
 
             // Try different play button selectors first
@@ -321,7 +357,7 @@ export class MoviesDetailsPage extends BasePage {
                     const exists = await element.isDisplayed();
                     if (exists) {
                         console.log(`Found play button with selector: ${selector}`);
-                        await element.click();
+                        await element.pressKeyCode(66);
                         return;
                     }
                 } catch (error) {

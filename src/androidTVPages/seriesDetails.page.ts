@@ -1,38 +1,45 @@
-import { BasePage } from './base.page';
 import { Browser } from 'webdriverio';
+import { BasePage } from './base.page';
 
-export class SettingsPage extends BasePage {
-    [x: string]: any;
-    clickTopNavSettingsButtonElement() {
-        throw new Error('Method not implemented.');
-    }
-    verifySettingsPage() {
-        throw new Error('Method not implemented.');
-    }
+export class SeriesDetailsPage extends BasePage {
     public selectors = {
-        // Header
-        settingsHeader: 'android=resourceId("com.philo.philo.google:id/settings_header")',
-        backButton: 'android=resourceId("com.philo.philo.google:id/back_button")',
-        
-        // Account Section
-        signInInformation: 'android=text("Sign-in information")',
-        addMobileNumber: 'android=text("Add mobile number")',
-        addProfiles: 'android=text("Add profiles")',
-        
-        // Edit Options
-        editButton: 'android=text("Edit")',
-        
-        // Playback Settings
-        playbackSection: 'android=text("Playback")',
-        startChannelPlayback: 'android=text("Start channel playback from...")',
-        programBeginning: 'android=text("Program beginning")',
-        
-        // Version Info
-        versionInfo: 'android=resourceId("com.philo.philo.google:id/version_info")',
-        appVersion: 'android=resourceId("com.philo.philo.google:id/app_version")',
-        
-        // Sign Out
-        signOutButton: 'android=text("Sign out")'
+        // Series Information
+        seriesTitle: 'android=new UiSelector().className("android.widget.TextView").textMatches(".*")',
+        seriesYear: 'android=new UiSelector().className("android.widget.TextView").textMatches("\\d{4}")',
+        seriesSeasons: 'android=new UiSelector().className("android.widget.TextView").textMatches("\\d+ Seasons?")',
+        seriesRating: 'android=new UiSelector().className("android.widget.TextView").textMatches("TV-.*")',
+        seriesDescription: 'android=new UiSelector().className("android.widget.TextView").textMatches(".*").index(5)',
+        seriesPoster: 'android=new UiSelector().className("android.widget.ImageView").descriptionMatches(".*")',
+
+        // Channel Information
+        channelLogo: 'android=resourceId("com.philo.philo.google:id/big_tile_channel_logo").className("android.widget.ImageView")',
+        channelButton: 'android=resourceId("com.philo.philo.google:id/button_channel").className("android.view.ViewGroup")',
+        channelName: 'android=resourceId("com.philo.philo.google:id/label_channel").className("android.widget.TextView")',
+
+        // Action Buttons
+        playButton: 'android=new UiSelector().className("android.view.View").description("Play")',
+        resumeButton: 'android=new UiSelector().className("android.widget.TextView").text("Resume")',
+        saveButton: 'android=new UiSelector().className("android.view.View").descriptionContains("Save")',
+
+        // Navigation Tabs
+        episodesTab: 'android=className("android.widget.TextView").text("Episodes")',
+        scheduleTab: 'android=className("android.widget.TextView").text("Schedule")',
+        relatedTab: 'android=className("android.widget.TextView").text("Related")',
+        extrasTab: 'android=className("android.widget.TextView").text("Extras")',
+        detailsTab: 'android=className("android.widget.TextView").text("Details")',
+
+        // Background Elements
+        backgroundImage: 'android=resourceId("com.philo.philo.google:id/big_tile_background_image_view").className("android.widget.ImageView")',
+        backgroundVideo: 'android=resourceId("com.philo.philo.google:id/big_tile_background_video_view").className("android.widget.FrameLayout")',
+        backgroundGradient: 'android=resourceId("com.philo.philo.google:id/big_tile_gradient_layer_view").className("android.view.View")',
+
+        // Container Elements
+        detailsContainer: 'android=resourceId("com.philo.philo.google:id/big_tile_item_details_container").className("android.view.ViewGroup")',
+        otherInfoContainer: 'android=resourceId("com.philo.philo.google:id/other_information_container").className("android.view.ViewGroup")',
+        buttonsContainer: 'android=resourceId("com.philo.philo.google:id/big_tile_buttons_container").className("android.view.ViewGroup")',
+
+        // Navigation
+        dismissButton: 'android=resourceId("com.philo.philo.google:id/big_tile_dismiss_text")'
     };
 
     constructor(driver: Browser<'async'>) {
@@ -40,160 +47,122 @@ export class SettingsPage extends BasePage {
     }
 
     /**
-     * Verify settings page elements are displayed
+     * Gets the series title
+     * @returns Promise<string> The series title
      */
-    async verifySettingsPageElements(): Promise<void> {
-        //wait until the page is stable
-        await this.driver.pause(15000);
-        // Verify header elements
-        await this.verifyElementDisplayed(this.selectors.backButton);
-
-        // Verify account section
-        await this.verifyElementDisplayed(this.selectors.signInInformation);
-        await this.verifyElementDisplayed(this.selectors.addMobileNumber);
-        await this.verifyElementDisplayed(this.selectors.addProfiles);
-        await this.verifyElementDisplayed(this.selectors.editButton);
-
-        // Verify version info
-        await this.verifyElementDisplayed(this.selectors.versionInfo);
-        await this.verifyElementDisplayed(this.selectors.appVersion);
-
-        // Verify sign out button
-        await this.verifyElementDisplayed(this.selectors.signOutButton);
+    async getSeriesTitle(): Promise<string> {
+        const element = await this.waitForElement(this.selectors.seriesTitle);
+        return element.getText();
     }
 
-    /**
-     * Navigate back
-     */
-    async goBack(): Promise<void> {
-        await this.click(this.selectors.backButton);
+    async findPlayableSeries(maxAttempts: number = 5): Promise<boolean> {
+        console.log('Looking for a series with Play or Resume button...');
+        return await this.findPlayableTitle(maxAttempts);
     }
 
-    /**
-     * Sign out
-     */
-    async signOut(): Promise<void> {
-        await this.click(this.selectors.signOutButton);
-        // You might want to add handling for confirmation dialog here
-    }
-
-    /**
-     * Get app version
-     */
-    async getAppVersion(): Promise<string> {
-        const element = await this.driver.$(this.selectors.appVersion);
-        return await element.getText();
-    }
-    /**
-     * Verify settings page is displayed
-     */
-    async verifySettingsPageDisplayed(): Promise<void> {
+    async clickPlay(): Promise<void> {
         try {
-            // Wait for the page to be stable
-            await this.driver.pause(5000);
-
-            // Verify account section elements
-            await this.verifyElementDisplayed(this.selectors.signInInformation);
-            await this.verifyElementDisplayed(this.selectors.addMobileNumber);
-            await this.verifyElementDisplayed(this.selectors.addProfiles);
-            await this.verifyElementDisplayed(this.selectors.editButton);
-
-            // Verify playback section
-            await this.verifyElementDisplayed(this.selectors.playbackSection);
-            await this.verifyElementDisplayed(this.selectors.startChannelPlayback);
-            await this.verifyElementDisplayed(this.selectors.programBeginning);
-
-            // Verify version info
-            await this.verifyElementDisplayed(this.selectors.versionInfo);
-            await this.verifyElementDisplayed(this.selectors.appVersion);
-
-            // Verify sign out button
-            await this.verifyElementDisplayed(this.selectors.signOutButton);
+            // First try to click Resume if it exists
+            const resumeExists = await this.isElementDisplayed(this.selectors.resumeButton);
+            if (resumeExists) {
+                await this.click(this.selectors.resumeButton);
+                return;
+            }
         } catch (error) {
-            console.error('Error verifying settings page elements:', error);
-            throw error;
+            // If Resume doesn't exist, try Play button
+            try {
+                await this.click(this.selectors.playButton);
+            } catch (playError) {
+                // If neither button works, try to find a playable series
+                const found = await this.findPlayableSeries();
+                if (!found) {
+                    throw new Error('Could not find a playable series');
+                }
+                // Try clicking play again on the new series
+                await this.clickPlay();
+            }
         }
     }
 
     /**
-     * Click edit button
+     * Clicks the save button
      */
-    async clickEdit(): Promise<void> {
-        await this.click(this.selectors.editButton);
+    async clickSave(): Promise<void> {
+        await this.click(this.selectors.saveButton);
     }
 
     /**
-     * Open start channel playback settings
+     * Clicks the channel button
      */
-    async openStartChannelPlayback(): Promise<void> {
-        await this.click(this.selectors.startChannelPlayback);
+    async clickChannel(): Promise<void> {
+        await this.click(this.selectors.channelButton);
     }
 
     /**
-     * Select program beginning option
+     * Navigates to Episodes tab
      */
-    async selectProgramBeginning(): Promise<void> {
-        await this.click(this.selectors.programBeginning);
+    async goToEpisodes(): Promise<void> {
+        await this.click(this.selectors.episodesTab);
     }
 
     /**
-     * Open sign-in information
+     * Navigates to Schedule tab
      */
-    async openSignInInformation(): Promise<void> {
-        await this.click(this.selectors.signInInformation);
+    async goToSchedule(): Promise<void> {
+        await this.click(this.selectors.scheduleTab);
     }
 
     /**
-     * Verify sign in information is displayed
+     * Navigates to Related tab
      */
-    async isSignInInformationDisplayed(): Promise<boolean> {
+    async goToRelated(): Promise<void> {
+        await this.click(this.selectors.relatedTab);
+    }
+
+    /**
+     * Navigates to Extras tab
+     */
+    async goToExtras(): Promise<void> {
+        await this.click(this.selectors.extrasTab);
+    }
+
+    /**
+     * Navigates to Details tab
+     */
+    async goToDetails(): Promise<void> {
+        await this.click(this.selectors.detailsTab);
+    }
+
+    /**
+     * Verifies if the series details page is displayed
+     * @returns Promise<boolean> True if the series details page is displayed
+     */
+    async isDisplayed(): Promise<boolean> {
+        return await this.isElementDisplayed(this.selectors.seriesTitle);
+    }
+
+    /**
+     * Waits for the series details page to be fully loaded
+     */
+    async waitForLoaded(): Promise<void> {
+        await this.waitForElement(this.selectors.seriesTitle);
+    }
+    /**
+     * Clicks on the series poster
+     */
+    async clickOnSeries(): Promise<void> {
+        await this.click(this.selectors.seriesPoster);
+    }
+
+    /**
+     * Checks if the Extras tab is present
+     * @returns Promise<boolean> True if the Extras tab is present
+     */
+    async isExtrasTabPresent(): Promise<boolean> {
         try {
-            await this.verifyElementDisplayed(this.selectors.signInInformation);
-            return true;
+            return await this.isElementDisplayed(this.selectors.extrasTab);
         } catch (error) {
             return false;
-        }
-    }
-
-    /**
-     * Add mobile number
-     */
-    async addMobileNumber(): Promise<void> {
-        await this.click(this.selectors.addMobileNumber);
-    }
-
-    /**
-     * Open add profiles
-     */
-    async openAddProfiles(): Promise<void> {
-        await this.click(this.selectors.addProfiles);
-    }
-
-    async isStartChannelPlaybackDisplayed(): Promise<boolean> {
-        try {
-            await this.verifyElementDisplayed(this.selectors.startChannelPlayback);
-            return true;
-        } catch (error) {
-            return false;
-        }
-    }
-
-    // Method to get the start channel playback selector
-    public getStartChannelPlaybackSelector(): string {
-        return this.selectors.startChannelPlayback;
-    }
-
-    /**
-     * Check if an element is visible
-     * @param selector The selector of the element to check
-     */
-    async isElementVisible(selector: string): Promise<boolean> {
-        try {
-            const element = await this.driver.$(selector);
-            return await element.isDisplayed(); // Check if the element is displayed
-        } catch (error) {
-            console.error(`Error checking visibility of element: ${error}`);
-            return false; // Return false if there's an error
         }
     }
 } 

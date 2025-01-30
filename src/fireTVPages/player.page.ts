@@ -132,11 +132,10 @@ export class PlayerPage extends BasePage {
 
     async waitForAdsToFinish(): Promise<void> {
         try {
-            // Check for any ad overlay elements
-            const hasAdOverlay = await this.isElementDisplayed(this.selectors.adOverlayRoot) ||
-                               await this.isElementDisplayed(this.selectors.adText);
+            await this.driver.pause(2000); // Short pause to let UI stabilize
+            const isAdActive = await this.isAdPlaying();
             
-            if (hasAdOverlay) {
+            if (isAdActive) {
                 console.log('Ad overlay found, waiting for ad to finish...');
                 
                 // Wait until both the ad overlay and text are gone
@@ -154,7 +153,7 @@ export class PlayerPage extends BasePage {
                 // Give a moment for player to stabilize after ad
                 await this.driver.pause(2000);
             } else {
-                console.log('No ad overlay found');
+                console.log('No ad overlay found, continuing playback');
             }
         } catch (error) {
             console.log('Error checking for ads:', error);
@@ -385,30 +384,12 @@ export class PlayerPage extends BasePage {
      */
     async isAdPlaying(): Promise<boolean> {
         try {
-            // Check for ad text element
-            const adTextPresent = await this.isElementDisplayed(this.selectors.adText);
-            if (adTextPresent) {
-                console.log('Ad detected via ad text element');
-                return true;
-            }
-
-            // Check for ad overlay
-            const adOverlayPresent = await this.isElementDisplayed(this.selectors.adOverlay);
-            if (adOverlayPresent) {
-                console.log('Ad detected via ad overlay element');
-                return true;
-            }
-
-            // Check for ad remaining time element
-            const adRemainingPresent = await this.isElementDisplayed(this.selectors.adRemainingTime);
-            if (adRemainingPresent) {
-                console.log('Ad detected via remaining time element');
-                return true;
-            }
-
-            return false;
+            // Check for any ad overlay elements
+            const hasAdOverlay = await this.isElementDisplayed(this.selectors.adOverlayRoot) ||
+                               await this.isElementDisplayed(this.selectors.adText);
+            return hasAdOverlay;
         } catch (error) {
-            console.log('Error checking for ad:', error);
+            console.log('Error checking for ads:', error);
             return false;
         }
     }
@@ -425,3 +406,4 @@ export class PlayerPage extends BasePage {
         await this.driver.pressKeyCode(66); // 66 is the keycode for KEYCODE_ENTER
     }
 } 
+
