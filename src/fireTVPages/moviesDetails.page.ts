@@ -15,7 +15,7 @@ export class MoviesDetailsPage extends BasePage {
         movieRating: [
             'android=new UiSelector().resourceId("com.philo.philo:id/rating")',
             'android=new UiSelector().resourceId("com.philo.philo:id/content_rating")',
-            'android=new UiSelector().className("android.widget.TextView").textMatches("^[A-Z0-9-]+$")'
+            'android=new UiSelector().className("android.widget.TextView").textMatches("^(G|PG|PG-13|R|TV-Y|TV-Y7|TV-G|TV-PG|TV-14|TV-MA|NR)$")',
         ],
         movieRatingAdvisories: [
             'android=new UiSelector().resourceId("com.philo.philo:id/rating_advisories")',
@@ -467,5 +467,29 @@ export class MoviesDetailsPage extends BasePage {
 
     async clickResume(): Promise<void> {
         await this.click(this.selectors.resumeButton);
+    }
+
+    /**
+   * Fetches the movie duration
+   * @returns Promise<string> The movie duration
+   */
+    async fetchMovieDuration(): Promise<string> {
+        try {
+            console.log('Attempting to get movie duration...');
+
+            const elements = await this.driver.$$('android=new UiSelector().className("android.widget.TextView")');
+            for (const element of elements) {
+                const text = await element.getText();
+                if (/^\d{1,2}h\s*\d{1,2}m$/.test(text.trim())) {
+                    console.log(`Found matching movie duration: "${text}"`);
+                    return text;
+                }
+            }
+
+            throw new Error('Could not find movie duration with any selector');
+        } catch (error) {
+            console.error('Error getting movie duration:', error);
+            throw error;
+        }
     }
 } 

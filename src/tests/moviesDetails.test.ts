@@ -127,7 +127,7 @@ describe('Movies Details Page', () => {
         expect(titleAfterClick).toBe(titleBeforeClick);
     });
 
-    test('TC125 - should get the movie description, rating, rating advisories, release date, and channel name', async () => {
+    test.only('TC125 - should get the movie description, rating, rating advisories, release date, and channel name', async () => {
         await driver.pause(5000);
         await categoriesPage.goToTopFreeMovies();
         await categoriesPage.waitForMovieTilesLoaded();
