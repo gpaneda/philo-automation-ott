@@ -1,18 +1,10 @@
 import { Browser } from 'webdriverio';
-import { HomeScreenPage } from '../fireTVPages/homescreen.page';
-import { PlayerPage } from '../fireTVPages/player.page';
-import { AppHelper } from '../helpers/app.helper';
-import { CategoriesPage } from '../fireTVPages/categories.page';
-import { TopPage } from '../fireTVPages/top.page';
-import { SeriesDetailsPage } from '../fireTVPages/seriesDetails.page';
-import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
-import { HomeScreenPage as AndroidHomeScreenPage } from '../androidTVPages/homescreen.page';
-import { CategoriesPage as AndroidCategoriesPage } from '../androidTVPages/categories.page';
-import { TopPage as AndroidTopPage } from '../androidTVPages/top.page';
-import { SeriesDetailsPage as AndroidSeriesDetailsPage } from '../androidTVPages/seriesDetails.page';
-import { MoviesDetailsPage as AndroidMoviesDetailsPage } from '../androidTVPages/moviesDetails.page';
-import { PlayerPage as AndroidPlayerPage } from '../androidTVPages/player.page';
 import path from 'path';
+
+// Importing local modules
+import { AppHelper } from '../helpers/app.helper';
+import { HomeScreenPage, PlayerPage, CategoriesPage, TopPage, SeriesDetailsPage, MoviesDetailsPage } from '../fireTVPages';
+import { HomeScreenPage as AndroidHomeScreenPage, CategoriesPage as AndroidCategoriesPage, TopPage as AndroidTopPage, SeriesDetailsPage as AndroidSeriesDetailsPage, MoviesDetailsPage as AndroidMoviesDetailsPage, PlayerPage as AndroidPlayerPage } from '../androidTVPages';
 
 describe('Playback Tests', () => {
     let driver: Browser<'async'>;

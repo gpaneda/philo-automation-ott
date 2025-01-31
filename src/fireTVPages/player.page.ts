@@ -1,6 +1,10 @@
 import { Browser, ChainablePromiseElement } from 'webdriverio';
 import { BasePage } from './base.page';
 
+const KEYCODE_ENTER = 66;
+const KEYCODE_DPAD_RIGHT = 22;
+const KEYCODE_DPAD_LEFT = 21;
+
 export class PlayerPage extends BasePage {
     public selectors = {
         // Player Fragment
@@ -53,6 +57,10 @@ export class PlayerPage extends BasePage {
         adText: 'android=resourceId("com.philo.philo:id/advertisements")',
         adRemainingTime: 'android=resourceId("com.philo.philo:id/remaining_time")',
         adFfwdDisabled: 'android=resourceId("com.philo.philo:id/icon_ffwd_disable")',
+
+        resumeButton: 'android=resourceId("com.philo.philo:id/playerControls_resumeButton")',
+        backButton: 'android=resourceId("com.philo.philo:id/back_button")',
+        rightNavigationButton: 'android=resourceId("com.philo.philo:id/right_navigation_button")',
     };
 
     constructor(driver: Browser<'async'>) {
@@ -72,48 +80,22 @@ export class PlayerPage extends BasePage {
         await this.driver.pause(2000);
     }
 
-    async fastForward(): Promise<void> {
-        try {
-            // Just show controls and use keyboard navigation
-            await this.showPlayerControls();
-            await this.driver.pause(2000);
-
-            // Press right key multiple times
-            console.log('Starting fast forward...');
-            for (let i = 0; i < 10; i++) {
-                await this.driver.pressKeyCode(22); // Right key
-                await this.driver.pause(200);
-            }
-            
-            // Press Enter to confirm
-            await this.driver.pressKeyCode(66);
-            await this.driver.pause(2000);
-        } catch (error) {
-            console.error('Error during fast forward:', error);
-            throw error;
+    async fastForward(times: number = 10, delay: number = 200): Promise<void> {
+        await this.showPlayerControls(); // Ensure controls are visible
+        for (let i = 0; i < times; i++) {
+            await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT); // Press right key
+            await this.driver.pause(delay); // Wait for the specified delay
         }
+        await this.driver.pressKeyCode(KEYCODE_ENTER); // Confirm the action
     }
 
-    async rewind(): Promise<void> {
-        try {
-            // Just show controls and use keyboard navigation
-            await this.showPlayerControls();
-            await this.driver.pause(2000);
-
-            // Press left key multiple times
-            console.log('Starting rewind...');
-            for (let i = 0; i < 10; i++) {
-                await this.driver.pressKeyCode(21); // Left key
-                await this.driver.pause(200);
-            }
-            
-            // Press Enter to confirm
-            await this.driver.pressKeyCode(66);
-            await this.driver.pause(2000);
-        } catch (error) {
-            console.error('Error during rewind:', error);
-            throw error;
+    async rewind(times: number = 10, delay: number = 200): Promise<void> {
+        await this.showPlayerControls(); // Ensure controls are visible
+        for (let i = 0; i < times; i++) {
+            await this.driver.pressKeyCode(KEYCODE_DPAD_LEFT); // Press left key
+            await this.driver.pause(delay); // Wait for the specified delay
         }
+        await this.driver.pressKeyCode(KEYCODE_ENTER); // Confirm the action
     }
 
     async getCurrentTime(): Promise<string> {
@@ -402,8 +384,52 @@ export class PlayerPage extends BasePage {
         await this.driver.pause(seconds * 1000);
     }
 
-    async resumePlayback() {
-        await this.driver.pressKeyCode(66); // 66 is the keycode for KEYCODE_ENTER
+   
+
+    private async clickElement(selector: string): Promise<void> {
+        try {
+            const element = await this.driver.$(selector);
+            await element.click();
+        } catch (error) {
+            console.error(`Error clicking element ${selector}:`, error);
+            throw new Error(`Failed to click element: ${selector}`);
+        }
+    }
+
+    private async isElementVisible(selector: string): Promise<boolean> {
+        try {
+            const element = await this.driver.$(selector);
+            return await element.isDisplayed();
+        } catch (error) {
+            console.error(`Error checking visibility of element ${selector}:`, error);
+            return false;
+        }
+    }
+
+    public async initiatePlayback(): Promise<boolean> {
+        await this.clickElement(this.selectors.playButton); // Click the play button first
+
+        // Loop until the play or resume button is found
+        while (true) {
+            const playVisible = await this.isElementVisible(this.selectors.playButton);
+            const resumeVisible = await this.isElementVisible(this.selectors.resumeButton);
+
+            if (playVisible) {
+                await this.clickElement(this.selectors.playButton);
+                return true; // Playback initiated
+            } else if (resumeVisible) {
+                await this.clickElement(this.selectors.resumeButton);
+                return true; // Playback initiated
+            } else {
+                // Navigate back and try again
+                await this.clickElement(this.selectors.backButton);
+                await this.clickElement(this.selectors.rightNavigationButton);
+            }
+        }
+    }
+
+    public async resumePlayback(): Promise<void> {
+        await this.driver.pressKeyCode(KEYCODE_ENTER); // Press enter to resume playback
     }
 } 
 
