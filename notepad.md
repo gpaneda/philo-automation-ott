@@ -15,12 +15,6 @@
 - [ ] Need to add more test cases to all the areas of the application - Playback, Series Details Page, Movies, etc.
 - [x] Need to create Search Test Cases 
 - [ ] Need to create test cases for live channels
-- [ ] Include historical run both in Test Suite Page and Test History page 
-- [ ] Troubleshoot Stop Run button - does not work
-- [ ] Pass Failed state not updating in test suite page
-- [ ] Not all tests are logged into the test history page
-- [ ] Device should be disabled when it is running a test
-- [ ] Landing page status not updating
 - [ ] Add android TV to .env file and capabilities file
   APP_ACTIVITY=com.philo.philo.ui.activity.MainTabbedActivity
   APP_PACKAGE=com.philo.philo.google
@@ -38,6 +32,12 @@
 - test suite runs should be retained in the dashboard after they are run
 - logs should not be too verbose - only failed errors should be displayed or if the test passed
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the Test Suite page
+-[ ] Include historical run both in Test Suite Page and Test History page 
+- [ ] Troubleshoot Stop Run button - does not work
+- [ ] Pass Failed state not updating in test suite page
+- [ ] Not all tests are logged into the test history page
+- [ ] Device should be disabled when it is running a test
+- [ ] Landing page status not updating
 
 ### Notes for Performance Testing
 - [ ] Research on common performance testing tools and frameworks
@@ -123,5 +123,19 @@ https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/au
        - This should be a helper function that can be called in the playback tests
 
        - Should be able to insert it into other methods like startMoviePlayback, startSeriesPlayback, etc.
+- [ ] Migrate methods from the playback tests to the playback page - do it one by one
+- [ ] Finish running the playback tests on the Android TV
 
-**Migrate methods from the playback tests to the playback page**
+Please write typescript code that would randomly pick a movie title or a series title when user is in the page where the user can choose a movie or a series. The code should be:
+1. Well-documented with clear comments
+2. Follow best practices and design patterns
+3. Include error handling
+4. Be efficient and maintainable
+5. it should take into account existing methods like startMoviePlayback, startSeriesPlayback, etc. and integrate it into the existing methods
+
+Please write typescript code that would check if the play or resume button is visible when user enters a details page of a movie or a series.  If not then it should go back to the last screen where the user can choose a movie or a series and then check again.  When the play or resume button is visible then it should proceed with the test. The code should be:
+1. Well-documented with clear comments
+2. Follow best practices and design patterns
+3. Include error handling
+4. Be efficient and maintainable
+5. it should take into account existing methods like startMoviePlayback, startSeriesPlayback, etc. and integrate it into the existing methods
