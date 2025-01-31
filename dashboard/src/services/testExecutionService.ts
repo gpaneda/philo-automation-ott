@@ -47,6 +47,8 @@ export class TestExecutionService {
 
   private getEmailForDevice(deviceIp: string): string {
     switch (deviceIp) {
+      case '10.0.0.130':
+        return process.env.PHILO_EMAIL_3!;
       case '10.0.0.55':
         return process.env.PHILO_EMAIL_2!;
       case '10.0.0.98':
