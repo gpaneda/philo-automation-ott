@@ -320,11 +320,10 @@ describe('Playback Tests', () => {
         }
     }, 120000);
 
-    //afterAll(async () => {
-        // Clean up app data after test
-        //console.log('Clearing app data after test...');
-        //await AppHelper.clearAppData();
-    //});
+    afterAll(async () => {
+        // Clean up the driver session
+        await driver.deleteSession();
+    });
 
     describe('Basic Playback Controls', () => {
         test('TC201 - should verify content playback', async () => {
