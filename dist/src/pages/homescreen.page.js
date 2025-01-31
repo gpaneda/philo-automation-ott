@@ -84,7 +84,7 @@ class HomeScreenPage extends base_page_1.BasePage {
      */
     async sendKeyEvent(keycode) {
         return new Promise((resolve, reject) => {
-            (0, child_process_1.exec)(`adb -s 10.0.0.98:5555 shell input keyevent ${keycode}`, (error, stdout, stderr) => {
+            exec(`adb -s ${ADB_CONFIG.ip} shell input keyevent ${keycode}`, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`Error sending key event: ${stderr}`);
                     reject(error);
