@@ -15,12 +15,12 @@
 - [ ] Need to add more test cases to all the areas of the application - Playback, Series Details Page, Movies, etc.
 - [x] Need to create Search Test Cases 
 - [ ] Need to create test cases for live channels
-- [ ] Add android TV to .env file and capabilities file
+- [x] Add android TV to .env file and capabilities file
   APP_ACTIVITY=com.philo.philo.ui.activity.MainTabbedActivity
   APP_PACKAGE=com.philo.philo.google
   ANDROID_TV_IP=10.0.0.130
   ANDROID_TV_PORT=5555
-- logs need to be cleared on dashbboard after each run
+- [ ]logs need to be cleared on dashbboard after each run
 - [ ] Create an excel google sheets for test cases seen in the use_cases.md file
 
 
@@ -32,7 +32,7 @@
 - test suite runs should be retained in the dashboard after they are run
 - logs should not be too verbose - only failed errors should be displayed or if the test passed
 - [ ] Need to have the results of the tests integrated into the dashboard so that it can be displayed in the Test Suite page
--[ ] Include historical run both in Test Suite Page and Test History page 
+- [ ] Include historical run both in Test Suite Page and Test History page 
 - [ ] Troubleshoot Stop Run button - does not work
 - [ ] Pass Failed state not updating in test suite page
 - [ ] Not all tests are logged into the test history page
