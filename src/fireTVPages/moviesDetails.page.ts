@@ -556,6 +556,8 @@ export class MoviesDetailsPage extends BasePage {
                 attempts++; // Increment the attempt counter
             }
 
+            await this.driver.pause(10000);
+
             if (!isPlaying) {
                 console.error('Failed to find play or resume button after maximum attempts.');
                 throw new Error('Playback initiation failed after multiple attempts.');

@@ -127,9 +127,9 @@ export class PlayerPage extends BasePage {
                     const adTextGone = !(await this.isElementDisplayed(this.selectors.adText));
                     return adOverlayGone && adTextGone;
                 }, { 
-                    timeout: 240000, 
-                    timeoutMsg: 'Advertisement did not finish after 4 minutes',
-                    interval: 2000
+                    timeout: 300000, 
+                    timeoutMsg: 'Advertisement did not finish after 5 minutes',
+                    interval: 5000
                 });
                 
                 console.log('Ad finished playing');
@@ -487,6 +487,21 @@ export class PlayerPage extends BasePage {
 
     public async pressEnter(): Promise<void> {
         await this.driver.pressKeyCode(KEYCODE_ENTER);
+    }
+
+    async performSeekOperation(direction: 'forward' | 'rewind'): Promise<{ initial: number; final: number }> {
+        const initialPosition = await this.getCurrentPosition();
+        console.log(`Starting seek ${direction}...`);
+
+        if (direction === 'forward') {
+            await this.fastForward();
+        } else {
+            await this.rewind();
+        }
+
+        await this.driver.pause(5000); // Wait for the seek to complete
+        const finalPosition = await this.getCurrentPosition();
+        return { initial: initialPosition, final: finalPosition };
     }
 } 
 

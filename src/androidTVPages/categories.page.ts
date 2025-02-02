@@ -222,7 +222,7 @@ export class CategoriesPage extends HomeScreenPage {
      * Requires 1 down press from Top Free Movies
      */
     public async navigateToTopFreeShows(): Promise<void> {
-        await this.navigateToCategory(this.selectors.topFreeShows, 1);
+        await this.navigateToCategory(this.selectors.topFreeShows, 2);
         await this.verifyTopFreeShowsHeaderDisplayed();
     }
 
