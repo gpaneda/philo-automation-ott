@@ -219,15 +219,15 @@ describe('Playback Tests', () => {
                         categoriesPage = new AndroidCategoriesPage(driver);
                         topPage = new AndroidTopPage(driver);
                         seriesDetails = new AndroidSeriesDetailsPage(driver);
-                        moviesDetails = new AndroidMoviesDetailsPage(driver);
-                        playerPage = new AndroidPlayerPage(driver);  // Add playerPage initialization for Android TV
+                        playerPage = new AndroidPlayerPage(driver);
+                        moviesDetails = new AndroidMoviesDetailsPage(driver, playerPage);
                     } else {
                         homeScreenPage = new HomeScreenPage(driver);
                         playerPage = new PlayerPage(driver);
                         categoriesPage = new CategoriesPage(driver);
                         topPage = new TopPage(driver);
                         seriesDetails = new SeriesDetailsPage(driver);
-                        moviesDetails = new MoviesDetailsPage(driver);
+                        moviesDetails = new MoviesDetailsPage(driver, playerPage);
                     }
                     
                     // Wait for app to be fully loaded
@@ -271,15 +271,15 @@ describe('Playback Tests', () => {
                 categoriesPage = new AndroidCategoriesPage(driver);
                 topPage = new AndroidTopPage(driver);
                 seriesDetails = new AndroidSeriesDetailsPage(driver);
-                moviesDetails = new AndroidMoviesDetailsPage(driver);
                 playerPage = new AndroidPlayerPage(driver);
+                moviesDetails = new AndroidMoviesDetailsPage(driver, playerPage);
             } else {
                 homeScreenPage = new HomeScreenPage(driver);
                 playerPage = new PlayerPage(driver);
                 categoriesPage = new CategoriesPage(driver);
                 topPage = new TopPage(driver);
                 seriesDetails = new SeriesDetailsPage(driver);
-                moviesDetails = new MoviesDetailsPage(driver);
+                moviesDetails = new MoviesDetailsPage(driver, playerPage);
             }
         } catch (error) {
             console.error('Error in beforeEach:', error);
@@ -295,15 +295,15 @@ describe('Playback Tests', () => {
                     categoriesPage = new AndroidCategoriesPage(driver);
                     topPage = new AndroidTopPage(driver);
                     seriesDetails = new AndroidSeriesDetailsPage(driver);
-                    moviesDetails = new AndroidMoviesDetailsPage(driver);
                     playerPage = new AndroidPlayerPage(driver);
+                    moviesDetails = new AndroidMoviesDetailsPage(driver, playerPage);
                 } else {
                     homeScreenPage = new HomeScreenPage(driver);
                     playerPage = new PlayerPage(driver);
                     categoriesPage = new CategoriesPage(driver);
                     topPage = new TopPage(driver);
                     seriesDetails = new SeriesDetailsPage(driver);
-                    moviesDetails = new MoviesDetailsPage(driver);
+                    moviesDetails = new MoviesDetailsPage(driver, playerPage);
                 }
             } catch (recoveryError) {
                 console.error('Failed to recover session:', recoveryError);
