@@ -81,7 +81,7 @@ export class PlayerPage extends BasePage {
         await this.driver.pause(2000);
     }
 
-    async fastForward(times: number = 10, delay: number = 200): Promise<void> {
+    async fastForward(times = 10, delay = 200): Promise<void> {
         await this.showPlayerControls(); // Ensure controls are visible
         for (let i = 0; i < times; i++) {
             await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT); // Press right key
@@ -90,7 +90,7 @@ export class PlayerPage extends BasePage {
         await this.driver.pressKeyCode(KEYCODE_ENTER); // Confirm the action
     }
 
-    async rewind(times: number = 10, delay: number = 200): Promise<void> {
+    async rewind(times = 10, delay = 200): Promise<void> {
         await this.showPlayerControls(); // Ensure controls are visible
         for (let i = 0; i < times; i++) {
             await this.driver.pressKeyCode(KEYCODE_DPAD_LEFT); // Press left key
@@ -441,7 +441,7 @@ export class PlayerPage extends BasePage {
  * 
  * @throws {Error} If there are issues during navigation or visibility checks.
  */
-    public async checkAndNavigateForPlayback(maxAttempts: number = 5): Promise<void> {
+    public async checkAndNavigateForPlayback(maxAttempts = 5): Promise<void> {
         try {
             let attempts = 0;
             let isPlaying = false;

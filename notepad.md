@@ -137,7 +137,7 @@ Please write typescript code that would randomly pick a movie title or a series 
 4. Be efficient and maintainable
 5. it should take into account existing methods like startMoviePlayback, startSeriesPlayback, etc. and integrate it into the existing methods
 
-Please write typescript code that would check if the play or resume button is visible when user enters a details page of a movie or a series.  If not then it should go back to the last screen where the user can choose a movie or a series and then check again.  When the play or resume button is visible then it should proceed with the test. The code should be:
+- DONE - Please write typescript code that would check if the play or resume button is visible when user enters a details page of a movie or a series.  If not then it should go back to the last screen where the user can choose a movie or a series and then check again.  When the play or resume button is visible then it should proceed with the test. The code should be:
 1. Well-documented with clear comments
 2. Follow best practices and design patterns
 3. Include error handling

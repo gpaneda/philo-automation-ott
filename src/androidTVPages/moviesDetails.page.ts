@@ -455,7 +455,7 @@ export class MoviesDetailsPage extends BasePage {
         await this.waitForElement(this.selectors.movieTitle);
     }
 
-    async findPlayableMovie(maxAttempts: number = 5): Promise<boolean> {
+    async findPlayableMovie(maxAttempts = 5): Promise<boolean> {
         console.log('Looking for a movie with Play or Resume button...');
         return await this.findPlayableTitle(maxAttempts);
     }
@@ -500,7 +500,7 @@ export class MoviesDetailsPage extends BasePage {
     * 
     * @throws { Error } If there are issues during navigation or visibility checks.
     */
-    public async checkAndNavigateForPlayback(maxAttempts: number = 5): Promise<void> {
+    public async checkAndNavigateForPlayback(maxAttempts = 5): Promise<void> {
         try {
             let attempts = 0;
             let isPlaying = false;
