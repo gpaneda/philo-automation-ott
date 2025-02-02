@@ -271,7 +271,7 @@ describe('Playback Tests', () => {
             expect(finalPosition).toBeGreaterThan(initialPosition);
         }, TIMEOUT);
 
-        test.only('TC204 - should verify rewind playback works', async () => {
+        test('TC204 - should verify rewind playback works', async () => {
             await checkPlaybackForTopFreeMovies(false);
             await playerPage.fastForward(); // Seek forward first
             const initialPosition = await playerPage.getCurrentPosition();
