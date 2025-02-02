@@ -229,7 +229,7 @@ export class GmailHelper {
                     console.log('Email body preview:', decodedBody.substring(0, 200) + '...');
 
                     // Find sign-in link using various patterns
-                    let signInLink = this.extractSignInLink(decodedBody);
+                    const signInLink = this.extractSignInLink(decodedBody);
                     if (!signInLink) {
                         console.log('❌ No sign-in link found in email');
                         continue;

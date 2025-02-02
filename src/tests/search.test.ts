@@ -5,7 +5,7 @@ import { SettingsPage } from '../fireTVPages/settings.page';
 import { TopPage } from '../fireTVPages/top.page';
 import WebSocketHelper from '../utils/WebSocketHelper';
 import { CategoriesPage } from '../fireTVPages/categories.page';
-import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
+//import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
 import { SearchPage } from '../fireTVPages/search.page';
 import { preProcessFile } from 'typescript';
 
@@ -14,7 +14,7 @@ let homeScreen: HomeScreenPage;
 let settingsPage: SettingsPage;
 let topPage: TopPage;
 let categoriesPage: CategoriesPage;
-let movieDetailsPage: MoviesDetailsPage;
+//let movieDetailsPage: MoviesDetailsPage;
 let searchPage: SearchPage;
 let webSocketHelper: WebSocketHelper;
 beforeAll(async () => {
@@ -51,7 +51,7 @@ beforeAll(async () => {
         settingsPage = new SettingsPage(driver);
         topPage = new TopPage(driver);
         categoriesPage = new CategoriesPage(driver);
-        movieDetailsPage = new MoviesDetailsPage(driver);
+        //movieDetailsPage = new MoviesDetailsPage(driver);
         searchPage = new SearchPage(driver);
 
     } catch (error) {

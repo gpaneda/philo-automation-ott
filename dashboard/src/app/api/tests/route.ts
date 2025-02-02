@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { exec, ChildProcess } from 'child_process';
 import { promisify } from 'util';
 import path from 'path';
-import axios from 'axios';
 import { updateTestResults } from '../test-history/route';
 
 const execAsync = promisify(exec);

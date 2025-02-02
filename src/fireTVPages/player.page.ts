@@ -81,7 +81,7 @@ export class PlayerPage extends BasePage {
         await this.driver.pause(2000);
     }
 
-    async fastForward(times: number = 10, delay: number = 200): Promise<void> {
+    async fastForward(times = 10, delay = 200): Promise<void> {
         await this.showPlayerControls(); // Ensure controls are visible
         for (let i = 0; i < times; i++) {
             await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT); // Press right key
@@ -90,7 +90,7 @@ export class PlayerPage extends BasePage {
         await this.driver.pressKeyCode(KEYCODE_ENTER); // Confirm the action
     }
 
-    async rewind(times: number = 10, delay: number = 200): Promise<void> {
+    async rewind(times = 10, delay = 200): Promise<void> {
         await this.showPlayerControls(); // Ensure controls are visible
         for (let i = 0; i < times; i++) {
             await this.driver.pressKeyCode(KEYCODE_DPAD_LEFT); // Press left key
@@ -127,9 +127,9 @@ export class PlayerPage extends BasePage {
                     const adTextGone = !(await this.isElementDisplayed(this.selectors.adText));
                     return adOverlayGone && adTextGone;
                 }, { 
-                    timeout: 240000, 
-                    timeoutMsg: 'Advertisement did not finish after 4 minutes',
-                    interval: 2000
+                    timeout: 300000, 
+                    timeoutMsg: 'Advertisement did not finish after 5 minutes',
+                    interval: 5000
                 });
                 
                 console.log('Ad finished playing');
@@ -441,7 +441,7 @@ export class PlayerPage extends BasePage {
  * 
  * @throws {Error} If there are issues during navigation or visibility checks.
  */
-    public async checkAndNavigateForPlayback(maxAttempts: number = 5): Promise<void> {
+    public async checkAndNavigateForPlayback(maxAttempts = 5): Promise<void> {
         try {
             let attempts = 0;
             let isPlaying = false;
@@ -487,6 +487,21 @@ export class PlayerPage extends BasePage {
 
     public async pressEnter(): Promise<void> {
         await this.driver.pressKeyCode(KEYCODE_ENTER);
+    }
+
+    async performSeekOperation(direction: 'forward' | 'rewind'): Promise<{ initial: number; final: number }> {
+        const initialPosition = await this.getCurrentPosition();
+        console.log(`Starting seek ${direction}...`);
+
+        if (direction === 'forward') {
+            await this.fastForward();
+        } else {
+            await this.rewind();
+        }
+
+        await this.driver.pause(5000); // Wait for the seek to complete
+        const finalPosition = await this.getCurrentPosition();
+        return { initial: initialPosition, final: finalPosition };
     }
 } 
 

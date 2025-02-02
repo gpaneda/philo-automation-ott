@@ -8,7 +8,7 @@ import { LoginPage as AndroidLoginPage } from '../androidTVPages/login.page';
 export class AppHelper {
     private static driver: Browser<'async'>;
     private static currentDeviceType: 'fireTV' | 'androidTV' | null = null;
-    static appPackage: string = 'com.philo.philo'; // Default to Fire TV package
+    static appPackage = 'com.philo.philo'; // Default to Fire TV package
 
     // Public getter for device type
     static get deviceType(): 'fireTV' | 'androidTV' | null {

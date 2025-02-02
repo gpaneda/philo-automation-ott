@@ -15,7 +15,7 @@ interface WebSocketHelperOptions {
 class WebSocketHelper extends EventEmitter {
     private url: string;
     private socket: WebSocket | null = null;
-    private reconnectAttempts: number = 0;
+    private reconnectAttempts = 0;
     private maxReconnectAttempts: number;
     private reconnectDelay: number;
     private messageQueue: WebSocketMessage[] = [];

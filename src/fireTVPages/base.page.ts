@@ -100,7 +100,7 @@ export class BasePage {
         }
     }
 
-    async findPlayableTitle(maxAttempts: number = 5): Promise<boolean> {
+    async findPlayableTitle(maxAttempts = 5): Promise<boolean> {
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
             try {
                 // Check for Play or Resume button
