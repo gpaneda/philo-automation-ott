@@ -105,18 +105,18 @@ describe('Playback Tests', () => {
         }
     }
 
-    /**
+    /*
      * Performs a seek operation and verifies the position change
      * @param {'forward' | 'rewind'} direction Direction to seek
      * @returns {Promise<{initial: number, final: number}>} Initial and final positions
      * @throws {Error} If seek operation fails or position verification fails
-     */
+     
     async function performSeekOperation(direction: 'forward' | 'rewind') {
-        try {
-            const initialPosition = await getPlaybackPosition();
-            console.log(`Starting seek ${direction}...`);
+        //try {
+            //const initialPosition = await getPlaybackPosition();
+            //console.log(`Starting seek ${direction}...`);
             
-            if (direction === 'forward') {
+            //if (direction === 'forward') {
                 await playerPage.seekForward();
             } else {
                 await playerPage.seekRewind();
@@ -130,7 +130,7 @@ describe('Playback Tests', () => {
             console.error(`Failed to perform ${direction} seek:`, error);
             throw new Error(`Seek ${direction} operation failed: ${error.message}`);
         }
-    }
+    }*/
 
     /**
      * Verifies player controls are in the expected state
