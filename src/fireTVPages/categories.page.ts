@@ -1,6 +1,6 @@
 import { Browser } from 'webdriverio';
 import { HomeScreenPage } from './homescreen.page';
-
+import { randomInt } from 'crypto';
 // Define the type for category-specific selectors
 interface CategorySelectors {
     headerWhitespace: string;
@@ -240,6 +240,7 @@ export class CategoriesPage extends HomeScreenPage {
     public async navigateToTopFreeShows(): Promise<void> {
         await this.navigateToCategory(this.selectors.topFreeShows, 2);
         await this.verifyTopFreeShowsHeaderDisplayed();
+        await this.selectRandomTitle();
     }
 
     /**
@@ -250,6 +251,60 @@ export class CategoriesPage extends HomeScreenPage {
     
         await this.navigateToCategory(this.selectors.topFreeMovies, 1);
         await this.verifyTopFreeMoviesHeaderDisplayed();
+        await this.selectRandomTitle();
+      
+    }
+
+    public async selectRandomTitle(): Promise<void> {
+        try {
+            // Get all visible titles using the class's defined selector
+            const titleElements = await this.driver.$$(this.selectors.movieTileWrapper);
+            
+            if (titleElements.length === 0) {
+                throw new Error('No titles found on the page');
+            }
+
+            // Choose a random index
+            const randomIndex = randomInt(0, titleElements.length - 1);
+            console.log(`Selected random index ${randomIndex} out of ${titleElements.length} titles`);
+
+            // Get the current focused element's index
+            const focusedElement = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
+            const focusedId = await focusedElement.elementId;
+            const currentIndex = await Promise.all(titleElements.map(async el => await el.elementId))
+                .then(ids => ids.findIndex((id: string) => id === focusedId));
+
+            if (currentIndex === -1) {
+                throw new Error('Could not determine current focused element');
+            }
+
+            console.log(`Current focused index: ${currentIndex}, navigating to index: ${randomIndex}`);
+
+            // Calculate how many moves right/left we need
+            const moveCount = randomIndex - currentIndex;
+            const moveRight = moveCount > 0;
+
+            // Perform the moves
+            for (let i = 0; i < Math.abs(moveCount); i++) {
+                if (moveRight) {
+                    await this.pressRightButton();
+                } else {
+                    await this.pressLeftButton();
+                }
+                // Wait for navigation animation
+                await this.driver.pause(1000);
+            }
+
+            // Verify we landed on the right title
+            const selectedTitle = await titleElements[randomIndex].getAttribute('content-desc');
+            console.log(`Successfully navigated to title: ${selectedTitle}`);
+
+            // Add a final pause to ensure focus is stable
+            await this.driver.pause(1000);
+        } catch (error) {
+            console.error('Error in selectRandomTitle:', error);
+            throw error;
+        }
     }
 
     /**
@@ -599,13 +654,22 @@ export class CategoriesPage extends HomeScreenPage {
 
     async clickOnSeries(): Promise<void> {
         try {
-            // Add initial pause to ensure the page has loaded
-            await this.driver.pause(5000);
+            // Get the focused element
+            const focusedElement = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
+            const isDisplayed = await focusedElement.isDisplayed();
 
-            // Instead of clicking, press enter since the element is already focused
+            if (!isDisplayed) {
+                throw new Error('No focused movie tile found');
+            }
+
+            // Press enter to click on the focused element
             await this.pressEnterButton();
+
+            // Wait for transition
+            await this.driver.pause(2000);
+
         } catch (error) {
-            console.error('Error clicking on series:', error);
+            console.error('Error clicking movie tile:', error);
             throw error;
         }
     }
@@ -709,14 +773,27 @@ export class CategoriesPage extends HomeScreenPage {
     }
 
     /**
-     * Click on the first movie tile in the grid
+     * Click on the currently focused movie tile
      */
     async clickMovieTile(): Promise<void> {
-        const movieTiles = await this.driver.$$(this.selectors.movieTileWrapper);
-        if (movieTiles.length > 0) {
-            await movieTiles[0].click();
-        } else {
-            throw new Error('No movie tiles found to click');
+        try {
+            // Get the focused element
+            const focusedElement = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
+            const isDisplayed = await focusedElement.isDisplayed();
+            
+            if (!isDisplayed) {
+                throw new Error('No focused movie tile found');
+            }
+            
+            // Press enter to click on the focused element
+            await this.pressEnterButton();
+            
+            // Wait for transition
+            await this.driver.pause(2000);
+            
+        } catch (error) {
+            console.error('Error clicking movie tile:', error);
+            throw error;
         }
     }
 } 

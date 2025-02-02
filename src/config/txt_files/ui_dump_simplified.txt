@@ -37,125 +37,224 @@ Element: undefined
                 resource-id: com.philo.philo:id/fragment_host
                 bounds: [0,0][1920,1080]
 
-                Element: com.philo.composeuicomponents.focus.FocusTrappingComposeView
+                Element: android.widget.FrameLayout
+                  resource-id: com.philo.philo:id/fragment_grid_or_list
                   bounds: [0,0][1920,1080]
 
-                  Element: android.view.View
+                  Element: android.widget.FrameLayout
+                    resource-id: com.philo.philo:id/grid_or_row_fragment_host
                     bounds: [0,0][1920,1080]
 
-                    Element: android.view.View
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/fragment_tile_group_grid
                       bounds: [0,0][1920,1080]
 
-                      Element: android.widget.ImageView
+                      Element: androidx.recyclerview.widget.RecyclerView
+                        resource-id: com.philo.philo:id/tile_groups
                         bounds: [0,0][1920,1080]
-                        content-desc: The Walking Dead
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo:id/grid_row
+                          bounds: [0,0][1920,1080]
+
+                          Element: android.view.ViewGroup
+                            resource-id: com.philo.philo:id/header_whitespace
+                            bounds: [0,0][1920,216]
+
+                            Element: android.widget.ImageView
+                              resource-id: com.philo.philo:id/icon_tile_group
+                              bounds: [742,148][798,204]
+
+                            Element: android.widget.TextView
+                              resource-id: com.philo.philo:id/label_tile_group
+                              bounds: [824,151][1116,202]
+                              text: Top Free Movies
+
+                          Element: android.widget.GridView
+                            resource-id: com.philo.philo:id/list_view_broadcasts
+                            bounds: [180,232][1740,1080]
+                            content-desc: Top Free Movies
+
+                            Element: android.view.ViewGroup
+                              bounds: [196,232][678,500]
+                              content-desc: Kill Bill: Vol. 1
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo:id/background_image
+                                bounds: [196,232][678,500]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo:id/pressed_overlay
+                                bounds: [196,232][678,500]
+
+                            Element: android.view.ViewGroup
+                              bounds: [716,232][1198,500]
+                              content-desc: A Walk to Remember
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo:id/background_image
+                                bounds: [716,232][1198,500]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo:id/pressed_overlay
+                                bounds: [716,232][1198,500]
+
+                            Element: android.view.ViewGroup
+                              bounds: [1236,232][1718,500]
+                              content-desc: Kill Bill: Vol. 2
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo:id/background_image
+                                bounds: [1236,232][1718,500]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo:id/pressed_overlay
+                                bounds: [1236,232][1718,500]
+
+                            Element: android.view.ViewGroup
+                              bounds: [196,532][678,800]
+                              content-desc: Inglourious Basterds
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo:id/background_image
+                                bounds: [196,532][678,800]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo:id/pressed_overlay
+                                bounds: [196,532][678,800]
+
+                            Element: android.view.ViewGroup
+                              bounds: [716,532][1198,800]
+                              content-desc: Hairspray
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo:id/background_image
+                                bounds: [716,532][1198,800]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo:id/pressed_overlay
+                                bounds: [716,532][1198,800]
+
+                            Element: android.view.ViewGroup
+                              bounds: [1236,532][1718,800]
+                              content-desc: Twilight
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo:id/background_image
+                                bounds: [1236,532][1718,800]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo:id/pressed_overlay
+                                bounds: [1236,532][1718,800]
+
+                            Element: android.view.ViewGroup
+                              bounds: [196,832][678,1080]
+                              content-desc: The Twilight Saga: New Moon
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo:id/background_image
+                                bounds: [196,832][678,1080]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo:id/pressed_overlay
+                                bounds: [196,832][678,1080]
+
+                            Element: android.view.ViewGroup
+                              bounds: [716,832][1198,1080]
+                              content-desc: Reservoir Dogs
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo:id/background_image
+                                bounds: [716,832][1198,1080]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo:id/pressed_overlay
+                                bounds: [716,832][1198,1080]
+
+                            Element: android.view.ViewGroup
+                              bounds: [1236,832][1718,1080]
+                              content-desc: Georgia Rule
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo:id/background_image
+                                bounds: [1236,832][1718,1080]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo:id/pressed_overlay
+                                bounds: [1236,832][1718,1080]
+
+              Element: android.widget.FrameLayout
+                resource-id: com.philo.philo:id/fragment_tabs
+                bounds: [0,0][1920,244]
+
+                Element: android.view.ViewGroup
+                  resource-id: com.philo.philo:id/widget_tabs
+                  bounds: [0,0][1920,244]
+
+                  Element: android.widget.LinearLayout
+                    resource-id: com.philo.philo:id/tab_bar
+                    bounds: [482,50][1439,146]
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/tab_home
+                      bounds: [490,58][661,138]
 
                       Element: android.widget.TextView
-                        bounds: [174,90][1174,126]
-                        text: Upgrade to Philo Core to unlock The Walking Dead Channel
+                        resource-id: com.philo.philo:id/label_tab
+                        bounds: [526,74][625,122]
+                        text: Home
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/tab_guide
+                      bounds: [661,58][832,138]
 
                       Element: android.widget.TextView
-                        bounds: [116,332][613,408]
-                        text: The Walking Dead
+                        resource-id: com.philo.philo:id/label_tab
+                        bounds: [697,74][796,122]
+                        text: Guide
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/tab_top
+                      bounds: [832,58][964,138]
 
                       Element: android.widget.TextView
-                        bounds: [116,432][386,474]
-                        text: S4 | E5 Internment
+                        resource-id: com.philo.philo:id/label_tab
+                        bounds: [868,74][928,122]
+                        text: Top
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/tab_saved
+                      bounds: [964,58][1138,138]
+
+                      Element: android.widget.TextView
+                        resource-id: com.philo.philo:id/label_tab
+                        bounds: [1000,74][1102,122]
+                        text: Saved
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/tab_search
+                      bounds: [1138,58][1327,138]
+
+                      Element: android.widget.TextView
+                        resource-id: com.philo.philo:id/label_tab
+                        bounds: [1174,74][1291,122]
+                        text: Search
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo:id/tab_profile
+                      bounds: [1327,62][1399,134]
 
                       Element: android.widget.ImageView
-                        bounds: [116,494][140,518]
+                        resource-id: com.philo.philo:id/icon_tab
+                        bounds: [1327,62][1399,134]
+                        content-desc: Settings Page
 
-                      Element: android.widget.TextView
-                        bounds: [148,490][198,522]
-                        text: 45m
+                  Element: android.widget.LinearLayout
+                    resource-id: com.philo.philo:id/tab_bar_time
+                    bounds: [1588,50][1772,146]
 
-                      Element: android.widget.ImageView
-                        bounds: [214,494][238,518]
-
-                      Element: android.widget.TextView
-                        bounds: [246,490][296,522]
-                        text: 3pm
-
-                      Element: android.widget.TextView
-                        bounds: [312,490][387,522]
-                        text: TV-MA
-
-                      Element: android.widget.TextView
-                        bounds: [116,538][1012,634]
-                        text: Assorted enemies pressure Rick and the group; the survivors and the prison may reach a breaking point.
-
-                      Element: android.view.View
-                        bounds: [116,662][620,734]
-
-                        Element: android.view.View
-                          bounds: [116,650][320,746]
-
-                          Element: android.view.View
-                            bounds: [132,680][168,716]
-                            content-desc: Play
-
-                          Element: android.widget.TextView
-                            bounds: [184,680][296,716]
-                            text: Upgrade
-
-                          Element: android.widget.Button
-                            bounds: [116,662][320,734]
-
-                        Element: android.view.View
-                          bounds: [536,650][632,746]
-
-                          Element: android.view.View
-                            bounds: [560,674][608,722]
-                            content-desc: View The Walking Dead Channel page
-
-                          Element: android.widget.Button
-                            bounds: [548,662][620,734]
-
-                        Element: android.view.View
-                          bounds: [336,650][532,746]
-
-                          Element: android.view.View
-                            bounds: [352,674][400,722]
-                            content-desc: Unsave The Walking Dead
-
-                          Element: android.widget.TextView
-                            bounds: [416,680][508,716]
-                            text: Unsave
-
-                          Element: android.widget.Button
-                            bounds: [336,662][532,734]
-
-                      Element: android.widget.ImageView
-                        bounds: [156,798][192,834]
-                        content-desc: info icon
-
-                      Element: android.widget.TextView
-                        bounds: [216,798][651,834]
-                        text: DVR not available for this content.
-
-                      Element: android.view.View
-                        bounds: [116,954][1844,1014]
-
-                        Element: android.view.View
-                          bounds: [116,954][946,1012]
-
-                          Element: android.widget.TextView
-                            bounds: [116,935][247,1031]
-                            text: Episodes
-
-                          Element: android.widget.TextView
-                            bounds: [299,935][437,1031]
-                            text: Schedule
-
-                          Element: android.widget.TextView
-                            bounds: [489,935][601,1031]
-                            text: Related
-
-                          Element: android.widget.TextView
-                            bounds: [650,935][746,1031]
-                            text: Extras
-
-                          Element: android.widget.TextView
-                            bounds: [794,935][894,1031]
-                            text: Details
+                    Element: android.widget.TextView
+                      resource-id: com.philo.philo:id/tab_bar_time_label
+                      bounds: [1620,50][1740,146]
+                      text: 1:56p
 

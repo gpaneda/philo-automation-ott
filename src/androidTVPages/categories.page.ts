@@ -1,5 +1,6 @@
 import { Browser } from 'webdriverio';
 import { HomeScreenPage } from './homescreen.page';
+import { randomInt } from 'crypto';
 
 // Define the type for category-specific selectors
 interface CategorySelectors {
@@ -212,18 +213,74 @@ export class CategoriesPage extends HomeScreenPage {
      * Navigate to and verify Top Free Movies section
      * Requires 1 down press from Top Free Movies
      */
-    public async navigateToTopFreeMovies(): Promise<void> {
-        await this.navigateToCategory(this.selectors.topFreeMovies, 1);
-        await this.verifyTopFreeMoviesHeaderDisplayed();
-    }
-
-    /**
-     * Navigate to and verify Top Free Shows section
-     * Requires 1 down press from Top Free Movies
-     */
     public async navigateToTopFreeShows(): Promise<void> {
         await this.navigateToCategory(this.selectors.topFreeShows, 2);
         await this.verifyTopFreeShowsHeaderDisplayed();
+        await this.selectRandomTitle();
+    }
+
+    /**
+     * Navigate to and verify Top Free Movies section
+     * Requires 1 down press from Top Free Movies
+     */
+    public async navigateToTopFreeMovies(): Promise<void> {
+
+        await this.navigateToCategory(this.selectors.topFreeMovies, 1);
+        await this.verifyTopFreeMoviesHeaderDisplayed();
+        await this.selectRandomTitle();
+
+    }
+
+    public async selectRandomTitle(): Promise<void> {
+        try {
+            // Get all visible titles using the class's defined selector
+            const titleElements = await this.driver.$$(this.selectors.movieTileWrapper);
+
+            if (titleElements.length === 0) {
+                throw new Error('No titles found on the page');
+            }
+
+            // Choose a random index
+            const randomIndex = randomInt(0, titleElements.length - 1);
+            console.log(`Selected random index ${randomIndex} out of ${titleElements.length} titles`);
+
+            // Get the current focused element's index
+            const focusedElement = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
+            const focusedId = await focusedElement.elementId;
+            const currentIndex = await Promise.all(titleElements.map(async el => await el.elementId))
+                .then(ids => ids.findIndex((id: string) => id === focusedId));
+
+            if (currentIndex === -1) {
+                throw new Error('Could not determine current focused element');
+            }
+
+            console.log(`Current focused index: ${currentIndex}, navigating to index: ${randomIndex}`);
+
+            // Calculate how many moves right/left we need
+            const moveCount = randomIndex - currentIndex;
+            const moveRight = moveCount > 0;
+
+            // Perform the moves
+            for (let i = 0; i < Math.abs(moveCount); i++) {
+                if (moveRight) {
+                    await this.pressRightButton();
+                } else {
+                    await this.pressLeftButton();
+                }
+                // Wait for navigation animation
+                await this.driver.pause(1000);
+            }
+
+            // Verify we landed on the right title
+            const selectedTitle = await titleElements[randomIndex].getAttribute('content-desc');
+            console.log(`Successfully navigated to title: ${selectedTitle}`);
+
+            // Add a final pause to ensure focus is stable
+            await this.driver.pause(1000);
+        } catch (error) {
+            console.error('Error in selectRandomTitle:', error);
+            throw error;
+        }
     }
 
     /**
