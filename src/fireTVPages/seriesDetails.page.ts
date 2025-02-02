@@ -1,5 +1,8 @@
 import { Browser } from 'webdriverio';
 import { BasePage } from './base.page';
+const KEYCODE_BACK = 4;
+const KEYCODE_DPAD_RIGHT = 22;
+const KEYCODE_ENTER = 66;
 
 export class SeriesDetailsPage extends BasePage {
     public selectors = {
@@ -20,6 +23,7 @@ export class SeriesDetailsPage extends BasePage {
         playButton: 'android=new UiSelector().className("android.view.View").description("Play")',
         resumeButton: 'android=new UiSelector().className("android.widget.TextView").text("Resume")',
         saveButton: 'android=new UiSelector().className("android.view.View").descriptionContains("Save")',
+        upgradeButton: 'android=new UiSelector().className("android.widget.TextView").text("Upgrade")',
         
         // Navigation Tabs
         episodesTab: 'android=className("android.widget.TextView").text("Episodes")',
@@ -164,5 +168,91 @@ export class SeriesDetailsPage extends BasePage {
         } catch (error) {
             return false;
         }
+    }
+
+    /**
+     * Checks for the visibility of the play or resume button after navigating back.
+     * If neither button is visible, it navigates back, presses the right key,
+     * and checks again until one of the buttons is found or a maximum number of attempts is reached.
+     * Once a button is found, it proceeds with playback.
+     * 
+     * @throws { Error } If there are issues during navigation or visibility checks.
+     */
+    public async checkAndNavigateForPlayback(maxAttempts: number = 5): Promise<void> {
+        try {
+            let attempts = 0;
+            let isPlaying = false;
+
+            while (!isPlaying && attempts < maxAttempts) {
+                // Check for visibility of play, resume, and upgrade buttons
+                const playButton = await this.driver.$(this.selectors.playButton);
+                const resumeButton = await this.driver.$(this.selectors.resumeButton);
+                const upgradeButton = await this.driver.$(this.selectors.upgradeButton); // Assuming you have defined this selector
+
+                const playVisible = await playButton.isDisplayed().catch(() => false);
+                const resumeVisible = await resumeButton.isDisplayed().catch(() => false);
+                const upgradeVisible = await upgradeButton.isDisplayed().catch(() => false);
+
+                console.log(`Attempt ${attempts + 1}: Play visible: ${playVisible}, Resume visible: ${resumeVisible}, Upgrade visible: ${upgradeVisible}`);
+
+                // If both Play and Upgrade buttons are visible, navigate back
+                if (playVisible && upgradeVisible) {
+                    console.log('Both Play and Upgrade buttons are visible. Navigating back...');
+                    await this.driver.pressKeyCode(KEYCODE_BACK);
+                    await this.driver.pause(2000); // Wait for the previous screen to load
+
+                    // Optionally, navigate to another title
+                    await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT);
+                    await this.driver.pressKeyCode(KEYCODE_ENTER); // Enter the details page
+                    await this.driver.pause(2000); // Wait for the details page to load
+                } else if (playVisible && !upgradeVisible) {
+                    console.log('Play button is visible and Upgrade button is not. Attempting to play...');
+                    await this.pressEnter(); // Click the play button
+                    isPlaying = true; // Playback initiated
+                } else if (resumeVisible) {
+                    console.log('Resume button is visible. Attempting to resume...');
+                    await this.pressEnter(); // Click the resume button
+                    isPlaying = true; // Playback resumed
+                } else {
+                    console.log('Neither Play nor Upgrade button is visible. Navigating back...');
+                    await this.driver.pressKeyCode(KEYCODE_BACK);
+                    await this.driver.pause(2000); // Wait for the previous screen to load
+
+                    // Optionally, navigate to another title
+                    await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT);
+                    await this.driver.pressKeyCode(KEYCODE_ENTER); // Enter the details page
+                    await this.driver.pause(2000); // Wait for the details page to load
+                }
+
+                attempts++; // Increment the attempt counter
+            }
+
+            if (!isPlaying) {
+                console.error('Failed to find play or resume button after maximum attempts.');
+                throw new Error('Playback initiation failed after multiple attempts.');
+            }
+        } catch (error: any) {
+            console.error('Error in checkAndNavigateForPlayback:', error);
+            throw new Error(`Failed to check and navigate for playback: ${error.message}`);
+        }
+    }
+
+    public async isElementVisible(selector: string): Promise<boolean> {
+        try {
+            const element = await this.driver.$(selector);
+            return await element.isDisplayed();
+        } catch (error) {
+            console.error(`Error checking visibility of element ${selector}:`, error);
+            return false;
+        }
+    }
+
+    async clickElement(selector: string): Promise<void> {
+        const element = await this.driver.$(selector);
+        await element.click();
+    }
+
+    async pressEnter(): Promise<void> {
+        await this.driver.pressKeyCode(KEYCODE_ENTER);
     }
 } 

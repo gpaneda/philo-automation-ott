@@ -123,7 +123,7 @@ export class CategoriesPage extends HomeScreenPage {
      * @param categorySelector The selector for the category text
      * @param numberOfDownPresses Number of times to press down to reach the row
      */
-    private async navigateToCategory(categorySelector: string, numberOfDownPresses: number): Promise<void> {
+    public async navigateToCategory(categorySelector: string, numberOfDownPresses: number): Promise<void> {
         try {
             // Press down the specified number of times to reach the row
             for (let i = 0; i < numberOfDownPresses; i++) {
@@ -231,6 +231,25 @@ export class CategoriesPage extends HomeScreenPage {
             console.error('Error verifying Reality Roundup header:', error);
             throw error;
         }
+    }
+
+    /**
+     * Navigate to and verify Top Free Shows section
+     * Requires 1 down press from Top Free Movies
+     */ 
+    public async navigateToTopFreeShows(): Promise<void> {
+        await this.navigateToCategory(this.selectors.topFreeShows, 2);
+        await this.verifyTopFreeShowsHeaderDisplayed();
+    }
+
+    /**
+     * Navigate to and verify Top Free Movies section
+     * Requires 1 down press from Top Free Movies
+     */
+    public async navigateToTopFreeMovies(): Promise<void> {
+    
+        await this.navigateToCategory(this.selectors.topFreeMovies, 1);
+        await this.verifyTopFreeMoviesHeaderDisplayed();
     }
 
     /**
@@ -581,7 +600,7 @@ export class CategoriesPage extends HomeScreenPage {
     async clickOnSeries(): Promise<void> {
         try {
             // Add initial pause to ensure the page has loaded
-            await this.driver.pause(2000);
+            await this.driver.pause(5000);
 
             // Instead of clicking, press enter since the element is already focused
             await this.pressEnterButton();

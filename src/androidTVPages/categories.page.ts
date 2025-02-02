@@ -123,7 +123,7 @@ export class CategoriesPage extends HomeScreenPage {
      * @param categorySelector The selector for the category text
      * @param numberOfDownPresses Number of times to press down to reach the row
      */
-    private async navigateToCategory(categorySelector: string, numberOfDownPresses: number): Promise<void> {
+    public async navigateToCategory(categorySelector: string, numberOfDownPresses: number): Promise<void> {
         try {
             // Press down the specified number of times to reach the row
             for (let i = 0; i < numberOfDownPresses; i++) {
@@ -206,6 +206,24 @@ export class CategoriesPage extends HomeScreenPage {
     async navigateToTrendingLive(): Promise<void> {
         await this.navigateToCategory(this.selectors.trendingLive, 3);
         await this.verifyTrendingLiveHeaderDisplayed();
+    }
+
+    /**
+     * Navigate to and verify Top Free Movies section
+     * Requires 1 down press from Top Free Movies
+     */
+    public async navigateToTopFreeMovies(): Promise<void> {
+        await this.navigateToCategory(this.selectors.topFreeMovies, 1);
+        await this.verifyTopFreeMoviesHeaderDisplayed();
+    }
+
+    /**
+     * Navigate to and verify Top Free Shows section
+     * Requires 1 down press from Top Free Movies
+     */
+    public async navigateToTopFreeShows(): Promise<void> {
+        await this.navigateToCategory(this.selectors.topFreeShows, 1);
+        await this.verifyTopFreeShowsHeaderDisplayed();
     }
 
     /**
@@ -693,6 +711,7 @@ export class CategoriesPage extends HomeScreenPage {
      * Click on the first movie tile in the grid
      */
     async clickMovieTile(): Promise<void> {
+        await this.driver.pause(50000);
         const movieTiles = await this.driver.$$(this.selectors.movieTileWrapper);
         if (movieTiles.length > 0) {
             await movieTiles[0].click();
