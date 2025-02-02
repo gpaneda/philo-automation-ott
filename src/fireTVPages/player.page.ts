@@ -407,27 +407,7 @@ export class PlayerPage extends BasePage {
         }
     }
 
-    public async initiatePlayback(): Promise<boolean> {
-        await this.clickElement(this.selectors.playButton); // Click the play button first
-
-        // Loop until the play or resume button is found
-        while (true) {
-            const playVisible = await this.isElementVisible(this.selectors.playButton);
-            const resumeVisible = await this.isElementVisible(this.selectors.resumeButton);
-
-            if (playVisible) {
-                await this.clickElement(this.selectors.playButton);
-                return true; // Playback initiated
-            } else if (resumeVisible) {
-                await this.clickElement(this.selectors.resumeButton);
-                return true; // Playback initiated
-            } else {
-                // Navigate back and try again
-                await this.clickElement(this.selectors.backButton);
-                await this.clickElement(this.selectors.rightNavigationButton);
-            }
-        }
-    }
+   
 
     public async resumePlayback(): Promise<void> {
         await this.driver.pressKeyCode(KEYCODE_ENTER); // Press enter to resume playback
