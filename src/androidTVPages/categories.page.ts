@@ -173,6 +173,7 @@ export class CategoriesPage extends HomeScreenPage {
     async navigateToRecommended(): Promise<void> {
         await this.navigateToCategory(this.selectors.recommended, 2);
         await this.verifyRecommendedHeaderDisplayed();
+        await this.selectRandomTitle();
     }
 
     /**
@@ -207,6 +208,7 @@ export class CategoriesPage extends HomeScreenPage {
     async navigateToTrendingLive(): Promise<void> {
         await this.navigateToCategory(this.selectors.trendingLive, 3);
         await this.verifyTrendingLiveHeaderDisplayed();
+        await this.selectRandomTitle();
     }
 
     /**
@@ -323,6 +325,7 @@ export class CategoriesPage extends HomeScreenPage {
             await this.driver.pause(2000);
             await this.pressEnterButton();
             await this.verifyRealityRoundupHeaderDisplayed();
+            await this.selectRandomTitle();
         } catch (error) {
             console.error('Error navigating to Reality Roundup:', error);
             throw error;
@@ -415,6 +418,7 @@ export class CategoriesPage extends HomeScreenPage {
             await this.driver.pause(2000);
             await this.pressEnterButton();
             await this.verifyHomeAndTravelHeaderDisplayed();
+            await this.selectRandomTitle();
         } catch (error) {
             console.error('Error navigating to Home & Travel:', error);
             throw error;
