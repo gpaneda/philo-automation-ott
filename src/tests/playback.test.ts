@@ -106,6 +106,33 @@ describe('Playback Tests', () => {
     }
 
     /**
+     * Performs a seek operation and verifies the position change
+     * @param {'forward' | 'rewind'} direction Direction to seek
+     * @returns {Promise<{initial: number, final: number}>} Initial and final positions
+     * @throws {Error} If seek operation fails or position verification fails
+     */
+    async function performSeekOperation(direction: 'forward' | 'rewind') {
+        try {
+            const initialPosition = await getPlaybackPosition();
+            console.log(`Starting seek ${direction}...`);
+            
+            if (direction === 'forward') {
+                await playerPage.seekForward();
+            } else {
+                await playerPage.seekRewind();
+            }
+            
+            await driver.pause(5000);
+            const finalPosition = await getPlaybackPosition();
+            
+            return { initial: initialPosition, final: finalPosition };
+        } catch (error) {
+            console.error(`Failed to perform ${direction} seek:`, error);
+            throw new Error(`Seek ${direction} operation failed: ${error.message}`);
+        }
+    }
+
+    /**
      * Verifies player controls are in the expected state
      * @throws {Error} If player controls are not in expected state
      */
@@ -269,16 +296,16 @@ describe('Playback Tests', () => {
             await checkPlaybackForTopFreeMovies(false);
             await playerPage.togglePlayPause();
             const initialPosition = await playerPage.getCurrentPosition();
-            await playerPage.performSeekOperation('forward');
+            await playerPage.fastForward();
             const finalPosition = await playerPage.getCurrentPosition();
             expect(finalPosition).toBeGreaterThan(initialPosition);
         }, TIMEOUT);
 
         test('TC204 - should verify rewind playback works', async () => {
             await checkPlaybackForTopFreeMovies(false);
-            await playerPage.performSeekOperation('forward');
+            await playerPage.seekForward(); // Seek forward first
             const initialPosition = await playerPage.getCurrentPosition();
-            await playerPage.performSeekOperation('rewind');
+            await playerPage.seekBackward(); // Seek backward
             const finalPosition = await playerPage.getCurrentPosition();
             expect(finalPosition).toBeLessThan(initialPosition);
         }, TIMEOUT);
