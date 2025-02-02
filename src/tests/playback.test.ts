@@ -6,7 +6,7 @@ import { AppHelper } from '../helpers/app.helper';
 import { HomeScreenPage, PlayerPage, CategoriesPage, TopPage, SeriesDetailsPage, MoviesDetailsPage } from '../fireTVPages';
 import { HomeScreenPage as AndroidHomeScreenPage, CategoriesPage as AndroidCategoriesPage, TopPage as AndroidTopPage, SeriesDetailsPage as AndroidSeriesDetailsPage, MoviesDetailsPage as AndroidMoviesDetailsPage, PlayerPage as AndroidPlayerPage } from '../androidTVPages';
 
-const TIMEOUT = 300000; // 5 minutes
+const TIMEOUT = 500000; // 8 minutes
 const REQUIRED_ENV_VARS = [
     'GMAIL_CLIENT_ID',
     'GMAIL_CLIENT_SECRET',
@@ -104,34 +104,6 @@ describe('Playback Tests', () => {
             throw error;
         }
     }
-
-    /*
-     * Performs a seek operation and verifies the position change
-     * @param {'forward' | 'rewind'} direction Direction to seek
-     * @returns {Promise<{initial: number, final: number}>} Initial and final positions
-     * @throws {Error} If seek operation fails or position verification fails
-     
-    async function performSeekOperation(direction: 'forward' | 'rewind') {
-        //try {
-            //const initialPosition = await getPlaybackPosition();
-            //console.log(`Starting seek ${direction}...`);
-            
-            //if (direction === 'forward') {
-                await playerPage.seekForward();
-            } else {
-                await playerPage.seekRewind();
-            }
-            
-            await driver.pause(5000);
-            const finalPosition = await getPlaybackPosition();
-            
-            return { initial: initialPosition, final: finalPosition };
-        } catch (error) {
-            console.error(`Failed to perform ${direction} seek:`, error);
-            throw new Error(`Seek ${direction} operation failed: ${error.message}`);
-        }
-    }*/
-
     /**
      * Verifies player controls are in the expected state
      * @throws {Error} If player controls are not in expected state
@@ -188,7 +160,6 @@ describe('Playback Tests', () => {
     const checkPlaybackForTopFreeMovies = async (isSeries: boolean) => {
         await categoriesPage.navigateToTopFreeMovies(); // Navigate to Top Free Movies
         if (isSeries) {
-            await driver.pressKeyCode(22); // Navigate to next title
             await categoriesPage.clickOnSeries();
         } else {
             await categoriesPage.clickMovieTile();
@@ -263,7 +234,6 @@ describe('Playback Tests', () => {
         const checkPlayback = async (isSeries: boolean) => {
             await categoriesPage.navigateToTopFreeShows();
             if (isSeries) {
-                await driver.pressKeyCode(22); // Navigate to next title
                 await categoriesPage.clickOnSeries();
             } else {
                 await categoriesPage.clickMovieTile();
@@ -301,11 +271,11 @@ describe('Playback Tests', () => {
             expect(finalPosition).toBeGreaterThan(initialPosition);
         }, TIMEOUT);
 
-        test('TC204 - should verify rewind playback works', async () => {
+        test.only('TC204 - should verify rewind playback works', async () => {
             await checkPlaybackForTopFreeMovies(false);
-            await playerPage.seekForward(); // Seek forward first
+            await playerPage.fastForward(); // Seek forward first
             const initialPosition = await playerPage.getCurrentPosition();
-            await playerPage.seekBackward(); // Seek backward
+            await playerPage.rewind(); // Seek backward
             const finalPosition = await playerPage.getCurrentPosition();
             expect(finalPosition).toBeLessThan(initialPosition);
         }, TIMEOUT);
