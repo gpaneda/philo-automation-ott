@@ -1,6 +1,11 @@
 import { Browser, ChainablePromiseElement } from 'webdriverio';
 import { BasePage } from './base.page';
 
+const KEYCODE_ENTER = 66;
+const KEYCODE_DPAD_RIGHT = 22;
+const KEYCODE_DPAD_LEFT = 21;
+const KEYCODE_BACK = 4; // Android back button keycode
+
 export class PlayerPage extends BasePage {
     public selectors = {
         // Player Fragment
@@ -14,6 +19,7 @@ export class PlayerPage extends BasePage {
         playButton: 'android=resourceId("com.philo.philo.google:id/playerControls_playButton")',
         pauseButton: 'android=resourceId("com.philo.philo.google:id/playerControls_pauseButton")',
         rewindButton: 'android=resourceId("com.philo.philo.google:id/playerControls_rewindButton")',
+        resumeButton: 'android=resourceId("com.philo.philo.google:id/playerControls_resumeButton")',
         fastForwardButton: 'android=resourceId("com.philo.philo.google:id/playerControls_fastForwardButton")',
         progressBar: 'android=resourceId("com.philo.philo.google:id/playerControls_progressBar")',
         currentTime: 'android=resourceId("com.philo.philo.google:id/playerControls_currentTime")',
@@ -424,4 +430,82 @@ export class PlayerPage extends BasePage {
     async resumePlayback() {
         await this.driver.pressKeyCode(66); // 66 is the keycode for KEYCODE_ENTER
     }
-} 
+
+    /**
+* Checks for the visibility of the play or resume button after navigating back.
+* If neither button is visible, it navigates back, presses the right key,
+* and checks again until one of the buttons is found or a maximum number of attempts is reached.
+* Once a button is found, it proceeds with playback.
+* 
+* @throws {Error} If there are issues during navigation or visibility checks.
+*/
+    public async checkAndNavigateForPlayback(maxAttempts: number = 5): Promise<void> {
+        try {
+            let attempts = 0;
+            let isPlaying = false;
+
+            while (!isPlaying && attempts < maxAttempts) {
+                // Check for play or resume button visibility
+                const playVisible = await this.isElementVisible(this.selectors.playButton);
+                const resumeVisible = await this.isElementVisible(this.selectors.resumeButton);
+
+                if (playVisible) {
+                    await this.clickElement(this.selectors.playButton);
+                    isPlaying = true; // Playback initiated
+                } else if (resumeVisible) {
+                    await this.clickElement(this.selectors.resumeButton);
+                    isPlaying = true; // Playback resumed
+                } else {
+                    // Neither button is visible, navigate back
+                    await this.driver.pressKeyCode(KEYCODE_BACK);
+                    await this.driver.pause(2000); // Wait for the previous screen to load
+
+                    // Press right key to navigate to the details page again
+                    await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT);
+                    await this.driver.pressKeyCode(KEYCODE_ENTER); // Enter the details page
+                    await this.driver.pause(2000); // Wait for the details page to load
+                }
+
+                attempts++; // Increment the attempt counter
+            }
+
+            if (!isPlaying) {
+                console.error('Failed to find play or resume button after maximum attempts.');
+                throw new Error('Playback initiation failed after multiple attempts.');
+            }
+        } catch (error: any) {
+            console.error('Error in checkAndNavigateForPlayback:', error);
+            throw new Error(`Failed to check and navigate for playback: ${error.message}`);
+        }
+    }
+    async isPlaybackOngoing(): Promise<boolean> {
+        const isPlaying = await this.isElementDisplayed(this.selectors.playerFragment);
+        return isPlaying;
+    }
+
+
+    public async clickElement(selector: string): Promise < void> {
+    try {
+        const element = await this.driver.$(selector);
+        await element.click();
+    } catch(error) {
+        console.error(`Error clicking element ${selector}:`, error);
+        throw new Error(`Failed to click element: ${selector}`);
+    }
+
+    }
+
+    public async isElementVisible(selector: string): Promise < boolean > {
+            try {
+            const element = await this.driver.$(selector);
+            return await element.isDisplayed();
+            } catch(error) {
+            console.error(`Error checking visibility of element ${selector}:`, error);
+            return false;
+        }
+    }
+
+    public async pressEnter(): Promise<void> {
+        await this.driver.pressKeyCode(KEYCODE_ENTER);
+    }
+}

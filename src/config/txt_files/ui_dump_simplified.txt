@@ -10,7 +10,7 @@ Element: undefined
         bounds: [0,0][1920,1080]
 
         Element: android.widget.LinearLayout
-          resource-id: com.philo.philo.google:id/action_bar_root
+          resource-id: com.philo.philo:id/action_bar_root
           bounds: [0,0][1920,1080]
 
           Element: android.widget.FrameLayout
@@ -18,23 +18,23 @@ Element: undefined
             bounds: [0,0][1920,1080]
 
             Element: android.widget.FrameLayout
-              resource-id: com.philo.philo.google:id/activity_host
+              resource-id: com.philo.philo:id/activity_host
               bounds: [0,0][1920,1080]
 
               Element: android.widget.FrameLayout
-                resource-id: com.philo.philo.google:id/player_fragment_host
+                resource-id: com.philo.philo:id/player_fragment_host
                 bounds: [0,0][1920,1080]
 
               Element: android.widget.FrameLayout
-                resource-id: com.philo.philo.google:id/modal_fragment_host
+                resource-id: com.philo.philo:id/modal_fragment_host
                 bounds: [0,0][1920,1080]
 
               Element: android.widget.FrameLayout
-                resource-id: com.philo.philo.google:id/dialog_fragment_host
+                resource-id: com.philo.philo:id/dialog_fragment_host
                 bounds: [0,0][1920,1080]
 
               Element: android.widget.FrameLayout
-                resource-id: com.philo.philo.google:id/fragment_host
+                resource-id: com.philo.philo:id/fragment_host
                 bounds: [0,0][1920,1080]
 
                 Element: com.philo.composeuicomponents.focus.FocusTrappingComposeView
@@ -48,87 +48,114 @@ Element: undefined
 
                       Element: android.widget.ImageView
                         bounds: [0,0][1920,1080]
-                        content-desc: Clerks II
+                        content-desc: The Walking Dead
 
                       Element: android.widget.TextView
-                        bounds: [116,450][339,526]
-                        text: Clerks II
+                        bounds: [174,90][1174,126]
+                        text: Upgrade to Philo Core to unlock The Walking Dead Channel
+
+                      Element: android.widget.TextView
+                        bounds: [116,332][613,408]
+                        text: The Walking Dead
+
+                      Element: android.widget.TextView
+                        bounds: [116,432][386,474]
+                        text: S4 | E5 Internment
 
                       Element: android.widget.ImageView
-                        bounds: [116,554][140,578]
+                        bounds: [116,494][140,518]
 
                       Element: android.widget.TextView
-                        bounds: [148,550][226,582]
-                        text: 1h 56m
+                        bounds: [148,490][198,522]
+                        text: 45m
+
+                      Element: android.widget.ImageView
+                        bounds: [214,494][238,518]
 
                       Element: android.widget.TextView
-                        bounds: [242,550][301,582]
-                        text: 2006
+                        bounds: [246,490][296,522]
+                        text: 3pm
 
                       Element: android.widget.TextView
-                        bounds: [317,550][377,582]
-                        text: TV-14
+                        bounds: [312,490][387,522]
+                        text: TV-MA
 
                       Element: android.widget.TextView
-                        bounds: [116,606][1012,726]
-                        text: Now in their 30s, slackers Dante (Brian O'Halloran) and Randal (Jeff Anderson) find that they must change their lives and expand their horizons beyond pop culture and sex. After a disaster at their convenience store ends their employment there, they find new jobs at Mooby's, a fast-food empire.
+                        bounds: [116,538][1012,634]
+                        text: Assorted enemies pressure Rick and the group; the survivors and the prison may reach a breaking point.
 
                       Element: android.view.View
-                        bounds: [116,762][531,834]
+                        bounds: [116,662][620,734]
 
                         Element: android.view.View
-                          bounds: [277,750][443,846]
+                          bounds: [116,650][320,746]
 
                           Element: android.view.View
-                            bounds: [293,774][341,822]
-                            content-desc: Save Clerks II
-
-                          Element: android.widget.TextView
-                            bounds: [357,780][419,816]
-                            text: Save
-
-                          Element: android.widget.Button
-                            bounds: [277,762][443,834]
-
-                        Element: android.view.View
-                          bounds: [447,750][543,846]
-
-                          Element: android.view.View
-                            bounds: [471,774][519,822]
-                            content-desc: View MovieSphere by Lionsgate page
-
-                          Element: android.widget.Button
-                            bounds: [459,762][531,834]
-
-                        Element: android.view.View
-                          bounds: [116,750][261,846]
-
-                          Element: android.view.View
-                            bounds: [132,780][168,816]
+                            bounds: [132,680][168,716]
                             content-desc: Play
 
                           Element: android.widget.TextView
-                            bounds: [184,780][237,816]
-                            text: Play
+                            bounds: [184,680][296,716]
+                            text: Upgrade
 
                           Element: android.widget.Button
-                            bounds: [116,762][261,834]
+                            bounds: [116,662][320,734]
+
+                        Element: android.view.View
+                          bounds: [536,650][632,746]
+
+                          Element: android.view.View
+                            bounds: [560,674][608,722]
+                            content-desc: View The Walking Dead Channel page
+
+                          Element: android.widget.Button
+                            bounds: [548,662][620,734]
+
+                        Element: android.view.View
+                          bounds: [336,650][532,746]
+
+                          Element: android.view.View
+                            bounds: [352,674][400,722]
+                            content-desc: Unsave The Walking Dead
+
+                          Element: android.widget.TextView
+                            bounds: [416,680][508,716]
+                            text: Unsave
+
+                          Element: android.widget.Button
+                            bounds: [336,662][532,734]
+
+                      Element: android.widget.ImageView
+                        bounds: [156,798][192,834]
+                        content-desc: info icon
+
+                      Element: android.widget.TextView
+                        bounds: [216,798][651,834]
+                        text: DVR not available for this content.
 
                       Element: android.view.View
                         bounds: [116,954][1844,1014]
 
                         Element: android.view.View
-                          bounds: [116,954][704,1012]
+                          bounds: [116,954][946,1012]
 
                           Element: android.widget.TextView
-                            bounds: [116,935][228,1031]
+                            bounds: [116,935][247,1031]
+                            text: Episodes
+
+                          Element: android.widget.TextView
+                            bounds: [299,935][437,1031]
+                            text: Schedule
+
+                          Element: android.widget.TextView
+                            bounds: [489,935][601,1031]
                             text: Related
 
                           Element: android.widget.TextView
-                            bounds: [280,935][500,1031]
-                            text: Watch Options
+                            bounds: [650,935][746,1031]
+                            text: Extras
 
                           Element: android.widget.TextView
-                            bounds: [552,935][652,1031]
+                            bounds: [794,935][894,1031]
                             text: Details
 

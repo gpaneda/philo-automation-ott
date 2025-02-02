@@ -1,7 +1,7 @@
 import { Browser } from 'webdriverio';
 import path from 'path';
 
-// Importing local modules
+// Importing local modules from index files
 import { AppHelper } from '../helpers/app.helper';
 import { HomeScreenPage, PlayerPage, CategoriesPage, TopPage, SeriesDetailsPage, MoviesDetailsPage } from '../fireTVPages';
 import { HomeScreenPage as AndroidHomeScreenPage, CategoriesPage as AndroidCategoriesPage, TopPage as AndroidTopPage, SeriesDetailsPage as AndroidSeriesDetailsPage, MoviesDetailsPage as AndroidMoviesDetailsPage, PlayerPage as AndroidPlayerPage } from '../androidTVPages';
@@ -219,15 +219,15 @@ describe('Playback Tests', () => {
                         categoriesPage = new AndroidCategoriesPage(driver);
                         topPage = new AndroidTopPage(driver);
                         seriesDetails = new AndroidSeriesDetailsPage(driver);
-                        moviesDetails = new AndroidMoviesDetailsPage(driver);
-                        playerPage = new AndroidPlayerPage(driver);  // Add playerPage initialization for Android TV
+                        playerPage = new AndroidPlayerPage(driver);
+                        moviesDetails = new AndroidMoviesDetailsPage(driver, playerPage);
                     } else {
                         homeScreenPage = new HomeScreenPage(driver);
                         playerPage = new PlayerPage(driver);
                         categoriesPage = new CategoriesPage(driver);
                         topPage = new TopPage(driver);
                         seriesDetails = new SeriesDetailsPage(driver);
-                        moviesDetails = new MoviesDetailsPage(driver);
+                        moviesDetails = new MoviesDetailsPage(driver, playerPage);
                     }
                     
                     // Wait for app to be fully loaded
@@ -271,15 +271,15 @@ describe('Playback Tests', () => {
                 categoriesPage = new AndroidCategoriesPage(driver);
                 topPage = new AndroidTopPage(driver);
                 seriesDetails = new AndroidSeriesDetailsPage(driver);
-                moviesDetails = new AndroidMoviesDetailsPage(driver);
                 playerPage = new AndroidPlayerPage(driver);
+                moviesDetails = new AndroidMoviesDetailsPage(driver, playerPage);
             } else {
                 homeScreenPage = new HomeScreenPage(driver);
                 playerPage = new PlayerPage(driver);
                 categoriesPage = new CategoriesPage(driver);
                 topPage = new TopPage(driver);
                 seriesDetails = new SeriesDetailsPage(driver);
-                moviesDetails = new MoviesDetailsPage(driver);
+                moviesDetails = new MoviesDetailsPage(driver, playerPage);
             }
         } catch (error) {
             console.error('Error in beforeEach:', error);
@@ -295,15 +295,15 @@ describe('Playback Tests', () => {
                     categoriesPage = new AndroidCategoriesPage(driver);
                     topPage = new AndroidTopPage(driver);
                     seriesDetails = new AndroidSeriesDetailsPage(driver);
-                    moviesDetails = new AndroidMoviesDetailsPage(driver);
                     playerPage = new AndroidPlayerPage(driver);
+                    moviesDetails = new AndroidMoviesDetailsPage(driver, playerPage);
                 } else {
                     homeScreenPage = new HomeScreenPage(driver);
                     playerPage = new PlayerPage(driver);
                     categoriesPage = new CategoriesPage(driver);
                     topPage = new TopPage(driver);
                     seriesDetails = new SeriesDetailsPage(driver);
-                    moviesDetails = new MoviesDetailsPage(driver);
+                    moviesDetails = new MoviesDetailsPage(driver, playerPage);
                 }
             } catch (recoveryError) {
                 console.error('Failed to recover session:', recoveryError);
@@ -312,10 +312,10 @@ describe('Playback Tests', () => {
         }
     }, 120000);
 
-    afterAll(async () => {
+    // afterAll(async () => {
         // Clean up the driver session
-        await driver.deleteSession();
-    });
+        //await driver.deleteSession();
+    //});
 
     describe('Basic Playback Controls', () => {
         test('TC201 - should verify content playback', async () => {
@@ -441,5 +441,54 @@ describe('Playback Tests', () => {
                 throw error;
             }
         }, 300000);
+
+        test('TC206 - Check if movie playback works', async () => {
+            try {
+                //Step 1: Navigate to Top Free Movies
+                await categoriesPage.navigateToTopFreeMovies();
+                //Step 2: Click on a movie tile
+                await categoriesPage.clickMovieTile();
+                //Step 3: Check and navigate for playback
+                await moviesDetails.checkAndNavigateForPlayback();
+                //Ste 4: wait for ads to finish
+                await playerPage.waitForAdsToFinish();
+                //Step 5: if ads does not exist, check if playback is ongoing
+                const isPlaying = await playerPage.isPlaybackOngoing();
+                if (!isPlaying) {
+                    console.log('No ads, checking playback status...');
+                    await playerPage.waitForPlayback();
+                }
+               
+            } catch (error) {
+                console.error('Error in TC206:', error);
+                throw error;
+            }
+        }, 300000);
+
+        test('TC207 - Check if series playback works', async () => {
+            try {
+                //Step 1: Navigate to Top Free Shows
+                await categoriesPage.navigateToTopFreeShows();
+                //Press right key to the next title
+                await driver.pressKeyCode(22);
+                //Step 2: Click on a series tile
+                await categoriesPage.clickOnSeries();
+                //Step 3: Check and navigate for playback
+                await seriesDetails.checkAndNavigateForPlayback();
+                //Ste 4: wait for ads to finish
+                await playerPage.waitForAdsToFinish();
+                //Step 5: if ads does not exist, check if playback is ongoing
+                const isPlaying = await playerPage.isPlaybackOngoing();
+                if (!isPlaying) {
+                    console.log('No ads, checking playback status...');
+                    await playerPage.waitForPlayback();
+                }
+
+            } catch (error) {
+                console.error('Error in TC206:', error);
+                throw error;
+            }
+        }, 300000);
+
     });
 }); 
