@@ -271,7 +271,7 @@ describe('Playback Tests', () => {
             expect(finalPosition).toBeGreaterThan(initialPosition);
         }, TIMEOUT);
 
-        test.only('TC204 - should verify rewind playback works', async () => {
+        test('TC204 - should verify rewind playback works', async () => {
             await checkPlaybackForTopFreeMovies(false);
             await playerPage.fastForward(); // Seek forward first
             const initialPosition = await playerPage.getCurrentPosition();
@@ -280,16 +280,18 @@ describe('Playback Tests', () => {
             expect(finalPosition).toBeLessThan(initialPosition);
         }, TIMEOUT);
 
-        test('TC205 - should verify ads trigger with multiple right keypresses', async () => {
-            await checkPlayback(false);
+        test.only('TC205 - should verify ads trigger with multiple right keypresses', async () => {
+            await checkPlaybackForTopFreeMovies(false);
             let adFound = await playerPage.isAdPlaying();
             if (!adFound) {
                 for (let i = 0; i < 10; i++) {
-                    await playerPage.pressRightButton();
-                    await playerPage.wait(1);
-                    await playerPage.resumePlayback();
+                    await playerPage.fastForward();
                     adFound = await playerPage.isAdPlaying();
                     if (adFound) break;
+                    await playerPage.wait(1);
+                    if (!adFound) {
+                        await playerPage.resumePlayback();
+                    }
                 }
             }
             expect(adFound).toBe(true);

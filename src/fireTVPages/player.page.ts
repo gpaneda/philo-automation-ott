@@ -12,7 +12,7 @@ export class PlayerPage extends BasePage {
         playerFragment: 'android=resourceId("com.philo.philo:id/player_fragment_host")',
         modalFragment: 'android=resourceId("com.philo.philo:id/modal_fragment_host")',
         dialogFragment: 'android=resourceId("com.philo.philo:id/dialog_fragment_host")',
-        adOverlay: 'android=text("Advertisements")',
+        
         
         // Player Controls
         playPauseButton: 'android=resourceId("com.philo.philo:id/playerControls_playPauseButton")',
@@ -53,11 +53,38 @@ export class PlayerPage extends BasePage {
         startOverButton: 'android=content-desc("Start over")',
         jumpToLiveButton: 'android=content-desc("Jump to live")',
 
-        // Ad Elements
-        adOverlayRoot: 'android=resourceId("com.philo.philo:id/ad_overlay_root")',
-        adText: 'android=resourceId("com.philo.philo:id/advertisements")',
-        adRemainingTime: 'android=resourceId("com.philo.philo:id/remaining_time")',
-        adFfwdDisabled: 'android=resourceId("com.philo.philo:id/icon_ffwd_disable")',
+        // Ad Elements - Updated to be more general and not tied to player hierarchy
+        adOverlayRoot: [
+            'android=new UiSelector().resourceId("com.philo.philo:id/ad_overlay_root")',
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/ad_overlay_root")',
+            'android=new UiSelector().resourceIdMatches(".*ad_overlay.*")'
+        ],
+        adText: [
+            'android=new UiSelector().resourceId("com.philo.philo:id/advertisements")',
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/advertisements")',
+            'android=new UiSelector().resourceIdMatches(".*advertisements.*")'
+        ],
+        adRemainingTime: [
+            'android=new UiSelector().resourceId("com.philo.philo:id/remaining_time")',
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/remaining_time")',
+            'android=new UiSelector().resourceIdMatches(".*remaining_time.*")'
+        ],
+        adFfwdDisabled: [
+            'android=new UiSelector().resourceId("com.philo.philo:id/icon_ffwd_disable")',
+            'android=new UiSelector().resourceId("com.philo.philo.google:id/icon_ffwd_disable")',
+            'android=new UiSelector().resourceIdMatches(".*ffwd_disable.*")'
+        ],
+        // Simple text-based selectors for ads
+        adOverlay: [
+            'android=new UiSelector().className("android.widget.TextView").text("Advertisements")',
+            'android=new UiSelector().className("android.widget.TextView").text("Advertisement")',
+            'android=new UiSelector().className("android.widget.TextView").text("Ad")',
+            'android=new UiSelector().text("Advertisements")',
+            'android=new UiSelector().textContains("Advertisement")',
+            // General ad detection
+            'android=new UiSelector().descriptionContains("advertisement")',
+            'android=new UiSelector().descriptionContains("ad break")'
+        ],
 
         resumeButton: 'android=resourceId("com.philo.philo:id/playerControls_resumeButton")',
         backButton: 'android=resourceId("com.philo.philo:id/back_button")',
@@ -81,13 +108,32 @@ export class PlayerPage extends BasePage {
         await this.driver.pause(2000);
     }
 
-    async fastForward(times = 10, delay = 200): Promise<void> {
-        await this.showPlayerControls(); // Ensure controls are visible
-        for (let i = 0; i < times; i++) {
-            await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT); // Press right key
-            await this.driver.pause(delay); // Wait for the specified delay
+    async fastForward(times = 10, delay = 200): Promise<boolean> {
+        try {
+            console.log('Starting fastForward operation...');
+            await this.showPlayerControls(); // Ensure controls are visible
+            for (let i = 0; i < times; i++) {
+                console.log(`Fast forward press ${i + 1}/${times}`);
+                await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT); // Press right key
+                await this.driver.pause(delay); // Wait for the specified delay
+            }
+            
+            // Check for ads BEFORE pressing Enter
+            await this.driver.pause(1000); // Give a moment for any ad to appear
+            const adPlaying = await this.isAdPlaying();
+            if (adPlaying) {
+                console.log('Ad detected during fast forward, before Enter press');
+                return true; // Return true if ad found
+            }
+
+            console.log('No ad detected, confirming fast forward with Enter key');
+            await this.driver.pressKeyCode(KEYCODE_ENTER); // Only confirm if no ad
+            console.log('Fast forward operation completed');
+            return false; // Return false if no ad found
+        } catch (error) {
+            console.error('Error during fast forward:', error);
+            throw error;
         }
-        await this.driver.pressKeyCode(KEYCODE_ENTER); // Confirm the action
     }
 
     async rewind(times = 10, delay = 200): Promise<void> {
@@ -119,27 +165,37 @@ export class PlayerPage extends BasePage {
             const isAdActive = await this.isAdPlaying();
             
             if (isAdActive) {
-                console.log('Ad overlay found, waiting for ad to finish...');
+                console.log('Ad detected, waiting for ad to finish...');
+                let checkCount = 0;
                 
-                // Wait until both the ad overlay and text are gone
+                // Wait until no ad indicators are present
                 await this.driver.waitUntil(async () => {
-                    const adOverlayGone = !(await this.isElementDisplayed(this.selectors.adOverlayRoot));
-                    const adTextGone = !(await this.isElementDisplayed(this.selectors.adText));
-                    return adOverlayGone && adTextGone;
+                    try {
+                        checkCount++;
+                        console.log(`Checking if ad is still playing (attempt ${checkCount})...`);
+                        const isStillPlaying = await this.isAdPlaying();
+                        if (!isStillPlaying) {
+                            console.log('Ad appears to have finished');
+                            return true;
+                        }
+                        return false;
+                    } catch (error) {
+                        console.log('Error while checking ad status:', error);
+                        return false;
+                    }
                 }, { 
-                    timeout: 300000, 
+                    timeout: 300000, // 5 minutes
                     timeoutMsg: 'Advertisement did not finish after 5 minutes',
                     interval: 5000
                 });
                 
-                console.log('Ad finished playing');
-                // Give a moment for player to stabilize after ad
-                await this.driver.pause(2000);
+                console.log('Ad finished playing, waiting for player to stabilize');
+                await this.driver.pause(3000); // Give more time for player to stabilize after ad
             } else {
-                console.log('No ad overlay found, continuing playback');
+                console.log('No ad detected, continuing playback');
             }
         } catch (error) {
-            console.log('Error checking for ads:', error);
+            console.log('Error in waitForAdsToFinish:', error);
             // Don't throw the error as ads might not be present
         }
     }
@@ -367,12 +423,62 @@ export class PlayerPage extends BasePage {
      */
     async isAdPlaying(): Promise<boolean> {
         try {
-            // Check for any ad overlay elements
-            const hasAdOverlay = await this.isElementDisplayed(this.selectors.adOverlayRoot) ||
-                               await this.isElementDisplayed(this.selectors.adText);
-            return hasAdOverlay;
+            console.log('Starting ad detection check...');
+            
+            // Try a direct UI dump first to see what's actually on screen
+            try {
+                const pageSource = await this.driver.getPageSource();
+                console.log('Current page source:', pageSource);
+            } catch (error) {
+                console.log('Could not get page source:', error);
+            }
+
+            // First try simple text search
+            try {
+                console.log('Trying direct text search for Advertisements...');
+                const simpleAdSelector = 'android=new UiSelector().text("Advertisements")';
+                const adElement = await this.driver.$(simpleAdSelector);
+                if (await adElement.isDisplayed()) {
+                    console.log('[SUCCESS] Found Advertisements text directly');
+                    return true;
+                }
+            } catch (error) {
+                console.log('Direct text search failed:', error);
+            }
+
+            // Try finding any TextView containing ad-related text
+            try {
+                console.log('Trying to find any TextView with ad text...');
+                const textViewSelector = 'android=new UiSelector().className("android.widget.TextView").textContains("Advertisement")';
+                const textView = await this.driver.$(textViewSelector);
+                if (await textView.isDisplayed()) {
+                    console.log('[SUCCESS] Found TextView with ad text');
+                    return true;
+                }
+            } catch (error) {
+                console.log('TextView search failed:', error);
+            }
+
+            // Check all other selectors
+            for (const selectorArray of [this.selectors.adOverlay, this.selectors.adOverlayRoot, this.selectors.adText]) {
+                for (const selector of selectorArray) {
+                    try {
+                        console.log(`Checking selector: ${selector}`);
+                        const element = await this.driver.$(selector);
+                        if (await element.isDisplayed()) {
+                            console.log(`[SUCCESS] Ad detected via: ${selector}`);
+                            return true;
+                        }
+                    } catch (error) {
+                        continue;
+                    }
+                }
+            }
+
+            console.log('No ad indicators found');
+            return false;
         } catch (error) {
-            console.log('Error checking for ads:', error);
+            console.log('Error in ad check:', error);
             return false;
         }
     }
@@ -385,7 +491,12 @@ export class PlayerPage extends BasePage {
         await this.driver.pause(seconds * 1000);
     }
 
-   
+    async resumePlayback() {
+        console.log('Attempting to resume playback...');
+        await this.driver.pressKeyCode(66); // 66 is the keycode for KEYCODE_ENTER
+        console.log('Resume playback command sent');
+    }
+
 
     public async clickElement(selector: string): Promise<void> {
         try {
@@ -409,9 +520,7 @@ export class PlayerPage extends BasePage {
 
    
 
-    public async resumePlayback(): Promise<void> {
-        await this.driver.pressKeyCode(KEYCODE_ENTER); // Press enter to resume playback
-    }
+   
 
     /**
  * Checks for the visibility of the play or resume button after navigating back.

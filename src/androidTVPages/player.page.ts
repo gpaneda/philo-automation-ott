@@ -12,7 +12,11 @@ export class PlayerPage extends BasePage {
         playerFragment: 'android=resourceId("com.philo.philo.google:id/player_fragment_host")',
         modalFragment: 'android=resourceId("com.philo.philo.google:id/modal_fragment_host")',
         dialogFragment: 'android=resourceId("com.philo.philo.google:id/dialog_fragment_host")',
-        adOverlay: 'android=text("Advertisements")',
+        adOverlay: [
+            'android=text("Advertisements")',
+            'android=text("Advertisement")',
+            'android=text("Ad")'
+        ],
 
         // Player Controls
         playPauseButton: 'android=resourceId("com.philo.philo.google:id/playerControls_playPauseButton")',
@@ -55,10 +59,26 @@ export class PlayerPage extends BasePage {
         jumpToLiveButton: 'android=content-desc("Jump to live")',
 
         // Ad Elements
-        adOverlayRoot: 'android=resourceId("com.philo.philo.google:id/ad_overlay_root")',
-        adText: 'android=resourceId("com.philo.philo.google:id/advertisements")',
-        adRemainingTime: 'android=resourceId("com.philo.philo.google:id/remaining_time")',
-        adFfwdDisabled: 'android=resourceId("com.philo.philo.google:id/icon_ffwd_disable")',
+        adOverlayRoot: [
+            'android=resourceId("com.philo.philo.google:id/ad_overlay_root")',
+            'android=resourceId("com.philo.philo:id/ad_overlay_root")',
+            'android=resourceId("*/*ad_overlay_root")'
+        ],
+        adText: [
+            'android=resourceId("com.philo.philo.google:id/advertisements")',
+            'android=resourceId("com.philo.philo:id/advertisements")',
+            'android=resourceId("*/*advertisements")'
+        ],
+        adRemainingTime: [
+            'android=resourceId("com.philo.philo.google:id/remaining_time")',
+            'android=resourceId("com.philo.philo:id/remaining_time")',
+            'android=resourceId("*/*remaining_time")'
+        ],
+        adFfwdDisabled: [
+            'android=resourceId("com.philo.philo.google:id/icon_ffwd_disable")',
+            'android=resourceId("com.philo.philo:id/icon_ffwd_disable")',
+            'android=resourceId("*/*icon_ffwd_disable")'
+        ],
     };
 
     constructor(driver: Browser<'async'>) {
@@ -138,32 +158,41 @@ export class PlayerPage extends BasePage {
 
     async waitForAdsToFinish(): Promise<void> {
         try {
-            // Check for any ad overlay elements
-            const hasAdOverlay = await this.isElementDisplayed(this.selectors.adOverlayRoot) ||
-                await this.isElementDisplayed(this.selectors.adText);
-
-            if (hasAdOverlay) {
-                console.log('Ad overlay found, waiting for ad to finish...');
-
-                // Wait until both the ad overlay and text are gone
+            await this.driver.pause(2000); // Short pause to let UI stabilize
+            const isAdActive = await this.isAdPlaying();
+            
+            if (isAdActive) {
+                console.log('Ad detected, waiting for ad to finish...');
+                let checkCount = 0;
+                
+                // Wait until no ad indicators are present
                 await this.driver.waitUntil(async () => {
-                    const adOverlayGone = !(await this.isElementDisplayed(this.selectors.adOverlayRoot));
-                    const adTextGone = !(await this.isElementDisplayed(this.selectors.adText));
-                    return adOverlayGone && adTextGone;
-                }, {
-                    timeout: 240000,
-                    timeoutMsg: 'Advertisement did not finish after 4 minutes',
-                    interval: 2000
+                    try {
+                        checkCount++;
+                        console.log(`Checking if ad is still playing (attempt ${checkCount})...`);
+                        const isStillPlaying = await this.isAdPlaying();
+                        if (!isStillPlaying) {
+                            console.log('Ad appears to have finished');
+                            return true;
+                        }
+                        return false;
+                    } catch (error) {
+                        console.log('Error while checking ad status:', error);
+                        return false;
+                    }
+                }, { 
+                    timeout: 300000, // 5 minutes
+                    timeoutMsg: 'Advertisement did not finish after 5 minutes',
+                    interval: 5000
                 });
-
-                console.log('Ad finished playing');
-                // Give a moment for player to stabilize after ad
-                await this.driver.pause(2000);
+                
+                console.log('Ad finished playing, waiting for player to stabilize');
+                await this.driver.pause(3000); // Give more time for player to stabilize after ad
             } else {
-                console.log('No ad overlay found');
+                console.log('No ad detected, continuing playback');
             }
         } catch (error) {
-            console.log('Error checking for ads:', error);
+            console.log('Error in waitForAdsToFinish:', error);
             // Don't throw the error as ads might not be present
         }
     }
@@ -391,30 +420,32 @@ export class PlayerPage extends BasePage {
      */
     async isAdPlaying(): Promise<boolean> {
         try {
-            // Check for ad text element
-            const adTextPresent = await this.isElementDisplayed(this.selectors.adText);
-            if (adTextPresent) {
-                console.log('Ad detected via ad text element');
-                return true;
+            // Check all ad-related selectors from the class's selectors object
+            for (const selector of [
+                ...this.selectors.adOverlayRoot,
+                ...this.selectors.adText,
+                ...this.selectors.adRemainingTime,
+                ...this.selectors.adFfwdDisabled,
+                ...this.selectors.adOverlay
+            ]) {
+                try {
+                    const isDisplayed = await this.isElementDisplayed(selector);
+                    if (isDisplayed) {
+                        console.log(`Ad detected via selector: ${selector}`);
+                        return true;
+                    }
+                } catch (error) {
+                    // Log the specific error for debugging
+                    console.log(`Error checking selector ${selector}:`, error);
+                    continue;
+                }
             }
 
-            // Check for ad overlay
-            const adOverlayPresent = await this.isElementDisplayed(this.selectors.adOverlay);
-            if (adOverlayPresent) {
-                console.log('Ad detected via ad overlay element');
-                return true;
-            }
-
-            // Check for ad remaining time element
-            const adRemainingPresent = await this.isElementDisplayed(this.selectors.adRemainingTime);
-            if (adRemainingPresent) {
-                console.log('Ad detected via remaining time element');
-                return true;
-            }
-
+            // If no ad indicators are found
+            console.log('No ad indicators found');
             return false;
         } catch (error) {
-            console.log('Error checking for ad:', error);
+            console.log('Error in ad check:', error);
             return false;
         }
     }
