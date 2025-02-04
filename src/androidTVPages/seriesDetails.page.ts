@@ -237,12 +237,12 @@ export class SeriesDetailsPage extends BasePage {
                 if (!playVisible || !playEpisodeVisible && upgradeVisible) {
                     console.log('Both Play and Upgrade buttons are visible. Navigating back...');
                     await this.driver.pressKeyCode(KEYCODE_BACK);
-                    await this.driver.pause(10000); // Wait for the previous screen to load
+                    await this.driver.pause(5000); // Wait for the previous screen to load
 
                     // Navigate to another title
                     await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT);
                     await this.driver.pressKeyCode(KEYCODE_ENTER); // Enter the details page
-                    await this.driver.pause(10000); // Wait for the details page to load
+                    await this.driver.pause(5000); // Wait for the details page to load
                 } else if (playVisible || playEpisodeVisible) {
                     console.log('Play button is visible and Upgrade button is not. Attempting to play...');
                     await this.pressEnter();
@@ -258,18 +258,18 @@ export class SeriesDetailsPage extends BasePage {
                 } else {
                     console.log('Neither Play nor Resume button is visible. Navigating back...');
                     await this.driver.pressKeyCode(KEYCODE_BACK);
-                    await this.driver.pause(10000); // Wait for the previous screen to load
+                    await this.driver.pause(5000); // Wait for the previous screen to load
 
                     // Navigate to another title
                     await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT);
                     await this.driver.pressKeyCode(KEYCODE_ENTER); // Enter the details page
-                    await this.driver.pause(10000); // Wait for the details page to load
+                    await this.driver.pause(5000); // Wait for the details page to load
                 }
 
                 attempts++; // Increment the attempt counter
             }
 
-            await this.driver.pause(10000);
+            await this.driver.pause(5000);
 
             if (!isPlaying) {
                 console.error('Failed to find play or resume button after maximum attempts.');
