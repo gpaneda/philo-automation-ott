@@ -224,11 +224,11 @@ describe('Playback Tests', () => {
         }
     }, TIMEOUT);
 
-    //afterAll(async () => {
+    afterAll(async () => {
         // Clean up the driver session
-        //await driver.deleteSession();
-        //await AppHelper.clearAppData();
-    //});
+        await driver.deleteSession();
+        await AppHelper.clearAppData();
+    });
 
     describe('Basic Playback Controls', () => {
         const checkPlayback = async (isSeries: boolean) => {
@@ -252,12 +252,12 @@ describe('Playback Tests', () => {
             await checkPlaybackForTopFreeMovies(false);
         }, TIMEOUT);
 
-        test.only('TC201 - Check if series playback works', async () => {
+        test('TC201 - Check if series playback works', async () => {
             await checkPlayback(true);
         }, TIMEOUT);
 
-        test('TC202 - Check if series playback and pause works', async () => {
-            await checkPlayback(true);
+        test('TC202 - Check if movie playback and pause works', async () => {
+            await checkPlaybackForTopFreeMovies(false);
             await playerPage.pressEnter(); // Pause playback
             const isPaused = await playerPage.waitForSeekbarVisible();
             expect(isPaused).toBe(true);
