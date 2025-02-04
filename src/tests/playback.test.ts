@@ -235,6 +235,7 @@ describe('Playback Tests', () => {
             await categoriesPage.navigateToTopFreeShows();
             if (isSeries) {
                 await categoriesPage.clickOnSeries();
+                await seriesDetails.checkAndNavigateForPlayback();
             } else {
                 await categoriesPage.clickMovieTile();
             }

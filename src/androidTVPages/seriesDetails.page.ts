@@ -20,16 +20,18 @@ export class SeriesDetailsPage extends BasePage {
         channelName: 'android=resourceId("com.philo.philo.google:id/label_channel").className("android.widget.TextView")',
 
         // Action Buttons
-        playButton: 'android=new UiSelector().className("android.view.View").description("Play")',
-        playButtonAlt: 'android=new UiSelector().className("android.widget.Button").descriptionContains("Play")',
-        playButtonView: 'android=new UiSelector().className("android.view.View").descriptionContains("Play")',
-        
-        resumeButton: 'android=new UiSelector().className("android.widget.TextView").text("Resume")',
-        resumeButtonAlt: 'android=new UiSelector().className("android.widget.Button").textContains("Resume")',
-        resumeButtonExact: 'android=new UiSelector().className("android.widget.TextView").text("Resume S2, E1")',
-        
-        saveButton: 'android=new UiSelector().className("android.view.View").descriptionContains("Save")',
+        playButton: 'android=new UiSelector().text("Play")',
+        playButtonByDesc: 'android=new UiSelector().description("Play")',
+        playButtonByText: 'android=new UiSelector().text("Play")',
+        saveButton: 'android=new UiSelector().text("Save")',
+        relatedButton: 'android=new UiSelector().text("Related")',
+        watchOptionsButton: 'android=new UiSelector().text("Watch Options")',
+        detailsButton: 'android=new UiSelector().text("Details")',
+        resumeButton: 'android=new UiSelector().text("Resume")',
+        dismissButton: 'android=new UiSelector().text("Back")',
         upgradeButton: 'android=new UiSelector().className("android.widget.TextView").text("Upgrade")',
+        playEpisodeText: 'android=new UiSelector().className("android.widget.TextView").textMatches("S\\d+, E\\d+")',
+        resumeEpisodeText: 'android=new UiSelector().className("android.widget.TextView").textMatches("S\\d+, E\\d+")',
 
         // Navigation Tabs
         episodesTab: 'android=className("android.widget.TextView").text("Episodes")',
@@ -47,12 +49,6 @@ export class SeriesDetailsPage extends BasePage {
         detailsContainer: 'android=resourceId("com.philo.philo.google:id/big_tile_item_details_container").className("android.view.ViewGroup")',
         otherInfoContainer: 'android=resourceId("com.philo.philo.google:id/other_information_container").className("android.view.ViewGroup")',
         buttonsContainer: 'android=resourceId("com.philo.philo.google:id/big_tile_buttons_container").className("android.view.ViewGroup")',
-
-        // Navigation
-        dismissButton: 'android=resourceId("com.philo.philo.google:id/big_tile_dismiss_text")',
-
-        // New selectors
-        playButtonContainer: 'android=new UiSelector().className("android.widget.Button").bounds(116,762,389,834)',
     };
 
     constructor(driver: Browser<'async'>) {
@@ -78,7 +74,7 @@ export class SeriesDetailsPage extends BasePage {
             console.log('Attempting to click play/resume...');
             
             // Try all resume button variations
-            for (const selector of [this.selectors.resumeButton, this.selectors.resumeButtonAlt, this.selectors.resumeButtonExact]) {
+            for (const selector of [this.selectors.resumeButton, this.selectors.resumeEpisodeText]) {
                 try {
                     console.log(`Trying resume selector: ${selector}`);
                     const element = await this.driver.$(selector);
@@ -94,7 +90,7 @@ export class SeriesDetailsPage extends BasePage {
             }
 
             // Try all play button variations
-            for (const selector of [this.selectors.playButton, this.selectors.playButtonAlt, this.selectors.playButtonView]) {
+            for (const selector of [this.selectors.playButton, this.selectors.playButtonByDesc, this.selectors.playButtonByText, this.selectors.playEpisodeText]) {
                 try {
                     console.log(`Trying play selector: ${selector}`);
                     const element = await this.driver.$(selector);
@@ -107,20 +103,6 @@ export class SeriesDetailsPage extends BasePage {
                 } catch (error: unknown) {
                     console.log(`Play selector failed: ${selector}`);
                 }
-            }
-
-            // Try the container button as last resort
-            try {
-                console.log('Trying play button container');
-                const container = await this.driver.$(this.selectors.playButtonContainer);
-                if (await container.isDisplayed()) {
-                    console.log('Found and clicking play button container');
-                    await this.driver.pause(5000);
-                    await container.click();
-                    return;
-                }
-            } catch (error: unknown) {
-                console.log('Container button failed');
             }
 
             // If nothing worked, try Enter key
@@ -240,40 +222,48 @@ export class SeriesDetailsPage extends BasePage {
                 const playButton = await this.driver.$(this.selectors.playButton);
                 const resumeButton = await this.driver.$(this.selectors.resumeButton);
                 const upgradeButton = await this.driver.$(this.selectors.upgradeButton);
+                const playEpisodeText = await this.driver.$(this.selectors.playEpisodeText);
+                const resumeEpisodeText = await this.driver.$(this.selectors.resumeEpisodeText);
 
                 const playVisible = await playButton.isDisplayed().catch(() => false);
                 const resumeVisible = await resumeButton.isDisplayed().catch(() => false);
                 const upgradeVisible = await upgradeButton.isDisplayed().catch(() => false);
+                const playEpisodeVisible = await playEpisodeText.isDisplayed().catch(() => false);
+                const resumeEpisodeVisible = await resumeEpisodeText.isDisplayed().catch(() => false);
 
-                console.log(`Attempt ${attempts + 1}: Play visible: ${playVisible}, Resume visible: ${resumeVisible}, Upgrade visible: ${upgradeVisible}`);
+                console.log(`Attempt ${attempts + 1}: Play visible: ${playVisible}, Resume visible: ${resumeVisible}, Upgrade visible: ${upgradeVisible}, Play Episode visible: ${playEpisodeVisible}, Resume Episode visible: ${resumeEpisodeVisible}`);
 
                 // If both Play and Upgrade buttons are visible, navigate back
-                if (playVisible && upgradeVisible) {
+                if (!playVisible || !playEpisodeVisible && upgradeVisible) {
                     console.log('Both Play and Upgrade buttons are visible. Navigating back...');
                     await this.driver.pressKeyCode(KEYCODE_BACK);
-                    await this.driver.pause(2000); // Wait for the previous screen to load
+                    await this.driver.pause(10000); // Wait for the previous screen to load
 
                     // Navigate to another title
                     await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT);
                     await this.driver.pressKeyCode(KEYCODE_ENTER); // Enter the details page
-                    await this.driver.pause(2000); // Wait for the details page to load
-                } else if (playVisible && !upgradeVisible) {
+                    await this.driver.pause(10000); // Wait for the details page to load
+                } else if (playVisible || playEpisodeVisible) {
                     console.log('Play button is visible and Upgrade button is not. Attempting to play...');
-                    await this.clickPlay(); // Use the enhanced clickPlay method
+                    await this.pressEnter();
+                    await this.driver.pause(10000);
+                    await this.pressEnter(); // Use the enhanced clickPlay method
                     isPlaying = true; // Playback initiated
-                } else if (resumeVisible) {
+                } else if (resumeVisible || resumeEpisodeVisible) {
                     console.log('Resume button is visible. Attempting to resume...');
-                    await this.clickPlay(); // Use the enhanced clickPlay method
+                    await this.pressEnter();
+                    await this.driver.pause(10000);
+                    await this.pressEnter(); // Use the enhanced clickPlay method
                     isPlaying = true; // Playback resumed
                 } else {
                     console.log('Neither Play nor Resume button is visible. Navigating back...');
                     await this.driver.pressKeyCode(KEYCODE_BACK);
-                    await this.driver.pause(2000); // Wait for the previous screen to load
+                    await this.driver.pause(10000); // Wait for the previous screen to load
 
                     // Navigate to another title
                     await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT);
                     await this.driver.pressKeyCode(KEYCODE_ENTER); // Enter the details page
-                    await this.driver.pause(2000); // Wait for the details page to load
+                    await this.driver.pause(10000); // Wait for the details page to load
                 }
 
                 attempts++; // Increment the attempt counter
