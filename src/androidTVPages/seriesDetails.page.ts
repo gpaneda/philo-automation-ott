@@ -21,7 +21,13 @@ export class SeriesDetailsPage extends BasePage {
 
         // Action Buttons
         playButton: 'android=new UiSelector().className("android.view.View").description("Play")',
+        playButtonAlt: 'android=new UiSelector().className("android.widget.Button").descriptionContains("Play")',
+        playButtonView: 'android=new UiSelector().className("android.view.View").descriptionContains("Play")',
+        
         resumeButton: 'android=new UiSelector().className("android.widget.TextView").text("Resume")',
+        resumeButtonAlt: 'android=new UiSelector().className("android.widget.Button").textContains("Resume")',
+        resumeButtonExact: 'android=new UiSelector().className("android.widget.TextView").text("Resume S2, E1")',
+        
         saveButton: 'android=new UiSelector().className("android.view.View").descriptionContains("Save")',
         upgradeButton: 'android=new UiSelector().className("android.widget.TextView").text("Upgrade")',
 
@@ -43,7 +49,10 @@ export class SeriesDetailsPage extends BasePage {
         buttonsContainer: 'android=resourceId("com.philo.philo.google:id/big_tile_buttons_container").className("android.view.ViewGroup")',
 
         // Navigation
-        dismissButton: 'android=resourceId("com.philo.philo.google:id/big_tile_dismiss_text")'
+        dismissButton: 'android=resourceId("com.philo.philo.google:id/big_tile_dismiss_text")',
+
+        // New selectors
+        playButtonContainer: 'android=new UiSelector().className("android.widget.Button").bounds(116,762,389,834)',
     };
 
     constructor(driver: Browser<'async'>) {
@@ -66,24 +75,65 @@ export class SeriesDetailsPage extends BasePage {
 
     async clickPlay(): Promise<void> {
         try {
-            // First try to click Resume if it exists
-            const resumeExists = await this.isElementDisplayed(this.selectors.resumeButton);
-            if (resumeExists) {
-                await this.click(this.selectors.resumeButton);
-                return;
-            }
-        } catch (error) {
-            // If Resume doesn't exist, try Play button
-            try {
-                await this.click(this.selectors.playButton);
-            } catch (playError) {
-                // If neither button works, try to find a playable series
-                const found = await this.findPlayableSeries();
-                if (!found) {
-                    throw new Error('Could not find a playable series');
+            console.log('Attempting to click play/resume...');
+            
+            // Try all resume button variations
+            for (const selector of [this.selectors.resumeButton, this.selectors.resumeButtonAlt, this.selectors.resumeButtonExact]) {
+                try {
+                    console.log(`Trying resume selector: ${selector}`);
+                    const element = await this.driver.$(selector);
+                    if (await element.isDisplayed()) {
+                        console.log('Found and clicking Resume button');
+                        await this.driver.pause(5000);
+                        await element.click();
+                        return;
+                    }
+                } catch (error: unknown) {
+                    console.log(`Resume selector failed: ${selector}`);
                 }
-                // Try clicking play again on the new series
-                await this.clickPlay();
+            }
+
+            // Try all play button variations
+            for (const selector of [this.selectors.playButton, this.selectors.playButtonAlt, this.selectors.playButtonView]) {
+                try {
+                    console.log(`Trying play selector: ${selector}`);
+                    const element = await this.driver.$(selector);
+                    if (await element.isDisplayed()) {
+                        console.log('Found and clicking Play button');
+                        await this.driver.pause(5000);
+                        await element.click();
+                        return;
+                    }
+                } catch (error: unknown) {
+                    console.log(`Play selector failed: ${selector}`);
+                }
+            }
+
+            // Try the container button as last resort
+            try {
+                console.log('Trying play button container');
+                const container = await this.driver.$(this.selectors.playButtonContainer);
+                if (await container.isDisplayed()) {
+                    console.log('Found and clicking play button container');
+                    await this.driver.pause(5000);
+                    await container.click();
+                    return;
+                }
+            } catch (error: unknown) {
+                console.log('Container button failed');
+            }
+
+            // If nothing worked, try Enter key
+            console.log('No clickable button found, trying Enter key');
+            await this.pressEnter();
+            await this.driver.pause(5000);
+        } catch (error: unknown) {
+            console.error('Error in clickPlay:', error);
+            // Try one last time with Enter key
+            try {
+                await this.pressEnter();
+            } catch (enterError: unknown) {
+                throw new Error(`Failed to click play: ${error instanceof Error ? error.message : 'Unknown error'}`);
             }
         }
     }
@@ -153,10 +203,10 @@ export class SeriesDetailsPage extends BasePage {
     }
     /**
      * Clicks on the series poster
-     */
+     
     async clickOnSeries(): Promise<void> {
         await this.click(this.selectors.seriesPoster);
-    }
+    } */
 
     /**
      * Checks if the Extras tab is present
@@ -170,23 +220,26 @@ export class SeriesDetailsPage extends BasePage {
         }
     }
     /**
-     * Checks for the visibility of the play or resume button after navigating back.
-     * If neither button is visible, it navigates back, presses the right key,
-     * and checks again until one of the buttons is found or a maximum number of attempts is reached.
-     * Once a button is found, it proceeds with playback.
-     * 
-     * @throws { Error } If there are issues during navigation or visibility checks.
-     */
+      * Checks for the visibility of the play or resume button after navigating back.
+      * If neither button is visible, it navigates back, presses the right key,
+      * and checks again until one of the buttons is found or a maximum number of attempts is reached.
+      * Once a button is found, it proceeds with playback.
+      * 
+      * @throws { Error } If there are issues during navigation or visibility checks.
+      */
     public async checkAndNavigateForPlayback(maxAttempts = 5): Promise<void> {
         try {
             let attempts = 0;
             let isPlaying = false;
 
-            while (!isPlaying && attempts < maxAttempts) {
+            let clickAttempts = 0;
+            const maxClickAttempts = 4;
+
+            while (clickAttempts < maxClickAttempts && !isPlaying && attempts < maxAttempts) {
                 // Check for visibility of play, resume, and upgrade buttons
                 const playButton = await this.driver.$(this.selectors.playButton);
                 const resumeButton = await this.driver.$(this.selectors.resumeButton);
-                const upgradeButton = await this.driver.$(this.selectors.upgradeButton); // Assuming you have defined this selector
+                const upgradeButton = await this.driver.$(this.selectors.upgradeButton);
 
                 const playVisible = await playButton.isDisplayed().catch(() => false);
                 const resumeVisible = await resumeButton.isDisplayed().catch(() => false);
@@ -200,24 +253,24 @@ export class SeriesDetailsPage extends BasePage {
                     await this.driver.pressKeyCode(KEYCODE_BACK);
                     await this.driver.pause(2000); // Wait for the previous screen to load
 
-                    // Optionally, navigate to another title
+                    // Navigate to another title
                     await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT);
                     await this.driver.pressKeyCode(KEYCODE_ENTER); // Enter the details page
                     await this.driver.pause(2000); // Wait for the details page to load
                 } else if (playVisible && !upgradeVisible) {
                     console.log('Play button is visible and Upgrade button is not. Attempting to play...');
-                    await this.pressEnter(); // Click the play button
+                    await this.clickPlay(); // Use the enhanced clickPlay method
                     isPlaying = true; // Playback initiated
                 } else if (resumeVisible) {
                     console.log('Resume button is visible. Attempting to resume...');
-                    await this.pressEnter(); // Click the resume button
+                    await this.clickPlay(); // Use the enhanced clickPlay method
                     isPlaying = true; // Playback resumed
                 } else {
-                    console.log('Neither Play nor Upgrade button is visible. Navigating back...');
+                    console.log('Neither Play nor Resume button is visible. Navigating back...');
                     await this.driver.pressKeyCode(KEYCODE_BACK);
                     await this.driver.pause(2000); // Wait for the previous screen to load
 
-                    // Optionally, navigate to another title
+                    // Navigate to another title
                     await this.driver.pressKeyCode(KEYCODE_DPAD_RIGHT);
                     await this.driver.pressKeyCode(KEYCODE_ENTER); // Enter the details page
                     await this.driver.pause(2000); // Wait for the details page to load
@@ -232,9 +285,9 @@ export class SeriesDetailsPage extends BasePage {
                 console.error('Failed to find play or resume button after maximum attempts.');
                 throw new Error('Playback initiation failed after multiple attempts.');
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Error in checkAndNavigateForPlayback:', error);
-            throw new Error(`Failed to check and navigate for playback: ${error.message}`);
+            throw new Error(`Failed to check and navigate for playback: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
     }
 

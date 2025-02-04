@@ -74,11 +74,11 @@ describe('Playback Tests', () => {
         await new Promise(resolve => setTimeout(resolve, 5000));
     };
 
-    /**
+    /*
      * Gets the current playback position with proper UI setup
      * @returns {Promise<number>} Current playback position as a percentage
      * @throws {Error} If unable to retrieve playback position
-     */
+     
     async function getPlaybackPosition() {
         try {
             await playerPage.showPlayerControls();
@@ -96,7 +96,7 @@ describe('Playback Tests', () => {
      * Validates that the WebDriver session is active
      * @param {string} context Description of where the validation is occurring
      * @throws {Error} If no active session is found
-     */
+     
     async function validateSession(context: string) {
         if (!await driver.sessionId) {
             const error = new Error(`No active session found during ${context}`);
@@ -107,7 +107,7 @@ describe('Playback Tests', () => {
     /**
      * Verifies player controls are in the expected state
      * @throws {Error} If player controls are not in expected state
-     */
+     *
     async function verifyPlayerControls() {
         try {
             console.log('Starting player controls verification...');
@@ -155,7 +155,7 @@ describe('Playback Tests', () => {
             console.error('Failed to verify player controls:', error);
             throw new Error(`Player controls verification failed: ${error.message}`);
         }
-    }
+    }*/
 
     const checkPlaybackForTopFreeMovies = async (isSeries: boolean) => {
         await categoriesPage.navigateToTopFreeMovies(); // Navigate to Top Free Movies
@@ -224,11 +224,11 @@ describe('Playback Tests', () => {
         }
     }, TIMEOUT);
 
-    afterAll(async () => {
+    //afterAll(async () => {
         // Clean up the driver session
-        await driver.deleteSession();
-        await AppHelper.clearAppData();
-    });
+        //await driver.deleteSession();
+        //await AppHelper.clearAppData();
+    //});
 
     describe('Basic Playback Controls', () => {
         const checkPlayback = async (isSeries: boolean) => {
@@ -251,7 +251,7 @@ describe('Playback Tests', () => {
             await checkPlaybackForTopFreeMovies(false);
         }, TIMEOUT);
 
-        test('TC201 - Check if series playback works', async () => {
+        test.only('TC201 - Check if series playback works', async () => {
             await checkPlayback(true);
         }, TIMEOUT);
 
@@ -280,7 +280,7 @@ describe('Playback Tests', () => {
             expect(finalPosition).toBeLessThan(initialPosition);
         }, TIMEOUT);
 
-        test.only('TC205 - should verify ads trigger with multiple right keypresses', async () => {
+        test('TC205 - should verify ads trigger with multiple right keypresses', async () => {
             await checkPlaybackForTopFreeMovies(false);
             let adFound = await playerPage.isAdPlaying();
             if (!adFound) {

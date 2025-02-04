@@ -659,13 +659,22 @@ export class CategoriesPage extends HomeScreenPage {
 
     async clickOnSeries(): Promise<void> {
         try {
-            // Add initial pause to ensure the page has loaded
+            // Get the focused element
+            const focusedElement = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
+            const isDisplayed = await focusedElement.isDisplayed();
+
+            if (!isDisplayed) {
+                throw new Error('No focused movie tile found');
+            }
+
+            // Press enter to click on the focused element
+            await this.pressEnterButton();
+
+            // Wait for transition
             await this.driver.pause(2000);
 
-            // Instead of clicking, press enter since the element is already focused
-            await this.pressEnterButton();
         } catch (error) {
-            console.error('Error clicking on series:', error);
+            console.error('Error clicking movie tile:', error);
             throw error;
         }
     }
