@@ -10,47 +10,126 @@ Element: undefined
         bounds: [0,0][1920,1080]
 
         Element: android.widget.LinearLayout
-          resource-id: com.philo.philo:id/action_bar_root
+          resource-id: com.philo.philo.google:id/action_bar_root
           bounds: [0,0][1920,1080]
 
           Element: android.widget.FrameLayout
             resource-id: android:id/content
             bounds: [0,0][1920,1080]
 
-            Element: android.view.ViewGroup
-              resource-id: com.philo.philo:id/player_activity_root
+            Element: android.widget.FrameLayout
+              resource-id: com.philo.philo.google:id/activity_host
               bounds: [0,0][1920,1080]
 
               Element: android.widget.FrameLayout
-                resource-id: com.philo.philo:id/modal_fragment_host
+                resource-id: com.philo.philo.google:id/player_fragment_host
                 bounds: [0,0][1920,1080]
 
               Element: android.widget.FrameLayout
-                resource-id: com.philo.philo:id/fragment_host_overlay
+                resource-id: com.philo.philo.google:id/modal_fragment_host
                 bounds: [0,0][1920,1080]
-
-                Element: android.view.ViewGroup
-                  resource-id: com.philo.philo:id/ad_overlay_root
-                  bounds: [0,0][1920,256]
-
-                  Element: android.widget.TextView
-                    resource-id: com.philo.philo:id/advertisements
-                    bounds: [80,78][281,114]
-                    text: Advertisements
 
               Element: android.widget.FrameLayout
-                resource-id: com.philo.philo:id/player_fragment_host
+                resource-id: com.philo.philo.google:id/dialog_fragment_host
                 bounds: [0,0][1920,1080]
 
-                Element: android.widget.FrameLayout
-                  resource-id: com.philo.philo:id/playback_root
+              Element: android.widget.FrameLayout
+                resource-id: com.philo.philo.google:id/fragment_host
+                bounds: [0,0][1920,1080]
+
+                Element: com.philo.composeuicomponents.focus.FocusTrappingComposeView
                   bounds: [0,0][1920,1080]
 
-                  Element: android.widget.FrameLayout
-                    resource-id: com.philo.philo:id/video_frame
+                  Element: android.view.View
                     bounds: [0,0][1920,1080]
 
                     Element: android.view.View
-                      resource-id: com.philo.philo:id/video_surface
                       bounds: [0,0][1920,1080]
+
+                      Element: android.widget.ImageView
+                        bounds: [0,0][1920,1080]
+                        content-desc: Grace and Frankie
+
+                      Element: android.widget.TextView
+                        bounds: [116,450][615,526]
+                        text: Grace and Frankie
+
+                      Element: android.widget.TextView
+                        bounds: [116,550][168,582]
+                        text: 2016
+
+                      Element: android.widget.TextView
+                        bounds: [184,550][294,582]
+                        text: 7 Seasons
+
+                      Element: android.widget.TextView
+                        bounds: [310,550][370,582]
+                        text: TV-14
+
+                      Element: android.widget.TextView
+                        bounds: [116,606][1012,726]
+                        text: For as long as they can recall, Grace and Frankie have been rivals. Their one-upmanship comes crashing to a halt, however, when they learn that their husbands have fallen in love with each other and want to get married. As everything around the ladies is coming apart, the only thing they can really rely on is each other. This Netflix original re-teams Jane Fonda and Lily Tomlin ("9 to 5") as Grace and Frankie, respectively, bringing their chemistry to the small screen. It's a casting reunion on a grand scale, as Tomlin is reunited with her co-star from "The West Wing," Martin Sheen, who plays Grace's husband, Robert. And Fonda is back with Sam Waterston, her co-star from "The Newsroom," who plays Frankie's husband, Sol.
+
+                      Element: android.view.View
+                        bounds: [116,762][610,834]
+
+                        Element: android.view.View
+                          bounds: [356,750][522,846]
+
+                          Element: android.view.View
+                            bounds: [372,774][420,822]
+                            content-desc: Save Grace and Frankie
+
+                          Element: android.widget.TextView
+                            bounds: [436,780][498,816]
+                            text: Save
+
+                          Element: android.widget.Button
+                            bounds: [356,762][522,834]
+
+                        Element: android.view.View
+                          bounds: [526,750][622,846]
+
+                          Element: android.view.View
+                            bounds: [550,774][598,822]
+                            content-desc: View HerSphere page
+
+                          Element: android.widget.Button
+                            bounds: [538,762][610,834]
+
+                        Element: android.view.View
+                          bounds: [116,750][340,846]
+
+                          Element: android.view.View
+                            bounds: [132,780][168,816]
+                            content-desc: Play
+
+                          Element: android.widget.TextView
+                            bounds: [184,780][316,816]
+                            text: Play S4, E1
+
+                          Element: android.widget.Button
+                            bounds: [116,762][340,834]
+
+                      Element: android.view.View
+                        bounds: [116,954][1844,1014]
+
+                        Element: android.view.View
+                          bounds: [116,954][805,1012]
+
+                          Element: android.widget.TextView
+                            bounds: [116,935][247,1031]
+                            text: Episodes
+
+                          Element: android.widget.TextView
+                            bounds: [299,935][437,1031]
+                            text: Schedule
+
+                          Element: android.widget.TextView
+                            bounds: [489,935][601,1031]
+                            text: Related
+
+                          Element: android.widget.TextView
+                            bounds: [653,935][753,1031]
+                            text: Details
 

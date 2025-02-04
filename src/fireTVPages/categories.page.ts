@@ -292,7 +292,7 @@ export class CategoriesPage extends HomeScreenPage {
                     await this.pressLeftButton();
                 }
                 // Wait for navigation animation
-                await this.driver.pause(1000);
+                await this.driver.pause(5000);
             }
 
             // Verify we landed on the right title
@@ -300,7 +300,7 @@ export class CategoriesPage extends HomeScreenPage {
             console.log(`Successfully navigated to title: ${selectedTitle}`);
 
             // Add a final pause to ensure focus is stable
-            await this.driver.pause(1000);
+            await this.driver.pause(5000);
         } catch (error) {
             console.error('Error in selectRandomTitle:', error);
             throw error;
