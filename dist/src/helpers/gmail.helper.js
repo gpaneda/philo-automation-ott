@@ -13,13 +13,28 @@ class GmailHelper {
      */
     static getGmailCredentials(email) {
         // Use the appropriate credentials based on the email
-        const isSecondDevice = email === process.env.PHILO_EMAIL_2;
-        return {
-            clientId: isSecondDevice ? process.env.GMAIL_2_CLIENT_ID : process.env.GMAIL_CLIENT_ID,
-            clientSecret: isSecondDevice ? process.env.GMAIL_2_CLIENT_SECRET : process.env.GMAIL_CLIENT_SECRET,
-            refreshToken: isSecondDevice ? process.env.GMAIL_2_REFRESH_TOKEN : process.env.GMAIL_REFRESH_TOKEN,
-            redirectUri: isSecondDevice ? process.env.GMAIL_2_REDIRECT_URI : process.env.GMAIL_REDIRECT_URI
-        };
+        if (email === process.env.PHILO_EMAIL_3) {
+            return {
+                clientId: process.env.GMAIL_3_CLIENT_ID,
+                clientSecret: process.env.GMAIL_3_CLIENT_SECRET,
+                refreshToken: process.env.GMAIL_3_REFRESH_TOKEN,
+                redirectUri: process.env.GMAIL_3_REDIRECT_URI,
+            };
+        } else if (email === process.env.PHILO_EMAIL_2) {
+            return {
+                clientId: process.env.GMAIL_2_CLIENT_ID,
+                clientSecret: process.env.GMAIL_2_CLIENT_SECRET,
+                refreshToken: process.env.GMAIL_2_REFRESH_TOKEN,
+                redirectUri: process.env.GMAIL_2_REDIRECT_URI,
+            };
+        } else {
+            return {
+                clientId: process.env.GMAIL_CLIENT_ID,
+                clientSecret: process.env.GMAIL_CLIENT_SECRET,
+                refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+                redirectUri: process.env.GMAIL_REDIRECT_URI,
+            };
+        }
     }
     /**
      * Initialize Gmail API client and configure axios instance

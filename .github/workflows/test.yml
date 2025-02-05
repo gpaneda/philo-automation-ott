@@ -16,6 +16,8 @@ jobs:
     env:
       FIRE_TV_IP: ${{ secrets.FIRE_TV_IP }}
       FIRE_TV_PORT: ${{ secrets.FIRE_TV_PORT }}
+      FIRE_TV_IP_2: ${{ secrets.FIRE_TV_IP_2 }}
+      FIRE_TV_IP_3: ${{ secrets.FIRE_TV_IP_3 }}
       APPIUM_HOST: ${{ secrets.APPIUM_HOST }}
       APPIUM_PORT: ${{ secrets.APPIUM_PORT }}
       DEFAULT_TIMEOUT: ${{ secrets.DEFAULT_TIMEOUT }}
@@ -28,6 +30,16 @@ jobs:
       GMAIL_REFRESH_TOKEN: ${{ secrets.GMAIL_REFRESH_TOKEN }}
       GMAIL_ACCESS_TOKEN: ${{ secrets.GMAIL_ACCESS_TOKEN }}
       GMAIL_REDIRECT_URI: ${{ secrets.GMAIL_REDIRECT_URI }}
+      GMAIL_2_CLIENT_ID: ${{ secrets.GMAIL_2_CLIENT_ID }}
+      GMAIL_2_CLIENT_SECRET: ${{ secrets.GMAIL_2_CLIENT_SECRET }}
+      GMAIL_2_REFRESH_TOKEN: ${{ secrets.GMAIL_2_REFRESH_TOKEN }}
+      GMAIL_2_ACCESS_TOKEN: ${{ secrets.GMAIL_2_ACCESS_TOKEN }}
+      GMAIL_2_REDIRECT_URI: ${{ secrets.GMAIL_2_REDIRECT_URI }}
+      GMAIL_3_CLIENT_ID: ${{ secrets.GMAIL_3_CLIENT_ID }}
+      GMAIL_3_CLIENT_SECRET: ${{ secrets.GMAIL_3_CLIENT_SECRET }}
+      GMAIL_3_REFRESH_TOKEN: ${{ secrets.GMAIL_3_REFRESH_TOKEN }}
+      GMAIL_3_ACCESS_TOKEN: ${{ secrets.GMAIL_3_ACCESS_TOKEN }}
+      GMAIL_3_REDIRECT_URI: ${{ secrets.GMAIL_3_REDIRECT_URI }}
     
     steps:
     - uses: actions/checkout@v3
