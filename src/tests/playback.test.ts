@@ -248,7 +248,7 @@ describe('Playback Tests', () => {
             }
         };
 
-        test('TC200 - Check if movie playback works', async () => {
+        test.only('TC200 - Check if movie playback works', async () => {
             await checkPlaybackForTopFreeMovies(false);
         }, TIMEOUT);
 

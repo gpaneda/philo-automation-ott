@@ -45,7 +45,8 @@ export class TestExecutionService {
     this.deviceEmailMap = new Map();
   }
 
-  private getEmailForDevice(deviceIp: string): string {
+  public getEmailForDevice(deviceIp: string): string {
+    console.log(`Device IP received: ${deviceIp}`); // Log the input
     switch (deviceIp) {
       case '10.0.0.130':
         return process.env.PHILO_EMAIL_3!;
