@@ -1,6 +1,6 @@
 ### 2025-01-23
 ### General Notes
-- [ ] Resolve the issue with the Passed Tests not being displayed correctly
+
 - [x] Add another device to the pool of devices to test on
 - [x] Create a project in Google Cosole using philotestb@gmail.com
 - [x] Get these values from the Google Console:
@@ -22,6 +22,7 @@
   ANDROID_TV_PORT=5555
 - [ ]logs need to be cleared on dashbboard after each run
 - [ ] Create an excel google sheets for test cases seen in the use_cases.md file
+- [ ] resolve different emails not being used when ip is determined
 
 
 ### Notes for the Dashboard UI
@@ -38,6 +39,7 @@
 - [ ] Not all tests are logged into the test history page
 - [ ] Device should be disabled when it is running a test
 - [ ] Landing page status not updating
+- [ ] Resolve the issue with the Passed Tests not being displayed correctly
 
 ### Notes for Performance Testing
 - [ ] Research on common performance testing tools and frameworks

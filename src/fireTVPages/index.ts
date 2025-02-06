@@ -7,3 +7,8 @@ export { MoviesDetailsPage } from './moviesDetails.page';
 export { GuidePage } from './guide.page';
 export { SettingsPage } from './settings.page';
 export { SearchPage } from './search.page';
+export { LandingPage } from './landing.page';
+export { LoginPage } from './login.page';
+export { ProfilePage } from './profile.page';
+export { BasePage } from './base.page';
+export { EmptySavedPage } from './empty_saved.page';
