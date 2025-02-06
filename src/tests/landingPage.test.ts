@@ -6,7 +6,7 @@ import { HomeScreenPage as AndroidHomeScreenPage } from '../androidTVPages/homes
 import { LandingPage as AndroidLandingPage } from '../androidTVPages/landing.page';
 
 describe('Landing Page Tests', () => {
-    let driver: Browser<'async'>;
+    let driver: Browser;
     let landingPage: LandingPage | AndroidLandingPage;
     let homeScreenPage: HomeScreenPage | AndroidHomeScreenPage;
     let appPackage: string;
