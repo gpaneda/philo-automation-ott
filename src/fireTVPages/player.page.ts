@@ -1,5 +1,6 @@
-import { Browser, ChainablePromiseElement } from 'webdriverio';
+import type { Browser, Element } from 'webdriverio'
 import { BasePage } from './base.page';
+
 
 const KEYCODE_ENTER = 66;
 const KEYCODE_DPAD_RIGHT = 22;
@@ -91,7 +92,7 @@ export class PlayerPage extends BasePage {
         rightNavigationButton: 'android=resourceId("com.philo.philo:id/right_navigation_button")',
     };
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
     }
 
@@ -146,12 +147,12 @@ export class PlayerPage extends BasePage {
     }
 
     async getCurrentTime(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.currentTime) as ChainablePromiseElement<any>;
+        const element = await this.waitForElement(this.selectors.currentTime) as Element;
         return element.getText();
     }
 
     async getDuration(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.duration) as ChainablePromiseElement<any>;
+        const element = await this.waitForElement(this.selectors.duration) as Element;
         return element.getText();
     }
 
@@ -213,7 +214,7 @@ export class PlayerPage extends BasePage {
 
     async startPlayback(): Promise<boolean> {
         try {
-            const playButton = await this.waitForElement(this.selectors.playButton) as ChainablePromiseElement<any>;
+            const playButton = await this.waitForElement(this.selectors.playButton) as Element;
             await playButton.click();
             await this.driver.pause(5000);
             return true;
@@ -349,7 +350,7 @@ export class PlayerPage extends BasePage {
     }
 
     async getEpisodeInfo(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.episodeInfo) as ChainablePromiseElement<any>;
+        const element = await this.waitForElement(this.selectors.episodeInfo) as Element;
         return element.getText();
     }
 

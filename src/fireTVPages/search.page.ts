@@ -1,6 +1,7 @@
 import { Browser } from "webdriverio";
 import { BasePage } from "./base.page";
 import { HomeScreenPage } from "./homescreen.page";
+import type { Element } from "webdriverio";
 
 type ChannelShowResultsElementNames = 
     | 'fearTheWalkingDead'
@@ -20,7 +21,7 @@ export class SearchPage extends BasePage    {
     theWalkingDeadUniverse(theWalkingDeadUniverse: any): boolean | PromiseLike<boolean> {
         throw new Error('Method not implemented.');
     }
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
         // Initialization code
         this.driver = driver;
@@ -270,6 +271,9 @@ export class SearchPage extends BasePage    {
             }
             await this.pause(100); // Small delay between keypresses
         }
+        
+        // Wait for search results to load
+        await this.pause(3000);
     }
 
     async clearInput(): Promise<void> {
@@ -302,8 +306,28 @@ export class SearchPage extends BasePage    {
 
     async getHeaderText(): Promise<string[]> {
         try {
-            const elements = await this.driver.$$(`//*[@resource-id='${this.labelTileGroup}']`);
-            const texts = await Promise.all(elements.map(element => element.getText()));
+            // Find all elements with label_tile_group
+            const selector = `//android.widget.TextView[@resource-id='com.philo.philo:id/label_tile_group']`;
+            console.log('Using selector:', selector);
+            
+            const elements = await this.driver.$$(selector);
+            console.log('Found elements:', elements.length);
+            
+            // Get text from each element
+            const texts = [];
+            for (const element of elements) {
+                try {
+                    const text = await element.getText();
+                    console.log('Found text:', text);
+                    if (text) {
+                        texts.push(text);
+                    }
+                } catch (elementError) {
+                    console.error('Error getting text from element:', elementError);
+                }
+            }
+            
+            console.log('Final texts array:', texts);
             return texts;
         } catch (error) {
             console.error('Failed to get header texts:', error);

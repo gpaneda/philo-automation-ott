@@ -53,7 +53,7 @@ export class GuidePage extends BasePage {
     //Guide Channel Details Page
 
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
     }
 

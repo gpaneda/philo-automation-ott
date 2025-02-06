@@ -1,27 +1,24 @@
 import { AppHelper } from '../helpers/app.helper';
-import { Browser } from 'webdriverio';
-import { HomeScreenPage } from '../fireTVPages/homescreen.page';
-import { GuidePage } from '../fireTVPages/guide.page';
-import { SettingsPage } from '../fireTVPages/settings.page';
-import { TopPage } from '../fireTVPages/top.page';
-import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
+import type { Browser } from 'webdriverio';
+// Importing local modules from index files
+
+import { HomeScreenPage, PlayerPage, CategoriesPage, TopPage, MoviesDetailsPage } from '../fireTVPages';
+import { HomeScreenPage as AndroidHomeScreenPage, CategoriesPage as AndroidCategoriesPage, TopPage as AndroidTopPage, MoviesDetailsPage as AndroidMoviesDetailsPage, PlayerPage as AndroidPlayerPage } from '../androidTVPages';
+
 import path from 'path';
 import fs from 'fs/promises';
-import { CategoriesPage } from '../fireTVPages/categories.page';
-import { HomeScreenPage as AndroidHomeScreenPage } from '../androidTVPages/homescreen.page';
-import { CategoriesPage as AndroidCategoriesPage } from '../androidTVPages/categories.page';
-import { GuidePage as AndroidGuidePage } from '../androidTVPages/guide.page';
-import { SettingsPage as AndroidSettingsPage } from '../androidTVPages/settings.page';
-import { TopPage as AndroidTopPage } from '../androidTVPages/top.page';
-import { MoviesDetailsPage as AndroidMoviesDetailsPage } from '../androidTVPages/moviesDetails.page';
 
-let driver: Browser<'async'>;
+import { GuidePage as AndroidGuidePage, GuidePage } from '../androidTVPages/guide.page';
+import { SettingsPage as AndroidSettingsPage, SettingsPage } from '../androidTVPages/settings.page';
+
+let driver: Browser;
 let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
 let guidePage: GuidePage | AndroidGuidePage;
 let settingsPage: SettingsPage | AndroidSettingsPage;
 let topPage: TopPage | AndroidTopPage;
 let categoriesPage: CategoriesPage | AndroidCategoriesPage;
 let movieDetailsPage: MoviesDetailsPage | AndroidMoviesDetailsPage;
+let playerPage: PlayerPage | AndroidPlayerPage;
 // Define screenshot directories
 const SCREENSHOT_BASE_DIR = path.join(process.cwd(), 'screenshots');
 const REFERENCE_DIR = path.join(SCREENSHOT_BASE_DIR, 'reference');
@@ -30,17 +27,55 @@ const DIFFERENCE_DIR = path.join(SCREENSHOT_BASE_DIR, 'difference');
 
 // Create screenshot directories if they don't exist
 async function ensureDirectories() {
-    for (const dir of [REFERENCE_DIR, CURRENT_DIR, DIFFERENCE_DIR]) {
+    const dirs = [REFERENCE_DIR, CURRENT_DIR, DIFFERENCE_DIR];
+    await Promise.all(dirs.map(async (dir) => {
         try {
             await fs.access(dir);
         } catch {
             await fs.mkdir(dir, { recursive: true });
         }
+    }));
+}
+
+async function initializeDriverAndPages() {
+    driver = await AppHelper.initializeDriver();
+    if (AppHelper.deviceType === 'androidTV') {
+        playerPage = new AndroidPlayerPage(driver);
+        homeScreen = new AndroidHomeScreenPage(driver);
+        categoriesPage = new AndroidCategoriesPage(driver);
+        settingsPage = new AndroidSettingsPage(driver);
+        topPage = new AndroidTopPage(driver);
+        guidePage = new AndroidGuidePage(driver);
+        movieDetailsPage = new AndroidMoviesDetailsPage(driver, playerPage as AndroidPlayerPage);
+    } else {
+        playerPage = new PlayerPage(driver);
+        homeScreen = new HomeScreenPage(driver);
+        categoriesPage = new CategoriesPage(driver);
+        guidePage = new GuidePage(driver);
+        settingsPage = new SettingsPage(driver);
+        topPage = new TopPage(driver);
+        movieDetailsPage = new MoviesDetailsPage(driver, playerPage as PlayerPage);
     }
 }
 
+async function verifyEnvVars(requiredEnvVars: string[]) {
+    for (const envVar of requiredEnvVars) {
+        if (!process.env[envVar]) {
+            throw new Error(`Missing required environment variable: ${envVar}`);
+        }
+    }
+}
+
+async function logError(message: string, error: any) {
+    console.error(message, error);
+    // Optionally, log to a file or monitoring system
+}
+
 beforeAll(async () => {
+    
     try {
+
+
         const requiredEnvVars = [
             'FIRE_TV_IP',
             'FIRE_TV_PORT',
@@ -55,40 +90,15 @@ beforeAll(async () => {
             'ANDROID_TV_PORT'
         ];
 
-        // Verify all required environment variables are set
-        for (const envVar of requiredEnvVars) {
-            if (!process.env[envVar]) {
-                throw new Error(`Missing required environment variable: ${envVar}`);
-            }
-        }
-
-        // Clear app data and login to Philo
+        await verifyEnvVars(requiredEnvVars);
         await AppHelper.clearAppData();
+        
         const loginSuccess = await AppHelper.loginToPhilo();
-        if (!loginSuccess) {
-            throw new Error('Failed to login to Philo');
-        }
+        if (!loginSuccess) throw new Error('Failed to login to Philo');
 
-        // Initialize driver and page objects
-        driver = await AppHelper.initializeDriver();
-        // Set up correct page objects and app package based on device type
-        if (AppHelper.deviceType === 'androidTV') {
-            homeScreen = new AndroidHomeScreenPage(driver);
-            categoriesPage = new AndroidCategoriesPage(driver);
-            settingsPage = new AndroidSettingsPage(driver);
-            topPage = new AndroidTopPage(driver);
-            guidePage = new AndroidGuidePage(driver);
-            movieDetailsPage = new AndroidMoviesDetailsPage(driver);
-        } else {
-            homeScreen = new HomeScreenPage(driver);
-            categoriesPage = new CategoriesPage(driver);
-            guidePage = new GuidePage(driver);
-            settingsPage = new SettingsPage(driver);
-            topPage = new TopPage(driver);
-            movieDetailsPage = new MoviesDetailsPage(driver);
-        }
+        await initializeDriverAndPages();
     } catch (error) {
-        console.error('Error in beforeAll:', error);
+        await logError('Error in beforeAll:', error);
         throw error;
     }
 }, 120000);
@@ -100,7 +110,7 @@ beforeEach(async () => {
         await driver.activateApp(AppHelper.appPackage);
         await driver.pause(5000);
     } catch (error) {
-        console.error('Error in beforeEach:', error);
+        await logError('Error in beforeEach:', error);
         throw error;
     }
 });
@@ -112,6 +122,7 @@ afterAll(async () => {
 });
 
 describe('Navigation Tests', () => {
+    
     test('TC106 - should display the Settings Page', async () => {
         try {
             // Step 1: Navigate to and verify Settings page
@@ -120,7 +131,7 @@ describe('Navigation Tests', () => {
             await homeScreen.navigateToSettings();
             expect(await settingsPage.isSignInInformationDisplayed()).toBe(true);
         } catch (error) {
-            console.error('Settings page was not displayed:', error);
+            await logError('Settings page was not displayed:', error);
             throw error;
         }
     }, 180000);
@@ -135,7 +146,7 @@ describe('Navigation Tests', () => {
             //console.log('Step 1: Navigating to and verifying Guide page');
             //await homeScreen.navigateAndVerifyGuidePage(guidePage, topPage);
         } catch (error) {
-            console.error('Guide page was not displayed:', error);
+            await logError('Guide page was not displayed:', error);
             throw error;
         }
     }, 180000);
@@ -146,7 +157,7 @@ describe('Navigation Tests', () => {
             console.log('Step 1: Navigating to and verifying Top page');
             await homeScreen.verifyTopPage(topPage);
         } catch (error) {
-            console.error('Error in TC108:', error);
+            await logError('Error in TC108:', error);
             throw error;
         }
     }, 180000);
@@ -158,7 +169,7 @@ describe('Navigation Tests', () => {
             await homeScreen.navigateToSaved();
             expect(await homeScreen.isElementDisplayed(homeScreen.selectors.topNavSaved)).toBe(true);
         } catch (error) {
-            console.error('Saved page was not displayed:', error);
+            await logError('Saved page was not displayed:', error);
             throw error;
         }
     }, 180000);
@@ -173,7 +184,7 @@ describe('Navigation Tests', () => {
             await homeScreen.navigateToSearch();
             expect(await homeScreen.isElementDisplayed(homeScreen.selectors.topNavSearch)).toBe(true);
         } catch (error) {
-            console.error('Search page was not displayed:', error);
+            await logError('Search page was not displayed:', error);
             throw error;
         }
     }, 180000);
@@ -185,7 +196,7 @@ describe('Navigation Tests', () => {
             await driver.pause(5000);
             await homeScreen.verifyTopFreeMovies(categoriesPage, topPage);
         } catch (error) {
-            console.error('Top Free Movies category was not displayed:', error);
+            await logError('Top Free Movies category was not displayed:', error);
             throw error;
         }
     }, 180000);
@@ -197,7 +208,7 @@ describe('Navigation Tests', () => {
             await driver.pause(5000);
             await homeScreen.verifyTopFreeShows(categoriesPage, topPage);
         } catch (error) {
-            console.error('Top Free Shows category was not displayed:', error);
+            await logError('Top Free Shows category was not displayed:', error);
             throw error;
         }
     }, 180000);
@@ -208,7 +219,7 @@ describe('Navigation Tests', () => {
             console.log('Step 1: Navigating to and verifying Recommended category');
             await homeScreen.verifyRecommended(categoriesPage, topPage);
         } catch (error) {
-            console.error('Recommended category was not displayed:', error);
+            await logError('Recommended category was not displayed:', error);
             throw error;
         }
     }, 180000);
@@ -219,7 +230,7 @@ describe('Navigation Tests', () => {
             console.log('Step 1: Navigating to and verifying Saved category');
             await homeScreen.verifySavedCategory(categoriesPage, topPage);
         } catch (error) {
-            console.error('Saved category was not displayed:', error);
+            await logError('Saved category was not displayed:', error);
             throw error;
         }
     }, 180000);
@@ -230,7 +241,7 @@ describe('Navigation Tests', () => {
             console.log('Step 1: Navigating to and verifying Trending Live category');
             await homeScreen.verifyTrendingLive(categoriesPage, topPage);
         } catch (error) {
-            console.error('Trending Live category was not displayed:', error);
+            await logError('Trending Live category was not displayed:', error);
             throw error;
         }
     }, 180000);
@@ -252,7 +263,7 @@ describe('Navigation Tests', () => {
                 expect(categoryTitle).toBe(detailsTitle);
             });
         } catch (error) {
-            console.error('Error in TC116:', error);
+            await logError('Error in TC116:', error);
             throw error;
         }
     }, 180000);
@@ -281,7 +292,7 @@ describe('Navigation Tests', () => {
             await fs.appendFile(logFile, summary);
             console.log('Scan complete. Found', foundCategories.length, 'categories');
         } catch (error) {
-            console.error('Error logging categories:', error);
+            await logError('Error logging categories:', error);
             throw error;
         }
     }, 180000);
@@ -359,7 +370,7 @@ describe('Navigation Tests', () => {
             await fs.appendFile(logFile, summary);
             console.log('Scan complete. Found', movieTitles.length, 'movies');
         } catch (error) {
-            console.error('Error scanning movie titles:', error);
+            await logError('Error scanning movie titles:', error);
             throw error;
         }
     }, 180000);

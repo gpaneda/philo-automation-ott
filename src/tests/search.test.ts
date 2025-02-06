@@ -1,24 +1,28 @@
 import { AppHelper } from '../helpers/app.helper';
 import { Browser } from 'webdriverio';
-import { HomeScreenPage } from '../fireTVPages/homescreen.page';
-import { SettingsPage } from '../fireTVPages/settings.page';
-import { TopPage } from '../fireTVPages/top.page';
 import WebSocketHelper from '../utils/WebSocketHelper';
-import { CategoriesPage } from '../fireTVPages/categories.page';
-//import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
-import { SearchPage } from '../fireTVPages/search.page';
+import { HomeScreenPage, CategoriesPage, SearchPage, PlayerPage, MoviesDetailsPage } from '../fireTVPages';
 import { preProcessFile } from 'typescript';
 
-let driver: Browser<'async'>;
-let homeScreen: HomeScreenPage;
-let settingsPage: SettingsPage;
-let topPage: TopPage;
-let categoriesPage: CategoriesPage;
-//let movieDetailsPage: MoviesDetailsPage;
-let searchPage: SearchPage;
+import { HomeScreenPage as AndroidHomeScreenPage, CategoriesPage as AndroidCategoriesPage, SearchPage as AndroidSearchPage, PlayerPage as AndroidPlayerPage, MoviesDetailsPage as AndroidMoviesDetailsPage } from '../androidTVPages';
+import path from 'path';
+import fs from 'fs';    
+
+let driver: Browser;
+let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
+let categoriesPage: CategoriesPage | AndroidCategoriesPage;
+let searchPage: SearchPage | AndroidSearchPage;
+let playerPage: PlayerPage | AndroidPlayerPage;
+let moviesDetailsPage: MoviesDetailsPage | AndroidMoviesDetailsPage;
 let webSocketHelper: WebSocketHelper;
+
 beforeAll(async () => {
     try {
+        // Create screenshots directory if it doesn't exist
+        const screenshotsDir = path.join(process.cwd(), 'screenshots', 'debug');
+        fs.mkdirSync(screenshotsDir, { recursive: true });
+
+        // First verify required environment variables
         const requiredEnvVars = [
             'FIRE_TV_IP',
             'FIRE_TV_PORT',
@@ -26,34 +30,45 @@ beforeAll(async () => {
             'GMAIL_CLIENT_ID',
             'GMAIL_CLIENT_SECRET',
             'GMAIL_REFRESH_TOKEN',
-            'GMAIL_ACCESS_TOKEN'
+            'GMAIL_REDIRECT_URI',
+            'PHILO_EMAIL_2',
+            'PHILO_EMAIL_3',
+            'ANDROID_TV_IP',
+            'ANDROID_TV_PORT'
         ];
 
-        // Verify all required environment variables are set
         for (const envVar of requiredEnvVars) {
             if (!process.env[envVar]) {
-                throw new Error(`Missing required environment variable: ${envVar}`);
+                throw new Error(`Required environment variable ${envVar} is not set`);
             }
         }
 
-        // Clear app data and login to Philo
+        // Clear app data before starting
+        console.log('Clearing app data...');
         await AppHelper.clearAppData();
+
+        // Login to Philo and get the initialized driver
         const loginSuccess = await AppHelper.loginToPhilo();
         if (!loginSuccess) {
             throw new Error('Failed to login to Philo');
         }
 
-        webSocketHelper = new WebSocketHelper({ url: 'ws://localhost:3000' });
-
-        // Initialize driver and page objects
+        // Get the already initialized driver
         driver = await AppHelper.initializeDriver();
-        homeScreen = new HomeScreenPage(driver);
-        settingsPage = new SettingsPage(driver);
-        topPage = new TopPage(driver);
-        categoriesPage = new CategoriesPage(driver);
-        //movieDetailsPage = new MoviesDetailsPage(driver);
-        searchPage = new SearchPage(driver);
-
+        // Set up correct page objects and app package based on device type
+        if (AppHelper.deviceType === 'androidTV') {
+            playerPage = new AndroidPlayerPage(driver);
+            homeScreen = new AndroidHomeScreenPage(driver);
+            categoriesPage = new AndroidCategoriesPage(driver);
+            searchPage = new AndroidSearchPage(driver);
+            moviesDetailsPage = new AndroidMoviesDetailsPage(driver, playerPage as AndroidPlayerPage);
+        } else {
+            playerPage = new PlayerPage(driver);
+            homeScreen = new HomeScreenPage(driver);
+            categoriesPage = new CategoriesPage(driver);
+            searchPage = new SearchPage(driver);
+            moviesDetailsPage = new MoviesDetailsPage(driver, playerPage as PlayerPage);
+        }
     } catch (error) {
         console.error('Error in beforeAll:', error);
         throw error;
@@ -62,25 +77,35 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     try {
-        await driver.terminateApp('com.philo.philo');
+        await driver.terminateApp(AppHelper.appPackage);
         await driver.pause(2000);
-        await driver.activateApp('com.philo.philo');
+        await driver.activateApp(AppHelper.appPackage);
         await driver.pause(5000);
     } catch (error) {
         console.error('Error in beforeEach:', error);
         throw error;
     }
 });
+
+afterEach(async () => {
+    try {
+        await driver.terminateApp(AppHelper.appPackage);
+        await driver.pause(2000);
+    } catch (error) {
+        console.error('Error in afterEach:', error);
+    }
+});
+
 afterAll(async () => {
     // Clean up app data after test
     console.log('Clearing app data after test...');
     await AppHelper.clearAppData();
-    webSocketHelper.close();
 });
 
 describe('Search Test', () => {
     test('TC501 - should display Search Results for Series', async () => {
         try {
+            
             await searchPage.navigateToSearchAndVerify();
             } catch (error) {
                 console.error('Search page was not displayed:', error);

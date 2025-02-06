@@ -35,7 +35,7 @@ export class SettingsPage extends BasePage {
         signOutButton: 'android=text("Sign out")'
     };
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
     }
 

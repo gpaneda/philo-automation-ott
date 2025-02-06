@@ -58,7 +58,7 @@ export class MoviesDetailsPage extends BasePage {
         channelName: 'android=new UiSelector().resourceId("com.philo.philo:id/channel_name")'
     };
 
-    constructor(driver: Browser<'async'>, public playerPage: PlayerPage) {
+    constructor(driver: Browser, public playerPage: PlayerPage) {
         super(driver);
     }
 

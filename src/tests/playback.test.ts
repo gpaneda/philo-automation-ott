@@ -20,9 +20,8 @@ const REQUIRED_ENV_VARS = [
 ];
 
 jest.setTimeout(TIMEOUT);
-
 describe('Playback Tests', () => {
-    let driver: Browser<'async'>;
+    let driver: Browser;
     let homeScreenPage: HomeScreenPage | AndroidHomeScreenPage;
     let categoriesPage: CategoriesPage | AndroidCategoriesPage;
     let topPage: TopPage | AndroidTopPage;

@@ -1,4 +1,4 @@
-import { Browser } from 'webdriverio';
+//import { Browser } from 'webdriverio';
 import { BasePage } from './base.page';
 const KEYCODE_BACK = 4;
 const KEYCODE_DPAD_RIGHT = 22;
@@ -51,9 +51,9 @@ export class SeriesDetailsPage extends BasePage {
         buttonsContainer: 'android=resourceId("com.philo.philo.google:id/big_tile_buttons_container").className("android.view.ViewGroup")',
     };
 
-    constructor(driver: Browser<'async'>) {
-        super(driver);
-    }
+    //constructor(driver: Browser<'async'>) {
+        //super(driver);
+    //}
 
     /**
      * Gets the series title

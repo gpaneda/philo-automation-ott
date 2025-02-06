@@ -68,7 +68,7 @@ export class MoviesDetailsPage extends BasePage {
         adFfwdDisabled: 'android=resourceId("com.philo.philo.google:id/icon_ffwd_disable")',
     };
 
-    constructor(driver: Browser<'async'>, private playerPage: PlayerPage) {
+    constructor(driver: Browser, private playerPage: PlayerPage) {
         super(driver);
     }
 

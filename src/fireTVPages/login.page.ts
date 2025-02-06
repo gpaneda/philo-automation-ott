@@ -57,7 +57,7 @@ export class LoginPage extends BasePage {
         bottomRow: 'android=resourceId("com.philo.philo:id/keypad_bottom_row")'
     };
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
     }
 

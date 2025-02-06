@@ -30,7 +30,7 @@ export class ProfilePage extends BasePage {
         versionLabel: 'android=text("Version")'
     };
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
     }
 

@@ -57,7 +57,7 @@ export class GuidePage extends BasePage {
     // New Selector for Free Channels
     freeChannels = 'android=text("Free channels")';
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
     }
 

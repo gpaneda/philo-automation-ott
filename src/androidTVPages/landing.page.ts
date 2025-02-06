@@ -21,7 +21,7 @@ export class LandingPage extends BasePage {
     private readonly LOGIN_SWITCH_TO_MOBILE = 'android=resourceId("com.philo.philo.google:id/auth_credentials_switch_input_type_button")';
     private readonly LOGIN_KEYPAD = 'android=resourceId("com.philo.philo.google:id/auth_credentials_keypad")';
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
     }
 

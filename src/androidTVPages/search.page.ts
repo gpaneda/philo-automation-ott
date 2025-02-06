@@ -1,4 +1,4 @@
-import { Browser } from "webdriverio";
+import type { Browser, Element } from "webdriverio";
 import { BasePage } from "./base.page";
 import { HomeScreenPage } from "./homescreen.page";
 
@@ -20,7 +20,7 @@ export class SearchPage extends BasePage {
     theWalkingDeadUniverse(theWalkingDeadUniverse: any): boolean | PromiseLike<boolean> {
         throw new Error('Method not implemented.');
     }
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
         // Initialization code
         this.driver = driver;
@@ -29,7 +29,7 @@ export class SearchPage extends BasePage {
     // Define properties for each UI element based on resource IDs
     actionBarRoot = 'com.philo.philo.google:id/action_bar_root';
     content = 'android:id/content';
-    searchInput = 'com.philo.philo.google:id/search_input';
+    searchInput = 'com.philo.philo.google:id/search_src_text';
     searchButton = 'com.philo.philo.google:id/search_button';
     searchResultsList = 'com.philo.philo.google:id/search_results_list';
     emptyStateContainer = 'com.philo.philo.google:id/empty_state_container';
@@ -39,7 +39,7 @@ export class SearchPage extends BasePage {
     clearSearchButton = 'com.philo.philo.google:id/clear_search_button';
 
     // Keypad elements
-    keypadContainer = 'com.philo.philo.google:id/keypad_container';
+    keypadContainer = 'com.philo.philo.google:id/keypad';
     keypadButtonA = 'com.philo.philo.google:id/keypad_a';
     keypadButtonB = 'com.philo.philo.google:id/keypad_b';
     keypadButtonC = 'com.philo.philo.google:id/keypad_c';
@@ -264,9 +264,9 @@ export class SearchPage extends BasePage {
             if (char === ' ') {
                 await this.click(this.keypadButtonSpace);
             } else if (/[0-9]/.test(char)) {
-                await this.click(`com.philo.philo:id/keypad_${char}`);
+                await this.click(`com.philo.philo.google:id/keypad_${char}`);
             } else {
-                await this.click(`com.philo.philo:id/keypad_${char.toLowerCase()}`);
+                await this.click(`com.philo.philo.google:id/keypad_${char.toLowerCase()}`);
             }
             await this.pause(100); // Small delay between keypresses
         }
@@ -302,8 +302,31 @@ export class SearchPage extends BasePage {
 
     async getHeaderText(): Promise<string[]> {
         try {
-            const elements = await this.driver.$$(`//*[@resource-id='${this.labelTileGroup}']`);
-            const texts = await Promise.all(elements.map(element => element.getText()));
+            // Wait for search results to load
+            await this.pause(3000);
+            
+            // Find all elements with label_tile_group
+            const selector = `//android.widget.TextView[@resource-id='com.philo.philo.google:id/label_tile_group']`;
+            console.log('Using selector:', selector);
+            
+            const elements = await this.driver.$$(selector);
+            console.log('Found elements:', elements.length);
+            
+            // Get text from each element
+            const texts = [];
+            for (const element of elements) {
+                try {
+                    const text = await element.getText();
+                    console.log('Found text:', text);
+                    if (text) {
+                        texts.push(text);
+                    }
+                } catch (elementError) {
+                    console.error('Error getting text from element:', elementError);
+                }
+            }
+            
+            console.log('Final texts array:', texts);
             return texts;
         } catch (error) {
             console.error('Failed to get header texts:', error);

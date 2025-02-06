@@ -7,9 +7,9 @@ export class TopPage {
     getMovieTitle() {
         throw new Error('Method not implemented.');
     }
-    private driver: Browser<'async'>;
+    private driver: Browser;
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         this.driver = driver;
     }
 
@@ -203,17 +203,20 @@ export class TopPage {
      * Get all channel logo elements
      * @returns Array of channel logo selectors with their bounds
      */
-    async getChannelLogos() {
+    async getChannelLogos(): Promise<{ element: any, bounds: string, contentDesc: string }[]> {
         const logos = await this.driver.$$(this.getChannelLogoElement());
-        const logoDetails = await Promise.all(logos.map(async (logo) => {
+        const logoDetails: { element: any, bounds: string, contentDesc: string }[] = [];
+        
+        for (const logo of logos) {
             const bounds = await logo.getAttribute('bounds');
             const contentDesc = await logo.getAttribute('content-desc');
-            return {
+            logoDetails.push({
                 element: logo,
                 bounds,
                 contentDesc
-            };
-        }));
+            });
+        }
+        
         return logoDetails;
     }
 
