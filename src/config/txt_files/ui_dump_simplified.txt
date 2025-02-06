@@ -37,99 +37,575 @@ Element: undefined
                 resource-id: com.philo.philo.google:id/fragment_host
                 bounds: [0,0][1920,1080]
 
-                Element: com.philo.composeuicomponents.focus.FocusTrappingComposeView
+                Element: android.view.ViewGroup
+                  resource-id: com.philo.philo.google:id/fragment_search
                   bounds: [0,0][1920,1080]
 
-                  Element: android.view.View
-                    bounds: [0,0][1920,1080]
+                  Element: android.widget.TextView
+                    resource-id: com.philo.philo.google:id/search_src_text
+                    bounds: [104,288][608,360]
+                    text: series
 
-                    Element: android.view.View
-                      bounds: [0,0][1920,1080]
+                  Element: android.widget.GridLayout
+                    resource-id: com.philo.philo.google:id/keypad
+                    bounds: [104,376][608,808]
 
-                      Element: android.widget.ImageView
-                        bounds: [0,0][1920,1080]
-                        content-desc: Grace and Frankie
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_a
+                      bounds: [104,376][176,448]
+                      text: a
 
-                      Element: android.widget.TextView
-                        bounds: [116,450][615,526]
-                        text: Grace and Frankie
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_b
+                      bounds: [176,376][248,448]
+                      text: b
 
-                      Element: android.widget.TextView
-                        bounds: [116,550][168,582]
-                        text: 2016
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_c
+                      bounds: [248,376][320,448]
+                      text: c
 
-                      Element: android.widget.TextView
-                        bounds: [184,550][294,582]
-                        text: 7 Seasons
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_d
+                      bounds: [320,376][392,448]
+                      text: d
 
-                      Element: android.widget.TextView
-                        bounds: [310,550][370,582]
-                        text: TV-14
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_e
+                      bounds: [392,376][464,448]
+                      text: e
 
-                      Element: android.widget.TextView
-                        bounds: [116,606][1012,726]
-                        text: For as long as they can recall, Grace and Frankie have been rivals. Their one-upmanship comes crashing to a halt, however, when they learn that their husbands have fallen in love with each other and want to get married. As everything around the ladies is coming apart, the only thing they can really rely on is each other. This Netflix original re-teams Jane Fonda and Lily Tomlin ("9 to 5") as Grace and Frankie, respectively, bringing their chemistry to the small screen. It's a casting reunion on a grand scale, as Tomlin is reunited with her co-star from "The West Wing," Martin Sheen, who plays Grace's husband, Robert. And Fonda is back with Sam Waterston, her co-star from "The Newsroom," who plays Frankie's husband, Sol.
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_f
+                      bounds: [464,376][536,448]
+                      text: f
 
-                      Element: android.view.View
-                        bounds: [116,762][610,834]
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_g
+                      bounds: [536,376][608,448]
+                      text: g
 
-                        Element: android.view.View
-                          bounds: [356,750][522,846]
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_h
+                      bounds: [104,448][176,520]
+                      text: h
 
-                          Element: android.view.View
-                            bounds: [372,774][420,822]
-                            content-desc: Save Grace and Frankie
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_i
+                      bounds: [176,448][248,520]
+                      text: i
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_j
+                      bounds: [248,448][320,520]
+                      text: j
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_k
+                      bounds: [320,448][392,520]
+                      text: k
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_l
+                      bounds: [392,448][464,520]
+                      text: l
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_m
+                      bounds: [464,448][536,520]
+                      text: m
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_n
+                      bounds: [536,448][608,520]
+                      text: n
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_o
+                      bounds: [104,520][176,592]
+                      text: o
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_p
+                      bounds: [176,520][248,592]
+                      text: p
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_q
+                      bounds: [248,520][320,592]
+                      text: q
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_r
+                      bounds: [320,520][392,592]
+                      text: r
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_s
+                      bounds: [392,520][464,592]
+                      text: s
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_t
+                      bounds: [464,520][536,592]
+                      text: t
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_u
+                      bounds: [536,520][608,592]
+                      text: u
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_v
+                      bounds: [104,592][176,664]
+                      text: v
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_w
+                      bounds: [176,592][248,664]
+                      text: w
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_x
+                      bounds: [248,592][320,664]
+                      text: x
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_y
+                      bounds: [320,592][392,664]
+                      text: y
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_z
+                      bounds: [392,592][464,664]
+                      text: z
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_1
+                      bounds: [464,592][536,664]
+                      text: 1
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_2
+                      bounds: [536,592][608,664]
+                      text: 2
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_3
+                      bounds: [104,664][176,736]
+                      text: 3
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_4
+                      bounds: [176,664][248,736]
+                      text: 4
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_5
+                      bounds: [248,664][320,736]
+                      text: 5
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_6
+                      bounds: [320,664][392,736]
+                      text: 6
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_7
+                      bounds: [392,664][464,736]
+                      text: 7
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_8
+                      bounds: [464,664][536,736]
+                      text: 8
+
+                    Element: android.widget.Button
+                      resource-id: com.philo.philo.google:id/keypad_9
+                      bounds: [536,664][608,736]
+                      text: 9
+
+                    Element: android.widget.LinearLayout
+                      resource-id: com.philo.philo.google:id/keypad_bottom_row
+                      bounds: [104,736][600,808]
+
+                      Element: android.widget.Button
+                        resource-id: com.philo.philo.google:id/keypad_0
+                        bounds: [104,736][176,808]
+                        text: 0
+
+                      Element: android.widget.Button
+                        resource-id: com.philo.philo.google:id/keypad_space
+                        bounds: [176,736][352,808]
+                        text: SPACE
+
+                      Element: android.widget.Button
+                        resource-id: com.philo.philo.google:id/button_clear
+                        bounds: [352,736][528,808]
+                        text: CLEAR
+
+                      Element: android.widget.Button
+                        resource-id: com.philo.philo.google:id/keypad_backspace
+                        bounds: [528,736][600,808]
+                        content-desc: backspace
+
+                  Element: androidx.recyclerview.widget.RecyclerView
+                    resource-id: com.philo.philo.google:id/tile_groups
+                    bounds: [648,0][1920,1080]
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo.google:id/default_tile_row
+                      bounds: [648,190][1920,556]
+
+                      Element: android.view.ViewGroup
+                        resource-id: com.philo.philo.google:id/tile_group_row_header_layout
+                        bounds: [748,190][1920,256]
+                        content-desc: Expand collection Shows
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/button_tile_group
+                          bounds: [748,200][1920,246]
 
                           Element: android.widget.TextView
-                            bounds: [436,780][498,816]
-                            text: Save
+                            resource-id: com.philo.philo.google:id/label_tile_group
+                            bounds: [748,200][856,246]
+                            text: Shows
 
-                          Element: android.widget.Button
-                            bounds: [356,762][522,834]
+                      Element: androidx.recyclerview.widget.RecyclerView
+                        resource-id: com.philo.philo.google:id/list_view_broadcasts
+                        bounds: [648,256][1920,524]
+                        content-desc: Shows
 
-                        Element: android.view.View
-                          bounds: [526,750][622,846]
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/widget_tile_wrapper
+                          bounds: [728,256][1216,524]
+                          content-desc: ALF: The Animated Series
 
-                          Element: android.view.View
-                            bounds: [550,774][598,822]
-                            content-desc: View HerSphere page
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo.google:id/tile_view_wrapper
+                            bounds: [728,256][1216,524]
 
-                          Element: android.widget.Button
-                            bounds: [538,762][610,834]
+                            Element: android.view.ViewGroup
+                              resource-id: com.philo.philo.google:id/tile_view
+                              bounds: [728,256][1210,524]
 
-                        Element: android.view.View
-                          bounds: [116,750][340,846]
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/background_image
+                                bounds: [728,256][1210,524]
 
-                          Element: android.view.View
-                            bounds: [132,780][168,816]
-                            content-desc: Play
+                              Element: android.view.View
+                                resource-id: com.philo.philo.google:id/pressed_overlay
+                                bounds: [728,256][1210,524]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/widget_tile_wrapper
+                          bounds: [1216,256][1704,524]
+                          content-desc: A Discovery of Witches: Creator Series
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo.google:id/tile_view_wrapper
+                            bounds: [1216,256][1704,524]
+
+                            Element: android.view.ViewGroup
+                              resource-id: com.philo.philo.google:id/tile_view
+                              bounds: [1216,256][1698,524]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/background_image
+                                bounds: [1216,256][1698,524]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo.google:id/pressed_overlay
+                                bounds: [1216,256][1698,524]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/widget_tile_wrapper
+                          bounds: [1704,256][1920,524]
+                          content-desc: BlackBerry: The Limited Series
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo.google:id/tile_view_wrapper
+                            bounds: [1704,256][1920,524]
+
+                            Element: android.view.ViewGroup
+                              resource-id: com.philo.philo.google:id/tile_view
+                              bounds: [1704,256][1920,524]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/background_image
+                                bounds: [1704,256][1920,524]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo.google:id/pressed_overlay
+                                bounds: [1704,256][1920,524]
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo.google:id/default_tile_row
+                      bounds: [648,556][1920,922]
+
+                      Element: android.view.ViewGroup
+                        resource-id: com.philo.philo.google:id/tile_group_row_header_layout
+                        bounds: [748,556][1920,622]
+                        content-desc: Expand collection Movies
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/button_tile_group
+                          bounds: [748,566][1920,612]
 
                           Element: android.widget.TextView
-                            bounds: [184,780][316,816]
-                            text: Play S4, E1
+                            resource-id: com.philo.philo.google:id/label_tile_group
+                            bounds: [748,566][864,612]
+                            text: Movies
 
-                          Element: android.widget.Button
-                            bounds: [116,762][340,834]
+                      Element: androidx.recyclerview.widget.RecyclerView
+                        resource-id: com.philo.philo.google:id/list_view_broadcasts
+                        bounds: [648,622][1920,890]
+                        content-desc: Movies
 
-                      Element: android.view.View
-                        bounds: [116,954][1844,1014]
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/widget_tile_wrapper
+                          bounds: [728,622][1216,890]
+                          content-desc: The Divergent Series: Insurgent
 
-                        Element: android.view.View
-                          bounds: [116,954][805,1012]
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo.google:id/tile_view_wrapper
+                            bounds: [728,622][1216,890]
+
+                            Element: android.view.ViewGroup
+                              resource-id: com.philo.philo.google:id/tile_view
+                              bounds: [728,622][1210,890]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/background_image
+                                bounds: [728,622][1210,890]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo.google:id/pressed_overlay
+                                bounds: [728,622][1210,890]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/widget_tile_wrapper
+                          bounds: [1216,622][1704,890]
+                          content-desc: The Divergent Series: Allegiant
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo.google:id/tile_view_wrapper
+                            bounds: [1216,622][1704,890]
+
+                            Element: android.view.ViewGroup
+                              resource-id: com.philo.philo.google:id/tile_view
+                              bounds: [1216,622][1698,890]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/background_image
+                                bounds: [1216,622][1698,890]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo.google:id/pressed_overlay
+                                bounds: [1216,622][1698,890]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/widget_tile_wrapper
+                          bounds: [1704,622][1920,890]
+                          content-desc: Lemony Snicket's A Series of Unfortunate Events
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo.google:id/tile_view_wrapper
+                            bounds: [1704,622][1920,890]
+
+                            Element: android.view.ViewGroup
+                              resource-id: com.philo.philo.google:id/tile_view
+                              bounds: [1704,622][1920,890]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/background_image
+                                bounds: [1704,622][1920,890]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo.google:id/pressed_overlay
+                                bounds: [1704,622][1920,890]
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo.google:id/default_tile_row
+                      bounds: [648,922][1920,1080]
+
+                      Element: android.view.ViewGroup
+                        resource-id: com.philo.philo.google:id/tile_group_row_header_layout
+                        bounds: [748,922][1920,988]
+                        content-desc: Expand collection Episodes
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/button_tile_group
+                          bounds: [748,932][1920,978]
 
                           Element: android.widget.TextView
-                            bounds: [116,935][247,1031]
+                            resource-id: com.philo.philo.google:id/label_tile_group
+                            bounds: [748,932][897,978]
                             text: Episodes
 
-                          Element: android.widget.TextView
-                            bounds: [299,935][437,1031]
-                            text: Schedule
+                      Element: androidx.recyclerview.widget.RecyclerView
+                        resource-id: com.philo.philo.google:id/list_view_broadcasts
+                        bounds: [648,988][1920,1080]
+                        content-desc: Episodes
 
-                          Element: android.widget.TextView
-                            bounds: [489,935][601,1031]
-                            text: Related
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/widget_tile_wrapper
+                          bounds: [728,988][1216,1080]
+                          content-desc: Wheeler Dealers
 
-                          Element: android.widget.TextView
-                            bounds: [653,935][753,1031]
-                            text: Details
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo.google:id/tile_view_wrapper
+                            bounds: [728,988][1216,1080]
+
+                            Element: android.view.ViewGroup
+                              resource-id: com.philo.philo.google:id/tile_view
+                              bounds: [728,988][1210,1080]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/background_image
+                                bounds: [728,988][1210,1080]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo.google:id/pressed_overlay
+                                bounds: [728,988][1210,1080]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/channel_logo
+                                bounds: [760,1023][824,1080]
+                                content-desc: MotorTrend
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo.google:id/icon_play_radial
+                                bounds: [1110,1023][1174,1080]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/widget_tile_wrapper
+                          bounds: [1216,988][1704,1080]
+                          content-desc: Pawn Stars
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo.google:id/tile_view_wrapper
+                            bounds: [1216,988][1704,1080]
+
+                            Element: android.view.ViewGroup
+                              resource-id: com.philo.philo.google:id/tile_view
+                              bounds: [1216,988][1698,1080]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/background_image
+                                bounds: [1216,988][1698,1080]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo.google:id/pressed_overlay
+                                bounds: [1216,988][1698,1080]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/channel_logo
+                                bounds: [1248,1023][1312,1080]
+                                content-desc: HISTORY
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo.google:id/icon_play_radial
+                                bounds: [1598,1023][1662,1080]
+
+                        Element: android.view.ViewGroup
+                          resource-id: com.philo.philo.google:id/widget_tile_wrapper
+                          bounds: [1704,988][1920,1080]
+                          content-desc: Cupcake Wars
+
+                          Element: android.widget.FrameLayout
+                            resource-id: com.philo.philo.google:id/tile_view_wrapper
+                            bounds: [1704,988][1920,1080]
+
+                            Element: android.view.ViewGroup
+                              resource-id: com.philo.philo.google:id/tile_view
+                              bounds: [1704,988][1920,1080]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/background_image
+                                bounds: [1704,988][1920,1080]
+
+                              Element: android.view.View
+                                resource-id: com.philo.philo.google:id/pressed_overlay
+                                bounds: [1704,988][1920,1080]
+
+                              Element: android.widget.ImageView
+                                resource-id: com.philo.philo.google:id/channel_logo
+                                bounds: [1736,1023][1800,1080]
+                                content-desc: Food Network
+
+              Element: android.widget.FrameLayout
+                resource-id: com.philo.philo.google:id/fragment_tabs
+                bounds: [0,0][1920,244]
+
+                Element: android.view.ViewGroup
+                  resource-id: com.philo.philo.google:id/widget_tabs
+                  bounds: [0,0][1920,244]
+
+                  Element: android.widget.LinearLayout
+                    resource-id: com.philo.philo.google:id/tab_bar
+                    bounds: [482,50][1439,146]
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo.google:id/tab_home
+                      bounds: [490,58][661,138]
+
+                      Element: android.widget.TextView
+                        resource-id: com.philo.philo.google:id/label_tab
+                        bounds: [526,74][625,122]
+                        text: Home
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo.google:id/tab_guide
+                      bounds: [661,58][832,138]
+
+                      Element: android.widget.TextView
+                        resource-id: com.philo.philo.google:id/label_tab
+                        bounds: [697,74][796,122]
+                        text: Guide
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo.google:id/tab_top
+                      bounds: [832,58][964,138]
+
+                      Element: android.widget.TextView
+                        resource-id: com.philo.philo.google:id/label_tab
+                        bounds: [868,74][928,122]
+                        text: Top
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo.google:id/tab_saved
+                      bounds: [964,58][1138,138]
+
+                      Element: android.widget.TextView
+                        resource-id: com.philo.philo.google:id/label_tab
+                        bounds: [1000,74][1102,122]
+                        text: Saved
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo.google:id/tab_search
+                      bounds: [1138,58][1327,138]
+
+                      Element: android.widget.TextView
+                        resource-id: com.philo.philo.google:id/label_tab
+                        bounds: [1174,74][1291,122]
+                        text: Search
+
+                    Element: android.view.ViewGroup
+                      resource-id: com.philo.philo.google:id/tab_profile
+                      bounds: [1327,62][1399,134]
+
+                      Element: android.widget.ImageView
+                        resource-id: com.philo.philo.google:id/icon_tab
+                        bounds: [1327,62][1399,134]
+                        content-desc: Settings Page
+
+                  Element: android.widget.LinearLayout
+                    resource-id: com.philo.philo.google:id/tab_bar_time
+                    bounds: [1588,50][1772,146]
+
+                    Element: android.widget.TextView
+                      resource-id: com.philo.philo.google:id/tab_bar_time_label
+                      bounds: [1620,50][1740,146]
+                      text: 11:03a
 

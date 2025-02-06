@@ -46,7 +46,7 @@ export class SeriesDetailsPage extends BasePage {
         dismissButton: 'android=resourceId("com.philo.philo:id/big_tile_dismiss_text")'
     };
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
     }
 

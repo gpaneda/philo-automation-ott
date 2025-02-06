@@ -1,11 +1,13 @@
 import { AppHelper } from '../helpers/app.helper';
-import { Browser } from 'webdriverio';
+import type { Browser } from 'webdriverio';
 import { HomeScreenPage } from '../fireTVPages/homescreen.page';
 import { CategoriesPage } from '../fireTVPages/categories.page';
 import { MoviesDetailsPage } from '../fireTVPages/moviesDetails.page';
+import { PlayerPage } from '../fireTVPages/player.page';
 import { HomeScreenPage as AndroidHomeScreenPage } from '../androidTVPages/homescreen.page';
 import { CategoriesPage as AndroidCategoriesPage } from '../androidTVPages/categories.page';
 import { MoviesDetailsPage as AndroidMoviesDetailsPage } from '../androidTVPages/moviesDetails.page';
+import { PlayerPage as AndroidPlayerPage } from '../androidTVPages/player.page';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
@@ -14,10 +16,11 @@ import fs from 'fs';
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-export let driver: Browser<'async'>;
-export let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
-export let categoriesPage: CategoriesPage | AndroidCategoriesPage;
-export let moviesDetailsPage: MoviesDetailsPage | AndroidMoviesDetailsPage;
+let driver: Browser;
+let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
+let categoriesPage: CategoriesPage | AndroidCategoriesPage;
+let moviesDetailsPage: MoviesDetailsPage | AndroidMoviesDetailsPage;
+let playerPage: PlayerPage | AndroidPlayerPage;
 
 beforeAll(async () => {
     try {
@@ -60,13 +63,15 @@ beforeAll(async () => {
         driver = await AppHelper.initializeDriver();
         // Set up correct page objects and app package based on device type
         if (AppHelper.deviceType === 'androidTV') {
+            playerPage = new AndroidPlayerPage(driver);
             homeScreen = new AndroidHomeScreenPage(driver);
             categoriesPage = new AndroidCategoriesPage(driver);
-            moviesDetailsPage = new AndroidMoviesDetailsPage(driver);
+            moviesDetailsPage = new AndroidMoviesDetailsPage(driver, playerPage as AndroidPlayerPage);
         } else {
+            playerPage = new PlayerPage(driver);
             homeScreen = new HomeScreenPage(driver);
             categoriesPage = new CategoriesPage(driver);
-            moviesDetailsPage = new MoviesDetailsPage(driver);
+            moviesDetailsPage = new MoviesDetailsPage(driver, playerPage as PlayerPage);
         }
     } catch (error) {
         console.error('Error in beforeAll:', error);
@@ -127,7 +132,7 @@ describe('Movies Details Page', () => {
         expect(titleAfterClick).toBe(titleBeforeClick);
     });
 
-    test.only('TC125 - should get the movie description, rating, rating advisories, release date, and channel name', async () => {
+    test('TC125 - should get the movie description, rating, rating advisories, release date, and channel name', async () => {
         await driver.pause(5000);
         await categoriesPage.goToTopFreeMovies();
         await categoriesPage.waitForMovieTilesLoaded();

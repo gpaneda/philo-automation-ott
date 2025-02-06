@@ -81,7 +81,7 @@ export class PlayerPage extends BasePage {
         ],
     };
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
     }
 

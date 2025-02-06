@@ -1,18 +1,19 @@
 import { AppHelper } from '../helpers/app.helper';
 import { Browser } from 'webdriverio';
-import { HomeScreenPage } from '../fireTVPages/homescreen.page';
-import { CategoriesPage } from '../fireTVPages/categories.page';
-import { SeriesDetailsPage } from '../fireTVPages/seriesDetails.page';
 import dotenv from 'dotenv';
 import path from 'path';
+
+import { HomeScreenPage, CategoriesPage, SeriesDetailsPage } from '../fireTVPages'
+
+import { HomeScreenPage as AndroidHomeScreenPage, CategoriesPage as AndroidCategoriesPage, SeriesDetailsPage as AndroidSeriesDetailsPage } from '../androidTVPages';
 
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
-let driver: Browser<'async'>;
-let homeScreen: HomeScreenPage;
-let categoriesPage: CategoriesPage;
-let seriesDetailsPage: SeriesDetailsPage;
+let driver: Browser;
+let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
+let categoriesPage: CategoriesPage | AndroidCategoriesPage;
+let seriesDetailsPage: SeriesDetailsPage | AndroidSeriesDetailsPage;
 
 beforeAll(async () => {
     try {
@@ -49,12 +50,16 @@ beforeAll(async () => {
 
         // Get the already initialized driver
         driver = await AppHelper.initializeDriver();
-        await driver.pause(5000); // Wait for app to fully load
-
-        // Initialize page objects
-        homeScreen = new HomeScreenPage(driver);
-        categoriesPage = new CategoriesPage(driver);
-        seriesDetailsPage = new SeriesDetailsPage(driver);
+        // Set up correct page objects and app package based on device type
+        if (AppHelper.deviceType === 'androidTV') {
+            homeScreen = new AndroidHomeScreenPage(driver);
+            categoriesPage = new AndroidCategoriesPage(driver);
+            seriesDetailsPage = new AndroidSeriesDetailsPage(driver);
+        } else {
+            homeScreen = new HomeScreenPage(driver);
+            categoriesPage = new CategoriesPage(driver);
+            seriesDetailsPage = new SeriesDetailsPage(driver);
+        }
     } catch (error) {
         console.error('Error in beforeAll:', error);
         throw error;
@@ -63,9 +68,9 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     try {
-        await driver.terminateApp('com.philo.philo');
+        await driver.terminateApp(AppHelper.appPackage);
         await driver.pause(2000);
-        await driver.activateApp('com.philo.philo');
+        await driver.activateApp(AppHelper.appPackage);
         await driver.pause(5000);
     } catch (error) {
         console.error('Error in beforeEach:', error);
@@ -75,7 +80,7 @@ beforeEach(async () => {
 
 afterEach(async () => {
     try {
-        await driver.terminateApp('com.philo.philo');
+        await driver.terminateApp(AppHelper.appPackage);
         await driver.pause(2000);
     } catch (error) {
         console.error('Error in afterEach:', error);
@@ -114,8 +119,9 @@ test('TC119 - Verify Episodes Tab Navigation', async () => {
 test('TC120 - Verify Schedule Tab Navigation', async () => {
     try {
         // Step 1: Navigate to Top Free Shows and select series      
-        await categoriesPage.goToTopFreeShows();
+        await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
         await driver.pause(5000);
+        await homeScreen.pressDownButton();
         await homeScreen.pressEnterButton();
         await driver.pause(5000);
 
@@ -137,8 +143,10 @@ test('TC120 - Verify Schedule Tab Navigation', async () => {
 test('TC121 - Verify Related Tab Navigation', async () => {
     try {
         // Step 1: Navigate to Top Free Shows and select series      
-        await categoriesPage.goToTopFreeShows();
+        await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
         await driver.pause(5000);
+        await homeScreen.pressDownButton();
+        await homeScreen.pressRightButton();
         await homeScreen.pressEnterButton();
         await driver.pause(5000);
 
@@ -160,8 +168,11 @@ test('TC121 - Verify Related Tab Navigation', async () => {
 test('TC122 - Verify Extras Tab Navigation', async () => {
     try {
         // Step 1: Navigate to Top Free Shows and select series      
-        await categoriesPage.goToTopFreeShows();
+        await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
         await driver.pause(5000);
+        await homeScreen.pressDownButton();
+        await homeScreen.pressRightButton();
+        await homeScreen.pressRightButton();
         await homeScreen.pressEnterButton();
         await driver.pause(5000);
 
@@ -190,8 +201,12 @@ test('TC122 - Verify Extras Tab Navigation', async () => {
 test('TC123 - Verify Details Tab Navigation', async () => {
     try {
         // Step 1: Navigate to Top Free Shows and select series      
-        await categoriesPage.goToTopFreeShows();
+        await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
         await driver.pause(5000);
+        await homeScreen.pressEnterButton();
+        await homeScreen.pressDownButton();
+        await homeScreen.pressRightButton();
+        await homeScreen.pressDownButton();
         await homeScreen.pressEnterButton();
         await driver.pause(5000);
 

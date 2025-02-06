@@ -37,7 +37,7 @@ export class CategoriesPage extends HomeScreenPage {
     // Override selectors to include both parent and category selectors
     public selectors!: CategorySelectors & typeof HomeScreenPage.prototype.selectors;
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
         // Merge the selectors
         this.selectors = {
@@ -249,7 +249,7 @@ export class CategoriesPage extends HomeScreenPage {
             // Get the current focused element's index
             const focusedElement = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
             const focusedId = await focusedElement.elementId;
-            const currentIndex = await Promise.all(titleElements.map(async el => await el.elementId))
+            const currentIndex = await Promise.all(titleElements.map(async (el: any) => await el.elementId))
                 .then(ids => ids.findIndex((id: string) => id === focusedId));
 
             if (currentIndex === -1) {

@@ -123,7 +123,7 @@ export class HomeScreenPage extends BasePage {
         family: 'android=text("Family")',
     };
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         super(driver);
     }
 

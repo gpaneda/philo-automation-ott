@@ -4,3 +4,6 @@ export { CategoriesPage } from './categories.page';
 export { TopPage } from './top.page';
 export { SeriesDetailsPage } from './seriesDetails.page';
 export { MoviesDetailsPage } from './moviesDetails.page';
+export { GuidePage } from './guide.page';
+export { SettingsPage } from './settings.page';
+export { SearchPage } from './search.page';
