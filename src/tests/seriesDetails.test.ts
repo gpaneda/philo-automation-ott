@@ -10,14 +10,25 @@ import { HomeScreenPage as AndroidHomeScreenPage, CategoriesPage as AndroidCateg
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
+const APP_TERMINATION_DELAY = 2000;
+const APP_ACTIVATION_DELAY = 5000;
+
 let driver: Browser;
 let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
 let categoriesPage: CategoriesPage | AndroidCategoriesPage;
 let seriesDetailsPage: SeriesDetailsPage | AndroidSeriesDetailsPage;
 
+// Helper function to terminate and activate the app
+const terminateAndActivateApp = async () => {
+    await driver.terminateApp(AppHelper.appPackage);
+    await driver.pause(APP_TERMINATION_DELAY);
+    await driver.activateApp(AppHelper.appPackage);
+    await driver.pause(APP_ACTIVATION_DELAY);
+};
+
 beforeAll(async () => {
     try {
-        // First verify required environment variables
+        // Verify required environment variables
         const requiredEnvVars = [
             'FIRE_TV_IP',
             'FIRE_TV_PORT',
@@ -68,10 +79,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     try {
-        await driver.terminateApp(AppHelper.appPackage);
-        await driver.pause(2000);
-        await driver.activateApp(AppHelper.appPackage);
-        await driver.pause(5000);
+        await terminateAndActivateApp();
     } catch (error) {
         console.error('Error in beforeEach:', error);
         throw error;
@@ -93,20 +101,19 @@ afterAll(async () => {
     await AppHelper.clearAppData();
 });
 
+const navigateToTopFreeShows = async () => {
+    await categoriesPage.goToTopFreeShows();
+    await driver.pause(5000);
+    await homeScreen.pressEnterButton();
+    await driver.pause(5000);
+};
+
 test('TC119 - Verify Episodes Tab Navigation', async () => {
     try {
-        // Step 1: Navigate to Top Free Shows and select series      
-        await categoriesPage.goToTopFreeShows();
-        await driver.pause(5000);
-        await homeScreen.pressEnterButton();
-        await driver.pause(5000);
-
-        // Step 2: Verify we're on series details page and get title
+        await navigateToTopFreeShows();
         await seriesDetailsPage.waitForLoaded();
         const seriesTitle = await seriesDetailsPage.getSeriesTitle();
         console.log('Found series:', seriesTitle);
-
-        // Step 3: Verify Episodes tab content
         console.log('Verifying Episodes tab...');
         await seriesDetailsPage.goToEpisodes();
         await driver.pause(2000);
@@ -118,19 +125,14 @@ test('TC119 - Verify Episodes Tab Navigation', async () => {
 
 test('TC120 - Verify Schedule Tab Navigation', async () => {
     try {
-        // Step 1: Navigate to Top Free Shows and select series      
         await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
         await driver.pause(5000);
         await homeScreen.pressDownButton();
         await homeScreen.pressEnterButton();
         await driver.pause(5000);
-
-        // Step 2: Verify we're on series details page
         await seriesDetailsPage.waitForLoaded();
         const seriesTitle = await seriesDetailsPage.getSeriesTitle();
         console.log('Found series:', seriesTitle);
-
-        // Step 3: Verify Schedule tab content
         console.log('Verifying Schedule tab...');
         await seriesDetailsPage.goToSchedule();
         await driver.pause(2000);
@@ -142,20 +144,15 @@ test('TC120 - Verify Schedule Tab Navigation', async () => {
 
 test('TC121 - Verify Related Tab Navigation', async () => {
     try {
-        // Step 1: Navigate to Top Free Shows and select series      
         await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
         await driver.pause(5000);
         await homeScreen.pressDownButton();
         await homeScreen.pressRightButton();
         await homeScreen.pressEnterButton();
         await driver.pause(5000);
-
-        // Step 2: Verify we're on series details page
         await seriesDetailsPage.waitForLoaded();
         const seriesTitle = await seriesDetailsPage.getSeriesTitle();
         console.log('Found series:', seriesTitle);
-
-        // Step 3: Verify Related tab content
         console.log('Verifying Related tab...');
         await seriesDetailsPage.goToRelated();
         await driver.pause(2000);
@@ -167,7 +164,6 @@ test('TC121 - Verify Related Tab Navigation', async () => {
 
 test('TC122 - Verify Extras Tab Navigation', async () => {
     try {
-        // Step 1: Navigate to Top Free Shows and select series      
         await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
         await driver.pause(5000);
         await homeScreen.pressDownButton();
@@ -175,20 +171,14 @@ test('TC122 - Verify Extras Tab Navigation', async () => {
         await homeScreen.pressRightButton();
         await homeScreen.pressEnterButton();
         await driver.pause(5000);
-
-        // Step 2: Verify we're on series details page
         await seriesDetailsPage.waitForLoaded();
         const seriesTitle = await seriesDetailsPage.getSeriesTitle();
         console.log('Found series:', seriesTitle);
-
-        // Check if Extras tab exists
         const hasExtrasTab = await seriesDetailsPage.isExtrasTabPresent();
         if (!hasExtrasTab) {
             console.log('Extras tab not present, skipping test');
             return;
         }
-
-        // Step 3: Verify Extras tab content
         console.log('Verifying Extras tab...');
         await seriesDetailsPage.goToExtras();
         await driver.pause(2000);
@@ -200,7 +190,6 @@ test('TC122 - Verify Extras Tab Navigation', async () => {
 
 test('TC123 - Verify Details Tab Navigation', async () => {
     try {
-        // Step 1: Navigate to Top Free Shows and select series      
         await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
         await driver.pause(5000);
         await homeScreen.pressEnterButton();
@@ -209,13 +198,9 @@ test('TC123 - Verify Details Tab Navigation', async () => {
         await homeScreen.pressDownButton();
         await homeScreen.pressEnterButton();
         await driver.pause(5000);
-
-        // Step 2: Verify we're on series details page
         await seriesDetailsPage.waitForLoaded();
         const seriesTitle = await seriesDetailsPage.getSeriesTitle();
         console.log('Found series:', seriesTitle);
-
-        // Step 3: Verify Details tab content
         console.log('Verifying Details tab...');
         await seriesDetailsPage.goToDetails();
         await driver.pause(2000);

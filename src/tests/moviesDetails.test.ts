@@ -12,9 +12,12 @@ import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 
-
 // Load environment variables from .env file
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+
+const APP_TERMINATION_DELAY = 2000;
+const APP_ACTIVATION_DELAY = 5000;
+const APP_DATA_CLEAR_DELAY = 10000;
 
 let driver: Browser;
 let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
@@ -22,14 +25,30 @@ let categoriesPage: CategoriesPage | AndroidCategoriesPage;
 let moviesDetailsPage: MoviesDetailsPage | AndroidMoviesDetailsPage;
 let playerPage: PlayerPage | AndroidPlayerPage;
 
+const initializeScreenshotsDir = () => {
+    const screenshotsDir = path.join(process.cwd(), 'screenshots', 'debug');
+    fs.mkdirSync(screenshotsDir, { recursive: true });
+};
+
+const verifyEnvVariables = (requiredEnvVars: string[]) => {
+    for (const envVar of requiredEnvVars) {
+        if (!process.env[envVar]) {
+            throw new Error(`Required environment variable ${envVar} is not set`);
+        }
+    }
+};
+
+const terminateAndActivateApp = async () => {
+    await driver.terminateApp(AppHelper.appPackage);
+    await driver.pause(APP_TERMINATION_DELAY);
+    await driver.activateApp(AppHelper.appPackage);
+    await driver.pause(APP_ACTIVATION_DELAY);
+};
+
 beforeAll(async () => {
     try {
-        // Create screenshots directory if it doesn't exist
-        const screenshotsDir = path.join(process.cwd(), 'screenshots', 'debug');
-        fs.mkdirSync(screenshotsDir, { recursive: true });
-
-        // First verify required environment variables
-        const requiredEnvVars = [
+        initializeScreenshotsDir();
+        verifyEnvVariables([
             'FIRE_TV_IP',
             'FIRE_TV_PORT',
             'PHILO_EMAIL',
@@ -41,27 +60,17 @@ beforeAll(async () => {
             'PHILO_EMAIL_3',
             'ANDROID_TV_IP',
             'ANDROID_TV_PORT'
-        ];
+        ]);
 
-        for (const envVar of requiredEnvVars) {
-            if (!process.env[envVar]) {
-                throw new Error(`Required environment variable ${envVar} is not set`);
-            }
-        }
-
-        // Clear app data before starting
         console.log('Clearing app data...');
         await AppHelper.clearAppData();
 
-        // Login to Philo and get the initialized driver
         const loginSuccess = await AppHelper.loginToPhilo();
         if (!loginSuccess) {
             throw new Error('Failed to login to Philo');
         }
 
-        // Get the already initialized driver
         driver = await AppHelper.initializeDriver();
-        // Set up correct page objects and app package based on device type
         if (AppHelper.deviceType === 'androidTV') {
             playerPage = new AndroidPlayerPage(driver);
             homeScreen = new AndroidHomeScreenPage(driver);
@@ -77,31 +86,27 @@ beforeAll(async () => {
         console.error('Error in beforeAll:', error);
         throw error;
     }
-    }, 120000);
+}, 120000);
 
 beforeEach(async () => {
     try {
-        await driver.terminateApp(AppHelper.appPackage);
-        await driver.pause(2000);
-        await driver.activateApp(AppHelper.appPackage);
-        await driver.pause(5000);
+        await terminateAndActivateApp();
     } catch (error) {
         console.error('Error in beforeEach:', error);
-        throw error;
+        throw new Error(`Failed to activate app: ${error.message}`);
     }
 });
 
 afterEach(async () => {
     try {
         await driver.terminateApp(AppHelper.appPackage);
-        await driver.pause(2000);
+        await driver.pause(APP_TERMINATION_DELAY);
     } catch (error) {
         console.error('Error in afterEach:', error);
     }
 });
 
 afterAll(async () => {
-    // Clean up app data after test
     console.log('Clearing app data after test...');
     await AppHelper.clearAppData();
 });
@@ -109,22 +114,17 @@ afterAll(async () => {
 // Test cases will be added here
 describe('Movies Details Page', () => {
     test('TC124 - Verify that user can click on a movie and see its details', async () => {
-        await driver.pause(5000);
+        await driver.pause(APP_ACTIVATION_DELAY);
         await categoriesPage.goToTopFreeMovies();
         await categoriesPage.waitForMovieTilesLoaded();
 
-        // Get all visible movie titles
         const titles = await categoriesPage.getAllVisibleMovieTitles();
         console.log('Available titles:', titles);
 
-        // Get the first movie title
         const titleBeforeClick = titles[0];
         console.log('Title before click:', titleBeforeClick);
 
-        // Click on the movie tile
         await categoriesPage.clickMovieTile();
-
-        // Wait for movie details page to load and get the title
         await moviesDetailsPage.waitForLoaded();
         const titleAfterClick = await moviesDetailsPage.getMovieTitle();
         console.log('Title after click:', titleAfterClick);
@@ -133,35 +133,26 @@ describe('Movies Details Page', () => {
     });
 
     test('TC125 - should get the movie description, rating, rating advisories, release date, and channel name', async () => {
-        await driver.pause(5000);
+        await driver.pause(APP_ACTIVATION_DELAY);
         await categoriesPage.goToTopFreeMovies();
         await categoriesPage.waitForMovieTilesLoaded();
 
-        // Move focus to the desired movie tile
         await homeScreen.pressRightButton();
         await driver.pause(1000);
 
-        // Get title of focused movie
         const titleBefore = await homeScreen.getSecondMovieTitle();
         console.log(`Title of the movie before: ${titleBefore}`);
 
-        // Click on the movie
         await homeScreen.clickMovieTile();
-        
-        // Add longer wait for movie details page to load and animations to complete
         await driver.pause(10000);
-        
-        // Wait for movie details page to load
         await moviesDetailsPage.waitForLoaded();
 
-        // Get movie details with retries
         let description, rating, releaseDate, duration;
-        
+
         for (let i = 0; i < 3; i++) {
             try {
                 if (!description) description = await moviesDetailsPage.getMovieDescription();
                 if (!rating) rating = await moviesDetailsPage.getMovieRating();
-                
                 if (!releaseDate) releaseDate = await moviesDetailsPage.getReleaseDate();
                 if (!duration) {
                     if ('fetchMovieDuration' in moviesDetailsPage) {
@@ -170,20 +161,16 @@ describe('Movies Details Page', () => {
                         throw new Error('fetchMovieDuration method does not exist on moviesDetailsPage');
                     }
                 }
-                
-                // If we got all values, break the loop
+
                 if (description && rating && releaseDate && duration) break;
-                
-                // Wait before retrying
                 await driver.pause(2000);
             } catch (error) {
                 console.log(`Attempt ${i + 1} failed:`, error);
-                if (i === 2) throw error; // Throw on last attempt
-                await driver.pause(2000); // Wait before retry
+                if (i === 2) throw error;
+                await driver.pause(2000);
             }
         }
 
-        // Log all found values
         console.log('Found movie details:', {
             description,
             rating,
@@ -191,7 +178,6 @@ describe('Movies Details Page', () => {
             duration
         });
 
-        // Verify that we got all the details
         expect(description).toBeTruthy();
         expect(rating).toBeTruthy();
         expect(releaseDate).toBeTruthy();
