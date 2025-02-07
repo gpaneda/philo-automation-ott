@@ -5,6 +5,10 @@ import { AppHelper } from '../helpers/app.helper';
 import { HomeScreenPage as AndroidHomeScreenPage } from '../androidTVPages/homescreen.page';
 import { LandingPage as AndroidLandingPage } from '../androidTVPages/landing.page';
 
+const APP_TERMINATION_DELAY = 2000;
+const APP_ACTIVATION_DELAY = 20000;
+const APP_DATA_CLEAR_DELAY = 10000;
+
 describe('Landing Page Tests', () => {
     let driver: Browser;
     let landingPage: LandingPage | AndroidLandingPage;
@@ -39,55 +43,72 @@ describe('Landing Page Tests', () => {
         }
     }, 120000);
 
+    const terminateAndActivateApp = async () => {
+        await driver.terminateApp(appPackage);
+        await driver.pause(APP_TERMINATION_DELAY);
+        await driver.activateApp(appPackage);
+        await driver.pause(APP_ACTIVATION_DELAY);
+    };
+
+    beforeEach(async () => {
+        try {
+            await terminateAndActivateApp();
+        } catch (error) {
+            console.error('Error in beforeEach:', error);
+            throw new Error(`Failed to activate app: ${error.message}`);
+        }
+    }, 60000);
+
     afterAll(async () => {
         try {
-            // Clean up app data after all tests
             console.log('Clearing app data after tests...');
             await AppHelper.clearAppData();
-
             if (driver) {
                 await driver.terminateApp(appPackage);
-                await driver.pause(2000);
+                await driver.pause(APP_TERMINATION_DELAY);
                 await driver.deleteSession();
-                await new Promise(resolve => setTimeout(resolve, 10000));
+                await new Promise(resolve => setTimeout(resolve, APP_DATA_CLEAR_DELAY));
             }
         } catch (error) {
             console.error('Error in afterAll:', error);
         }
     });
 
-    beforeEach(async () => {
+    test('TC101 - should display landing page buttons', async () => {
         try {
-            await driver.terminateApp(appPackage);
-            await driver.pause(2000);
-            await driver.activateApp(appPackage);
-            await driver.pause(20000); // Longer wait for app to fully load
+            await landingPage.verifyLandingPageElements();
         } catch (error) {
-            console.error('Error in beforeEach:', error);
-            throw error;
+            console.error('Error in TC101:', error);
+            throw new Error(`TC101 failed: ${error.message}`);
         }
     }, 60000);
 
-    test('TC101 - should display landing page buttons', async () => {
-        await landingPage.verifyLandingPageElements();
-    }, 60000);
-
     test('TC102 - should display channels after pressing the down button', async () => {
-        await landingPage.verifyLandingPageElements();
-        await homeScreenPage.pressDownButton();
-        await driver.pause(5000);
-        await landingPage.verifyLandingPageElements();
-        await driver.pause(2000);
-        await landingPage.verifyChannelsDisplayed();
+        try {
+            await landingPage.verifyLandingPageElements();
+            await homeScreenPage.pressDownButton();
+            await driver.pause(5000);
+            await landingPage.verifyLandingPageElements();
+            await driver.pause(2000);
+            await landingPage.verifyChannelsDisplayed();
+        } catch (error) {
+            console.error('Error in TC102:', error);
+            throw new Error(`TC102 failed: ${error.message}`);
+        }
     }, 60000);
 
     test('TC103 - should display login screen after pressing the Explore Free Channels button', async () => {
-        await landingPage.verifyLandingPageElements();
-        await homeScreenPage.pressDownButton();
-        await driver.pause(3000);
-        await homeScreenPage.pressRightButton();
-        await homeScreenPage.pressEnterButton();
-        await driver.pause(3000);
-        await landingPage.verifyLoginScreenDisplayed();
+        try {
+            await landingPage.verifyLandingPageElements();
+            await homeScreenPage.pressDownButton();
+            await driver.pause(3000);
+            await homeScreenPage.pressRightButton();
+            await homeScreenPage.pressEnterButton();
+            await driver.pause(3000);
+            await landingPage.verifyLoginScreenDisplayed();
+        } catch (error) {
+            console.error('Error in TC103:', error);
+            throw new Error(`TC103 failed: ${error.message}`);
+        }
     }, 60000);
 }); 

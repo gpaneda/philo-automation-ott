@@ -2,11 +2,12 @@ import { AppHelper } from '../helpers/app.helper';
 import { Browser } from 'webdriverio';
 import WebSocketHelper from '../utils/WebSocketHelper';
 import { HomeScreenPage, CategoriesPage, SearchPage, PlayerPage, MoviesDetailsPage } from '../fireTVPages';
-import { preProcessFile } from 'typescript';
-
 import { HomeScreenPage as AndroidHomeScreenPage, CategoriesPage as AndroidCategoriesPage, SearchPage as AndroidSearchPage, PlayerPage as AndroidPlayerPage, MoviesDetailsPage as AndroidMoviesDetailsPage } from '../androidTVPages';
 import path from 'path';
-import fs from 'fs';    
+import fs from 'fs/promises';
+
+const APP_TERMINATION_DELAY = 2000;
+const APP_ACTIVATION_DELAY = 5000;
 
 let driver: Browser;
 let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
@@ -16,13 +17,21 @@ let playerPage: PlayerPage | AndroidPlayerPage;
 let moviesDetailsPage: MoviesDetailsPage | AndroidMoviesDetailsPage;
 let webSocketHelper: WebSocketHelper;
 
+// Helper function to terminate and activate the app
+const terminateAndActivateApp = async () => {
+    await driver.terminateApp(AppHelper.appPackage);
+    await driver.pause(APP_TERMINATION_DELAY);
+    await driver.activateApp(AppHelper.appPackage);
+    await driver.pause(APP_ACTIVATION_DELAY);
+};
+
 beforeAll(async () => {
     try {
         // Create screenshots directory if it doesn't exist
         const screenshotsDir = path.join(process.cwd(), 'screenshots', 'debug');
-        fs.mkdirSync(screenshotsDir, { recursive: true });
+        await fs.mkdir(screenshotsDir, { recursive: true });
 
-        // First verify required environment variables
+        // Verify required environment variables
         const requiredEnvVars = [
             'FIRE_TV_IP',
             'FIRE_TV_PORT',
@@ -77,10 +86,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     try {
-        await driver.terminateApp(AppHelper.appPackage);
-        await driver.pause(2000);
-        await driver.activateApp(AppHelper.appPackage);
-        await driver.pause(5000);
+        await terminateAndActivateApp();
     } catch (error) {
         console.error('Error in beforeEach:', error);
         throw error;
@@ -105,128 +111,116 @@ afterAll(async () => {
 describe('Search Test', () => {
     test('TC501 - should display Search Results for Series', async () => {
         try {
-            
             await searchPage.navigateToSearchAndVerify();
-            } catch (error) {
-                console.error('Search page was not displayed:', error);
-                throw error;
-            }
-
             await searchPage.enterSearchTerm('Series');
             await driver.pause(3000);
             await homeScreen.pressEnterButton();
 
-            //Verify that the search results displays Channels, Shows, Episodes Header Text
+            // Verify that the search results display Channels, Shows, Episodes Header Text
             const headerTexts = await searchPage.getHeaderText();
             console.log('Header Texts:', headerTexts);
             expect(headerTexts).toContain('Shows');
-        }, 180000);
+        } catch (error) {
+            console.error('Error in TC501:', error);
+            throw error;
+        }
+    }, 180000);
 
     test('TC502 - should display Search Results for Movies', async () => {
         try {
             await searchPage.navigateToSearchAndVerify();
+            await searchPage.enterSearchTerm('Movies');
+            await driver.pause(3000);
+            await homeScreen.pressEnterButton();
+
+            // Verify that the search results display Channels, Shows, Episodes Header Text
+            const headerTexts = await searchPage.getHeaderText();
+            console.log('Header Texts:', headerTexts);
+            expect(headerTexts).toContain('Movies');
         } catch (error) {
-            console.error('Search page was not displayed:', error);
+            console.error('Error in TC502:', error);
             throw error;
         }
-
-        await searchPage.enterSearchTerm('Movies');
-        await driver.pause(3000);
-        await homeScreen.pressEnterButton();
-
-        //Verify that the search results displays Channels, Shows, Episodes Header Text
-        const headerTexts = await searchPage.getHeaderText();
-        console.log('Header Texts:', headerTexts);
-        expect(headerTexts).toContain('Movies');
     }, 180000);
 
     test('TC503 - should display Search Results for Channels', async () => {
         try {
             await searchPage.navigateToSearchAndVerify();
+            await searchPage.enterSearchTerm('AMC');
+            await driver.pause(3000);
+            await homeScreen.pressEnterButton();
+
+            // Verify that the search results display Channels, Shows, Episodes Header Text
+            const headerTexts = await searchPage.getHeaderText();
+            console.log('Header Texts:', headerTexts);
+            expect(headerTexts).toContain('Channels');
+
+            // Goes to Keyboard
+            for (let i = 0; i < 2; i++) {
+                await homeScreen.pressDownButton();
+            }
+            // Press right button until channels row is in focus and go to channels row
+            for (let i = 0; i < 7; i++) {
+                await homeScreen.pressRightButton();
+            }
+            await driver.pause(3000);
+            await searchPage.interactWithSearchResults();
+            // Check if Channels Text is displayed
+            expect(await searchPage.isElementDisplayed(searchPage.labelTileGroup)).toBe(true);
+            console.log('Channels Text is displayed');
         } catch (error) {
-            console.error('Search page was not displayed:', error);
+            console.error('Error in TC503:', error);
             throw error;
         }
-
-        await searchPage.enterSearchTerm('AMC');
-        await driver.pause(3000);
-        await homeScreen.pressEnterButton();
-
-        //Verify that the search results displays Channels, Shows, Episodes Header Text
-        const headerTexts = await searchPage.getHeaderText();
-        console.log('Header Texts:', headerTexts);
-        expect(headerTexts).toContain('Channels');
-        
-        //Goes to Keyboard
-        for (let i = 0; i < 2; i++) {
-            await homeScreen.pressDownButton();
-        }
-        //Press right button until channels row is in focus and go to channels row
-        for (let i = 0; i < 7; i++) {
-            await homeScreen.pressRightButton();
-        }
-        await driver.pause(3000);
-        await searchPage.interactWithSearchResults();
-        //Check if Channels Text is displayed
-        expect(await searchPage.isElementDisplayed(searchPage.labelTileGroup)).toBe(true);
-        //Add console log to check if Channels Text is displayed
-        console.log('Channels Text is displayed');
     }, 180000);
 
     test('TC504 - should display Empty State when no results are found', async () => {
         try {
             await searchPage.navigateToSearchAndVerify();
+            // Enter a search term that does not exist
+            await searchPage.enterSearchTerm('skdhfkadfkjdfhak');
+            await driver.pause(3000);
+            await homeScreen.pressEnterButton();
+
+            // Expect Channels, Shows, Episodes, Movies does not exist - header text is empty    
+            const headerTexts = await searchPage.getHeaderText();
+            console.log('Header Texts:', headerTexts);
+            expect(headerTexts).not.toContain('Channels');
+            expect(headerTexts).not.toContain('Shows');
+            expect(headerTexts).not.toContain('Episodes');
+            expect(headerTexts).not.toContain('Movies');
+            console.log('Empty State is displayed');
         } catch (error) {
-            console.error('Search page was not displayed:', error);
+            console.error('Error in TC504:', error);
             throw error;
         }
-        //Enter a search term that does not exist
-        await searchPage.enterSearchTerm('skdhfkadfkjdfhak');
-        await driver.pause(3000);
-        await homeScreen.pressEnterButton();
-
-        //Expect Channels, Shows, Episodes, Movies does not exist - header text is empty    
-        const headerTexts = await searchPage.getHeaderText();
-        console.log('Header Texts:', headerTexts);
-        expect(headerTexts).not.toContain('Channels');
-        expect(headerTexts).not.toContain('Shows');
-        expect(headerTexts).not.toContain('Episodes');
-        expect(headerTexts).not.toContain('Movies');
-        //Add console log to check if Empty State is displayed
-        console.log('Empty State is displayed');
     }, 180000);
 
     test('TC505 - should display Search Results for Specific Title', async () => {
         try {
             await searchPage.navigateToSearchAndVerify();
-        } catch (error) {
-            console.error('Search page was not displayed:', error);
-            throw error;
-        }
+            await searchPage.enterSearchTerm('The Walking Dead');
+            await driver.pause(3000);
+            await homeScreen.pressEnterButton();
 
-        await searchPage.enterSearchTerm('The Walking Dead');
-        await driver.pause(3000);
-        await homeScreen.pressEnterButton();
+            // Verify that the search results display Channels, Shows, Episodes Header Text
+            const headerTexts = await searchPage.getHeaderText();
+            console.log('Header Texts:', headerTexts);
+            expect(headerTexts).toContain('Shows');
 
-        //Verify that the search results displays Channels, Shows, Episodes Header Text
-        const headerTexts = await searchPage.getHeaderText();
-        console.log('Header Texts:', headerTexts);
-        expect(headerTexts).toContain('Shows');
-
-        //Goes to Keyboard
-        for (let i = 0; i < 2; i++) {
-            await homeScreen.pressDownButton();
-        }
-        //Press right button until channels row is in focus and go to channels row
-        for (let i = 0; i < 7; i++) {
-            await homeScreen.pressRightButton();
-        }
-        await driver.pause(3000);
-        await searchPage.interactWithSearchResults();
-        //Press Enter Button
-        await homeScreen.pressEnterButton();
-        //Verify that any of the Walking Dead shows are displayed
-        try {
+            // Goes to Keyboard
+            for (let i = 0; i < 2; i++) {
+                await homeScreen.pressDownButton();
+            }
+            // Press right button until channels row is in focus and go to channels row
+            for (let i = 0; i < 7; i++) {
+                await homeScreen.pressRightButton();
+            }
+            await driver.pause(3000);
+            await searchPage.interactWithSearchResults();
+            // Press Enter Button
+            await homeScreen.pressEnterButton();
+            // Verify that any of the Walking Dead shows are displayed
             const possibleElements = [
                 'topShowsWalkingDeadUniverse',
                 'fearTheWalkingDead',
@@ -255,11 +249,10 @@ describe('Search Test', () => {
 
             expect(foundShow).toBe(true);
         } catch (error) {
-            console.error('Error checking for Walking Dead shows:', error);
+            console.error('Error in TC505:', error);
             throw error;
         }
     }, 180000);
-
 });
 
 

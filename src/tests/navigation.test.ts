@@ -11,6 +11,10 @@ import fs from 'fs/promises';
 import { GuidePage as AndroidGuidePage, GuidePage } from '../androidTVPages/guide.page';
 import { SettingsPage as AndroidSettingsPage, SettingsPage } from '../androidTVPages/settings.page';
 
+const APP_TERMINATION_DELAY = 2000;
+const APP_ACTIVATION_DELAY = 5000;
+const APP_DATA_CLEAR_DELAY = 10000;
+
 let driver: Browser;
 let homeScreen: HomeScreenPage | AndroidHomeScreenPage;
 let guidePage: GuidePage | AndroidGuidePage;
@@ -71,10 +75,16 @@ async function logError(message: string, error: any) {
     // Optionally, log to a file or monitoring system
 }
 
-beforeAll(async () => {
-    
-    try {
+const terminateAndActivateApp = async () => {
+    await driver.terminateApp(AppHelper.appPackage);
+    await driver.pause(APP_TERMINATION_DELAY);
+    await driver.activateApp(AppHelper.appPackage);
+    await driver.pause(APP_ACTIVATION_DELAY);
+};
 
+beforeAll(async () => {
+    try {
+        await ensureDirectories();
 
         const requiredEnvVars = [
             'FIRE_TV_IP',
@@ -105,10 +115,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
     try {
-        await driver.terminateApp(AppHelper.appPackage);
-        await driver.pause(2000);
-        await driver.activateApp(AppHelper.appPackage);
-        await driver.pause(5000);
+        await terminateAndActivateApp();
     } catch (error) {
         await logError('Error in beforeEach:', error);
         throw error;
