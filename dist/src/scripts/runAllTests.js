@@ -16,18 +16,34 @@ if (!deviceIp) {
 // Set the device IP in the environment
 process.env.FIRE_TV_IP = deviceIp;
 // Get the corresponding email based on the device IP
-const email = deviceIp === '10.0.0.55' ? process.env.PHILO_EMAIL_2 : process.env.PHILO_EMAIL;
-process.env.PHILO_EMAIL = email;
-console.log(`Running tests for device ${deviceIp} with email ${email}`);
-const testFiles = [
+let email;
+
+switch (deviceIp) {
+    case '10.0.0.55':
+        email = process.env.PHILO_EMAIL_2;
+        break;
+    case '10.0.0.130':
+        email = process.env.PHILO_EMAIL_3; // New device
+        break;
+    case '10.0.0.98':
+        email = process.env.PHILO_EMAIL; // Default email
+        break;
+    default:
+        email = process.env.PHILO_EMAIL; // Fallback to default
+}
+
+console.log(`Device IP: ${deviceIp}, Selected Email: ${email}`);
+
+const testFiles =  { }
     'src/tests/login.test.ts',
     'src/tests/homescreen.test.ts',
     'src/tests/navigation.test.ts',
     'src/tests/landingPage.test.ts',
     'src/tests/playback.test.ts',
     'src/tests/seriesDetails.test.ts',
-    'src/tests/moviesDetails.test.ts'
-];
+    'src/tests/moviesDetails.test.ts',
+    'src/tests/search.test.ts',
+
 // Run each test file
 testFiles.forEach(testFile => {
     try {
@@ -38,3 +54,6 @@ testFiles.forEach(testFile => {
         console.error(`Error running ${testFile}:`, error);
     }
 });
+
+process.env.PHILO_EMAIL = email;
+console.log(`Running tests for device ${deviceIp} with email ${email}`);
