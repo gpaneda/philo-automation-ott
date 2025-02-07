@@ -53,7 +53,7 @@ export class TestExecutionService {
       case '10.0.0.55':
         return process.env.PHILO_EMAIL_2!;
       case '10.0.0.98':
-        return process.env.PHILO_EMAIL!;
+        return process.env.PHILO_EMAIL_3!;
       default:
         return process.env.PHILO_EMAIL!; // Default to first device
     }

@@ -79,8 +79,8 @@ To add new devices to the dashboard and ensure they are properly integrated with
            return process.env.PHILO_EMAIL_2!;
          case '10.0.0.98':
            return process.env.PHILO_EMAIL!;
-         case '10.0.0.99': // New device case
-           return process.env.DEVICE_3_EMAIL!;
+         case '10.0.0.130': // New device case
+           return process.env.PHILO_EMAIL_3!;
          default:
            return process.env.PHILO_EMAIL!; // Default to first device
        }
