@@ -271,8 +271,13 @@ export class CategoriesPage extends HomeScreenPage {
             // Get the current focused element's index
             const focusedElement = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
             const focusedId = await focusedElement.elementId;
-            const currentIndex = await Promise.all(titleElements.map(async (el: any) => await el.elementId))
-                .then(ids => ids.findIndex((id: string) => id === focusedId));
+            
+            // Get element IDs one by one to avoid Promise.all type issues
+            const elementIds: string[] = [];
+            for (const element of titleElements) {
+                elementIds.push(await element.elementId);
+            }
+            const currentIndex = elementIds.findIndex(id => id === focusedId);
 
             if (currentIndex === -1) {
                 throw new Error('Could not determine current focused element');
@@ -735,7 +740,7 @@ export class CategoriesPage extends HomeScreenPage {
      * @returns Promise<Array<{categoryTitle: string, detailsTitle: string}>> Array of verified titles
      */
     async verifyMultipleMovies(movieCount: number, movieDetailsPage: any): Promise<Array<{ categoryTitle: string, detailsTitle: string }>> {
-        const verifiedTitles = [];
+        const verifiedTitles: Array<{ categoryTitle: string, detailsTitle: string }> = [];
 
         try {
             // Navigate to Top Free Movies
