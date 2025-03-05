@@ -1,4 +1,5 @@
-import { Browser, ChainablePromiseElement, Element } from 'webdriverio';
+import type { Browser } from 'webdriverio';
+import { ChainablePromiseElement, Element } from 'webdriverio';
 import { exec } from 'child_process';
 import fs from 'fs';
 
@@ -13,10 +14,10 @@ export interface Selector {
 }
 
 export class BasePage {
-    protected driver: Browser<'async'>;
+    protected driver: Browser;
     protected defaultTimeout = 30000; // Increased to 30 seconds for better reliability
 
-    constructor(driver: Browser<'async'>) {
+    constructor(driver: Browser) {
         this.driver = driver;
     }
 

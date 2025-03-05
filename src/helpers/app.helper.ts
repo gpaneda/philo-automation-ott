@@ -6,7 +6,7 @@ import { LoginPage } from '../fireTVPages/login.page';
 import { LoginPage as AndroidLoginPage } from '../androidTVPages/login.page';
 
 export class AppHelper {
-    private static driver: Browser<'async'>;
+    private static driver: Browser;
     private static currentDeviceType: 'fireTV' | 'androidTV' | null = null;
     static appPackage = 'com.philo.philo'; // Default to Fire TV package
 
@@ -72,7 +72,7 @@ export class AppHelper {
         });
     }
 
-    static async initializeDriver(): Promise<Browser<'async'>> {
+    static async initializeDriver(): Promise<Browser> {
         if (!this.driver) {
             try {
                 // Detect device type if not already set
@@ -105,7 +105,7 @@ export class AppHelper {
         return this.driver;
     }
 
-    static async launchPhiloApp(): Promise<Browser<'async'>> {
+    static async launchPhiloApp(): Promise<Browser> {
         console.log('Attempting to launch Philo app...');
         try {
             const driver = await this.initializeDriver();
