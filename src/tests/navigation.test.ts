@@ -190,7 +190,7 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test.only('TC111 - should display the Top Free Movies category', async () => {
+    test('TC111 - should display the Top Free Movies category', async () => {
         try {
             // Step 1: Navigate to and verify Top Free Movies category
             console.log('Step 1: Navigating to and verifying Top Free Movies category');
@@ -201,7 +201,7 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test.only('TC112 - should display the Top Free Shows category', async () => {
+    test('TC112 - should display the Top Free Shows category', async () => {
         try {
             // Step 1: Navigate to and verify Top Free Shows category
             console.log('Step 1: Navigating to and verifying Top Free Shows category');
@@ -245,7 +245,7 @@ describe('Navigation Tests', () => {
         }
     }, 180000);
 
-    test.only('TC116 - should display the Movie Details Page', async () => {
+    test('TC116 - should display the Movie Details Page', async () => {
         try {
             // Step 1: Verify multiple movies and their details
             console.log('Step 1: Verifying multiple movies and their details');
