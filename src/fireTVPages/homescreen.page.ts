@@ -586,8 +586,6 @@ export class HomeScreenPage extends BasePage {
      */
     async verifyTopPage(topPage: any): Promise<void> {
         try {
-            await this.pressUpButton();
-            await this.driver.pause(5000);
             
             for (let i = 0; i < 2; i++) {
                 await this.pressRightButton();

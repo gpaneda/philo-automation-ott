@@ -133,8 +133,7 @@ describe('Navigation Tests', () => {
     test('TC106 - should display the Settings Page', async () => {
         try {
             // Step 1: Navigate to and verify Settings page
-            await homeScreen.pressUpButton();
-            await driver.pause(3000);
+            
             await homeScreen.navigateToSettings();
             expect(await settingsPage.isSignInInformationDisplayed()).toBe(true);
         } catch (error) {
@@ -145,8 +144,7 @@ describe('Navigation Tests', () => {
 
     test('TC107 - should display the Guide Page', async () => {
         try {
-            await homeScreen.pressUpButton();
-            await driver.pause(3000);
+          
             await homeScreen.navigateToGuide();
             expect(await guidePage.isFreeChannelsDisplayed()).toBe(true);
             // Step 1: Navigate to and verify Guide page
@@ -171,8 +169,7 @@ describe('Navigation Tests', () => {
 
     test('TC109 - should display the Saved Page', async () => {
         try {
-            await homeScreen.pressUpButton();
-            await driver.pause(3000);
+           
             await homeScreen.navigateToSaved();
             expect(await homeScreen.isElementDisplayed(homeScreen.selectors.topNavSaved)).toBe(true);
         } catch (error) {
@@ -184,10 +181,7 @@ describe('Navigation Tests', () => {
     test('TC110 - should display the Search Page', async () => {
         try {
             // Step 1: Navigate to and verify Search page
-            //console.log('Step 1: Navigating to and verifying Search page');
-            //await homeScreen.verifySearchPage(topPage);
-            await homeScreen.pressUpButton();
-            await driver.pause(3000);
+        
             await homeScreen.navigateToSearch();
             expect(await homeScreen.isElementDisplayed(homeScreen.selectors.topNavSearch)).toBe(true);
         } catch (error) {
@@ -200,7 +194,6 @@ describe('Navigation Tests', () => {
         try {
             // Step 1: Navigate to and verify Top Free Movies category
             console.log('Step 1: Navigating to and verifying Top Free Movies category');
-            await driver.pause(5000);
             await homeScreen.verifyTopFreeMovies(categoriesPage, topPage);
         } catch (error) {
             await logError('Top Free Movies category was not displayed:', error);
@@ -212,7 +205,6 @@ describe('Navigation Tests', () => {
         try {
             // Step 1: Navigate to and verify Top Free Shows category
             console.log('Step 1: Navigating to and verifying Top Free Shows category');
-            await driver.pause(5000);
             await homeScreen.verifyTopFreeShows(categoriesPage, topPage);
         } catch (error) {
             await logError('Top Free Shows category was not displayed:', error);
