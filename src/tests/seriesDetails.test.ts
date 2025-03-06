@@ -101,16 +101,12 @@ afterAll(async () => {
     await AppHelper.clearAppData();
 });
 
-const navigateToTopFreeShows = async () => {
-    await categoriesPage.goToTopFreeShows();
-    await driver.pause(5000);
-    await homeScreen.pressEnterButton();
-    await driver.pause(5000);
-};
 
-test('TC119 - Verify Episodes Tab Navigation', async () => {
+test.only('TC119 - Verify Episodes Tab Navigation', async () => {
     try {
-        await navigateToTopFreeShows();
+        await categoriesPage.navigateToTopFreeShows();
+        await homeScreen.pressEnterButton();
+        await driver.pause(5000);
         await seriesDetailsPage.waitForLoaded();
         const seriesTitle = await seriesDetailsPage.getSeriesTitle();
         console.log('Found series:', seriesTitle);
@@ -125,9 +121,7 @@ test('TC119 - Verify Episodes Tab Navigation', async () => {
 
 test('TC120 - Verify Schedule Tab Navigation', async () => {
     try {
-        await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
-        await driver.pause(5000);
-        await homeScreen.pressDownButton();
+        await categoriesPage.navigateToTopFreeShows();
         await homeScreen.pressEnterButton();
         await driver.pause(5000);
         await seriesDetailsPage.waitForLoaded();
@@ -144,10 +138,7 @@ test('TC120 - Verify Schedule Tab Navigation', async () => {
 
 test('TC121 - Verify Related Tab Navigation', async () => {
     try {
-        await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
-        await driver.pause(5000);
-        await homeScreen.pressDownButton();
-        await homeScreen.pressRightButton();
+        await categoriesPage.navigateToTopFreeShows();
         await homeScreen.pressEnterButton();
         await driver.pause(5000);
         await seriesDetailsPage.waitForLoaded();
@@ -164,7 +155,7 @@ test('TC121 - Verify Related Tab Navigation', async () => {
 
 test('TC122 - Verify Extras Tab Navigation', async () => {
     try {
-        await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
+        await categoriesPage.navigateToTopFreeShows();
         await driver.pause(5000);
         await homeScreen.pressDownButton();
         await homeScreen.pressRightButton();
@@ -190,7 +181,7 @@ test('TC122 - Verify Extras Tab Navigation', async () => {
 
 test('TC123 - Verify Details Tab Navigation', async () => {
     try {
-        await categoriesPage.navigateToCategory(categoriesPage.selectors.topFreeShows, 2);
+        await categoriesPage.navigateToTopFreeShows();
         await driver.pause(5000);
         await homeScreen.pressEnterButton();
         await homeScreen.pressDownButton();

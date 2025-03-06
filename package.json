@@ -31,7 +31,8 @@
     "test:no-connection": "NODE_OPTIONS=--experimental-vm-modules jest src/scripts/noConnectionf.test.ts",
     "test:decreased-bandwidth": "NODE_OPTIONS=--experimental-vm-modules jest src/scripts/decreasedBandwidth.test.ts",
     "test:vizio": "ts-node src/vizioSmartCast.ts",
-    "test:vizio-key-events": "ts-node src/vizioKeyEvents.ts"
+    "test:vizio-key-events": "ts-node src/vizioKeyEvents.ts",
+    "test:get-gmail-token": "ts-node src/scripts/getGmailToken.ts"
   },
   "dependencies": {
     "@appium/base-driver": "^9.15.0",

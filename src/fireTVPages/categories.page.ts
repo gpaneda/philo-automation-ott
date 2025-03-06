@@ -238,7 +238,7 @@ export class CategoriesPage extends HomeScreenPage {
      * Requires 1 down press from Top Free Movies
      */ 
     public async navigateToTopFreeShows(): Promise<void> {
-        await this.navigateToCategory(this.selectors.topFreeShows, 2);
+        await this.navigateToCategory(this.selectors.topFreeShows, 1);
         await this.verifyTopFreeShowsHeaderDisplayed();
         await this.selectRandomTitle();
     }
@@ -472,10 +472,9 @@ export class CategoriesPage extends HomeScreenPage {
         try {
 
             // Two down presses to reach Top Free Shows
-            for (let i = 0; i < 2; i++) {
-                await this.pressDownButton();
-                await this.driver.pause(2000);
-            }
+           
+            await this.pressDownButton();
+            await this.driver.pause(2000);
             await this.pressLeftButton();
             await this.driver.pause(2000);
             await this.pressEnterButton();
