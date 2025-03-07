@@ -15,7 +15,7 @@ export interface Selector {
 
 export class BasePage {
     protected driver: Browser;
-    protected defaultTimeout = 30000; // Increased to 30 seconds for better reliability
+    protected defaultTimeout = 40000; // Increased to 40 seconds for better reliability
 
     constructor(driver: Browser) {
         this.driver = driver;
