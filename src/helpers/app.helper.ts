@@ -205,6 +205,7 @@ export class AppHelper {
                 throw new Error('Device IP not found in environment variables');
             }
 
+            console.log(`Using device IP: ${deviceIp} for device type: ${this.currentDeviceType}`);
             await GmailHelper.searchPhiloEmails(deviceIp);
             
             console.log('\nStep 2: Triggering sign-in email...');
@@ -225,6 +226,7 @@ export class AppHelper {
             await driver.pause(10000);
             
             console.log('\nStep 3: Processing sign-in email...');
+            console.log(`Using device IP: ${deviceIp} for device type: ${this.currentDeviceType}`);
             const success = await GmailHelper.processSignInEmail(deviceIp);
             
             if (success) {

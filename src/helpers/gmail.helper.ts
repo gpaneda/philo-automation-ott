@@ -2,6 +2,7 @@ import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import axios, { AxiosInstance } from 'axios';
 import open from 'open';
+import { AppHelper } from './app.helper';
 
 export class GmailHelper {
     private static oauth2Client: OAuth2Client;
@@ -18,7 +19,7 @@ export class GmailHelper {
     public static async initializeGmailClient(deviceIp: string, email?: string): Promise<void> {
         try {
             console.log('Device IP received:', deviceIp);
-            // If email is not provided, determine it based on the device IP
+            // If email is not provided, determine it based on the device type
             let selectedEmail = email || process.env.PHILO_EMAIL;
             if (!selectedEmail) {
                 const androidTvIp = process.env.ANDROID_TV_IP || '';
@@ -28,20 +29,26 @@ export class GmailHelper {
                 console.log('Current device IP:', deviceIp);
                 console.log('Fire TV IP:', fireTvIp);
                 console.log('Android TV IP:', androidTvIp);
+                console.log('Current device type:', AppHelper.currentDeviceType);
                 
-                switch (deviceIp) {
-                    case androidTvIp:
-                        console.log('Matched Android TV IP');
-                        selectedEmail = process.env.PHILO_EMAIL_3 || ''; // Use the third device's email
-                        break;
-                    case fireTvIp:
-                        console.log('Matched Fire TV IP');
-                        selectedEmail = process.env.PHILO_EMAIL || ''; // Use the first device's email
-                        break;
-                    default:
-                        console.log('No IP match, using default email');
-                        selectedEmail = process.env.PHILO_EMAIL || ''; // Default to the first device's email
-                        break;
+                // First try to match by device type
+                if (AppHelper.currentDeviceType === 'androidTV') {
+                    console.log('Using Android TV email based on device type');
+                    selectedEmail = process.env.PHILO_EMAIL_3 || '';
+                } else if (AppHelper.currentDeviceType === 'fireTV') {
+                    console.log('Using Fire TV email based on device type');
+                    selectedEmail = process.env.PHILO_EMAIL || '';
+                } 
+                // If device type is not set, try to match by IP
+                else if (deviceIp === androidTvIp) {
+                    console.log('Matched Android TV IP');
+                    selectedEmail = process.env.PHILO_EMAIL_3 || '';
+                } else if (deviceIp === fireTvIp) {
+                    console.log('Matched Fire TV IP');
+                    selectedEmail = process.env.PHILO_EMAIL || '';
+                } else {
+                    console.log('No IP match, using default email');
+                    selectedEmail = process.env.PHILO_EMAIL || '';
                 }
             }
 
@@ -160,6 +167,7 @@ export class GmailHelper {
         try {
             console.log('\n=== Processing Philo Sign-in Email ===');
             if (deviceIp) {
+                console.log(`Processing sign-in email for device IP: ${deviceIp}, device type: ${AppHelper.currentDeviceType}`);
                 await this.initializeGmailClient(deviceIp);
             } else {
                 throw new Error('Device IP is required for email processing');

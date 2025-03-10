@@ -25,7 +25,7 @@ switch (deviceIp) {
     case '10.0.0.130':
         email = process.env.PHILO_EMAIL_3; // New device
         break;
-    case '10.0.0.98':
+    case '10.0.0.15':
         email = process.env.PHILO_EMAIL; // Default email
         break;
     default:
