@@ -2,6 +2,7 @@ import { Browser } from 'webdriverio';
 import { BasePage } from './base.page';
 import dotenv from 'dotenv';
 import { GmailHelper } from '../helpers/gmail.helper';
+import { AppHelper } from '../helpers/app.helper';
 
 // Load environment variables
 dotenv.config();
@@ -192,7 +193,12 @@ export class LoginPage extends BasePage {
     async completeVerification(): Promise<void> {
         // Wait for email and process sign-in
         console.log('Processing sign-in email...');
-        const success = await GmailHelper.processSignInEmail(process.env.FIRE_TV_IP);
+        const deviceIp = AppHelper.currentDeviceType === 'fireTV' 
+            ? process.env.FIRE_TV_IP 
+            : process.env.ANDROID_TV_IP;
+            
+        console.log(`Using device IP: ${deviceIp} for device type: ${AppHelper.currentDeviceType}`);
+        const success = await GmailHelper.processSignInEmail(deviceIp);
         if (!success) {
             throw new Error('Failed to process sign-in email');
         }

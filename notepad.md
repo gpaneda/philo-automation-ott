@@ -77,7 +77,7 @@ To add new devices to the dashboard and ensure they are properly integrated with
        switch (deviceIp) {
          case '10.0.0.55':
            return process.env.PHILO_EMAIL_2!;
-         case '10.0.0.98':
+         case '10.0.0.15':
            return process.env.PHILO_EMAIL!;
          case '10.0.0.130': // New device case
            return process.env.PHILO_EMAIL_3!;

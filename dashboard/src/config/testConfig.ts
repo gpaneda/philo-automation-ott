@@ -1,7 +1,7 @@
 import { TestSuite, Device } from '@/types/testTypes';
 
 export const devices: Device[] = [
-  { id: '1', name: 'Fire TV Stick 4K', status: 'active', ipAddress: '10.0.0.98' },
+  { id: '1', name: 'Fire TV Stick 4K', status: 'active', ipAddress: '10.0.0.15' },
   { id: '2', name: 'Fire TV Cube', status: 'active', ipAddress: '10.0.0.55' },
   { id: '3', name: 'Android TV', status: 'active', ipAddress: '10.0.0.130' },
 ];
