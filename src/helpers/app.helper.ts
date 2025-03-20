@@ -4,11 +4,25 @@ import { exec } from 'child_process';
 import { GmailHelper } from './gmail.helper';
 import { LoginPage } from '../fireTVPages/login.page';
 import { LoginPage as AndroidLoginPage } from '../androidTVPages/login.page';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as https from 'https';
+import { promisify } from 'util';
+import fetch from 'node-fetch';
+
+interface VersionManifest {
+    version: string;
+}
+
+const execAsync = promisify(exec);
 
 export class AppHelper {
     private static driver: Browser;
     private static currentDeviceType: 'fireTV' | 'androidTV' | null = null;
     static appPackage = 'com.philo.philo'; // Default to Fire TV package
+
+    // Placeholder for the package source URL - to be implemented based on actual source
+    private static readonly PACKAGE_SOURCE_URL = 'https://example.com/philo/latest';
 
     // Public getter for device type
     static get deviceType(): 'fireTV' | 'androidTV' | null {
@@ -257,6 +271,191 @@ export class AppHelper {
         } catch (error) {
             console.error('❌ Error during sign-in process:', error);
             return false;
+        }
+    }
+
+    /**
+     * Get the currently installed version of the app on the device
+     * @returns Promise<string> The version number of the installed app
+     */
+    static async getInstalledVersion(): Promise<string> {
+        const deviceId = this.getDeviceId();
+        const packageName = this.currentDeviceType === 'fireTV' 
+            ? 'com.philo.philo'
+            : 'com.philo.philo.google';
+
+        try {
+            const { stdout } = await execAsync(`adb -s ${deviceId} shell dumpsys package ${packageName} | grep versionName`);
+            const versionMatch = stdout.match(/versionName=([^\s]+)/);
+            return versionMatch ? versionMatch[1] : '';
+        } catch (error) {
+            console.error('Error getting installed version:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Get the latest version available from the package source
+     * @returns Promise<string> The version number of the latest available package
+     */
+    static async getLatestVersion(): Promise<string> {
+        try {
+            // Method 1: Check from a version manifest file
+            const manifestUrl = 'https://example.com/philo/version.json';
+            const response = await fetch(manifestUrl);
+            const manifest = await response.json() as VersionManifest;
+            
+            if (manifest && manifest.version) {
+                return manifest.version;
+            }
+
+            // Method 2: Check from package.json if available
+            const packageJsonPath = path.join(process.cwd(), 'package.json');
+            if (fs.existsSync(packageJsonPath)) {
+                const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+                if (packageJson.version) {
+                    return packageJson.version;
+                }
+            }
+
+            // Method 3: Check from a local version file
+            const versionFilePath = path.join(process.cwd(), 'version.txt');
+            if (fs.existsSync(versionFilePath)) {
+                const version = fs.readFileSync(versionFilePath, 'utf8').trim();
+                if (version) {
+                    return version;
+                }
+            }
+
+            // Method 4: Check from environment variable
+            const envVersion = process.env.PHILO_APP_VERSION;
+            if (envVersion) {
+                return envVersion;
+            }
+
+            throw new Error('Could not determine latest version from any available source');
+        } catch (error) {
+            console.error('Error getting latest version:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Compare two version strings
+     * @param v1 First version string
+     * @param v2 Second version string
+     * @returns number -1 if v1 < v2, 0 if v1 = v2, 1 if v1 > v2
+     */
+    private static compareVersions(v1: string, v2: string): number {
+        const v1Parts = v1.split('.').map(Number);
+        const v2Parts = v2.split('.').map(Number);
+
+        for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
+            const v1Part = v1Parts[i] || 0;
+            const v2Part = v2Parts[i] || 0;
+            if (v1Part < v2Part) return -1;
+            if (v1Part > v2Part) return 1;
+        }
+        return 0;
+    }
+
+    /**
+     * Download the latest version of the app from the package source
+     * @returns Promise<string> Path to the downloaded file
+     */
+    private static async downloadLatestVersion(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const downloadDir = path.join(process.cwd(), 'downloads');
+            if (!fs.existsSync(downloadDir)) {
+                fs.mkdirSync(downloadDir);
+            }
+
+            const filePath = path.join(downloadDir, 'philo-latest.apk');
+            const file = fs.createWriteStream(filePath);
+
+            https.get(this.PACKAGE_SOURCE_URL, response => {
+                response.pipe(file);
+                file.on('finish', () => {
+                    file.close();
+                    resolve(filePath);
+                });
+            }).on('error', err => {
+                fs.unlink(filePath, () => reject(err));
+            });
+        });
+    }
+
+    /**
+     * Uninstall the current version of the app
+     */
+    private static async uninstallApp(): Promise<void> {
+        const deviceId = this.getDeviceId();
+        const packageName = this.currentDeviceType === 'fireTV' 
+            ? 'com.philo.philo'
+            : 'com.philo.philo.google';
+
+        try {
+            await execAsync(`adb -s ${deviceId} uninstall ${packageName}`);
+            console.log('App uninstalled successfully');
+        } catch (error) {
+            console.error('Error uninstalling app:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Install the app from an APK file
+     * @param apkPath Path to the APK file
+     */
+    private static async installApp(apkPath: string): Promise<void> {
+        const deviceId = this.getDeviceId();
+
+        try {
+            await execAsync(`adb -s ${deviceId} install ${apkPath}`);
+            console.log('App installed successfully');
+        } catch (error) {
+            console.error('Error installing app:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Check and update the app version if needed
+     * @returns Promise<boolean> True if update was performed, false otherwise
+     */
+    static async checkAndUpdateVersion(): Promise<boolean> {
+        try {
+            // Get current and latest versions
+            const installedVersion = await this.getInstalledVersion();
+            const latestVersion = await this.getLatestVersion();
+
+            console.log(`Installed version: ${installedVersion}`);
+            console.log(`Latest version: ${latestVersion}`);
+
+            // Compare versions
+            if (this.compareVersions(installedVersion, latestVersion) < 0) {
+                console.log('Update needed. Starting update process...');
+
+                // Download latest version
+                const apkPath = await this.downloadLatestVersion();
+
+                // Uninstall current version
+                await this.uninstallApp();
+
+                // Install new version
+                await this.installApp(apkPath);
+
+                // Clean up downloaded file
+                fs.unlinkSync(apkPath);
+
+                return true;
+            }
+
+            console.log('App is up to date');
+            return false;
+        } catch (error) {
+            console.error('Error during version check and update:', error);
+            throw error;
         }
     }
 } 
