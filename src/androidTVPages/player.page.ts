@@ -94,8 +94,13 @@ export class PlayerPage extends BasePage {
     }
 
     async togglePlayPause(): Promise<void> {
-        await this.driver.pressKeyCode(66);
-        await this.driver.pause(2000);
+        try {
+            const playButton = await this.waitForElement(this.selectors.playButton);
+            await playButton.click();
+        } catch (error) {
+            console.error('Error toggling play/pause:', error);
+            throw error;
+        }
     }
 
     async fastForward(): Promise<void> {
@@ -143,12 +148,12 @@ export class PlayerPage extends BasePage {
     }
 
     async getCurrentTime(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.currentTime) as unknown as ChainablePromiseElement<any>;
+        const element = await this.waitForElement(this.selectors.currentTime);
         return element.getText();
     }
 
     async getDuration(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.duration) as unknown as ChainablePromiseElement<any>;
+        const element = await this.waitForElement(this.selectors.duration);
         return element.getText();
     }
 
@@ -346,7 +351,7 @@ export class PlayerPage extends BasePage {
     }
 
     async getEpisodeInfo(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.episodeInfo) as unknown as ChainablePromiseElement<any>;
+        const element = await this.waitForElement(this.selectors.episodeInfo);
         return element.getText();
     }
 
@@ -553,5 +558,15 @@ export class PlayerPage extends BasePage {
         await this.driver.pause(5000); // Wait for the seek to complete
         const finalPosition = await this.getCurrentPosition();
         return { initial: initialPosition, final: finalPosition };
+    }
+
+    async play(): Promise<void> {
+        try {
+            const playButton = await this.waitForElement(this.selectors.playButton);
+            await playButton.click();
+        } catch (error) {
+            console.error('Error clicking play button:', error);
+            throw error;
+        }
     }
 }

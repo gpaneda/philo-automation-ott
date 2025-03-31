@@ -85,9 +85,9 @@ export class CategoriesPage extends HomeScreenPage {
      * @returns Promise<string[]> Array of movie titles
      */
     async getAllVisibleMovieTitles(): Promise<string[]> {
-        const movieTiles = await this.driver.$$(this.selectors.movieTileWrapper);
+        const titleElements = await this.driver.$$(this.selectors.movieTileWrapper) as unknown as WebdriverIO.Element[];
         const titles: string[] = [];
-        for (const tile of movieTiles) {
+        for (const tile of titleElements) {
             const title = await tile.getAttribute('content-desc');
             if (title) {
                 titles.push(title);
@@ -258,15 +258,15 @@ export class CategoriesPage extends HomeScreenPage {
     public async selectRandomTitle(): Promise<void> {
         try {
             // Get all visible titles using the class's defined selector
-            const titleElements = await this.driver.$$(this.selectors.movieTileWrapper);
+            const titleElements = await this.driver.$$(this.selectors.movieTileWrapper) as unknown as WebdriverIO.Element[];
             
-            if (titleElements.length === 0) {
+            if ((await titleElements.length) === 0) {
                 throw new Error('No titles found on the page');
             }
 
             // Choose a random index
-            const randomIndex = randomInt(0, titleElements.length - 1);
-            console.log(`Selected random index ${randomIndex} out of ${titleElements.length} titles`);
+            const randomIndex = randomInt(0, (await titleElements.length) - 1);
+            console.log(`Selected random index ${randomIndex} out of ${await titleElements.length} titles`);
 
             // Get the current focused element's index
             const focusedElement = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
@@ -775,7 +775,8 @@ export class CategoriesPage extends HomeScreenPage {
      * Wait for movie tiles to be loaded
      */
     async waitForMovieTilesLoaded(): Promise<void> {
-        await this.driver.$(this.selectors.movieTileWrapper).waitForDisplayed({ timeout: 10000 });
+        const element = await this.driver.$(this.selectors.movieTileWrapper);
+        await element.waitForDisplayed({ timeout: 10000 });
     }
 
     /**

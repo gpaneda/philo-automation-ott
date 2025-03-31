@@ -1,8 +1,11 @@
-import type { Browser } from 'webdriverio';
-import { ChainablePromiseElement, Element } from 'webdriverio';
+import { Browser } from 'webdriverio';
+import type { ChainablePromiseElement } from 'webdriverio';
+
 import { exec } from 'child_process';
+
 import fs from 'fs';
 
+// Use the Element type from WebdriverIO which includes all element methods
 export interface Selector {
     id: string;
     text?: string;
@@ -15,15 +18,15 @@ export interface Selector {
 
 export class BasePage {
     protected driver: Browser;
-    protected defaultTimeout = 30000; // Increased to 30 seconds for better reliability
+    protected defaultTimeout = 10000;
 
     constructor(driver: Browser) {
         this.driver = driver;
     }
 
     /**
-     * Wait for an element to be present
-     * @param selector The element selector
+     * Wait for an element to be present and return it
+     * @param selector The selector to find the element
      * @param timeout Optional timeout in milliseconds
      * @returns The element when found
      */

@@ -18,7 +18,7 @@ const execAsync = promisify(exec);
 
 export class AppHelper {
     private static driver: Browser;
-    private static currentDeviceType: 'fireTV' | 'androidTV' | null = null;
+    static currentDeviceType: 'fireTV' | 'androidTV' | null = null;
     static appPackage = 'com.philo.philo'; // Default to Fire TV package
 
     // Placeholder for the package source URL - to be implemented based on actual source
@@ -50,8 +50,14 @@ export class AppHelper {
     }
 
     static async detectDeviceType(): Promise<'fireTV' | 'androidTV' | null> {
+        console.log('\n=== Detecting Device Type ===');
         const fireTVIP = process.env.FIRE_TV_IP;
         const androidTVIP = process.env.ANDROID_TV_IP;
+        
+        console.log('Fire TV IP:', fireTVIP);
+        console.log('Android TV IP:', androidTVIP);
+        console.log('Fire TV Port:', process.env.FIRE_TV_PORT);
+        console.log('Android TV Port:', process.env.ANDROID_TV_PORT);
 
         return new Promise((resolve) => {
             // Get list of connected devices
@@ -87,17 +93,19 @@ export class AppHelper {
     }
 
     static async initializeDriver(): Promise<Browser> {
+        console.log('\n=== Initializing WebDriver ===');
         if (!this.driver) {
             try {
                 // Detect device type if not already set
                 if (!this.currentDeviceType) {
+                    console.log('Device type not set, detecting...');
                     this.currentDeviceType = await this.detectDeviceType();
+                    if (!this.currentDeviceType) {
+                        throw new Error('No supported device detected');
+                    }
                 }
 
-                if (!this.currentDeviceType) {
-                    throw new Error('No supported device detected');
-                }
-
+                console.log('Using device type:', this.currentDeviceType);
                 const capabilities = this.currentDeviceType === 'fireTV' ? fireTVCapabilities : androidTVCapabilities;
                 console.log(`Initializing WebDriver for ${this.currentDeviceType} with capabilities:`, JSON.stringify(capabilities, null, 2));
                 
@@ -203,12 +211,24 @@ export class AppHelper {
     }
 
     static async loginToPhilo(): Promise<boolean> {
+        console.log('\n=== Starting Philo Login Process ===');
         try {
-            console.log('\n=== Starting Philo Sign-in Process ===');
+            // Ensure device type is detected
+            if (!this.currentDeviceType) {
+                console.log('Device type not set, detecting...');
+                this.currentDeviceType = await this.detectDeviceType();
+                if (!this.currentDeviceType) {
+                    throw new Error('Failed to detect device type');
+                }
+            }
             
+            console.log('Current device type:', this.currentDeviceType);
+
             // Initialize driver if not already initialized
+            console.log('Launching Philo app...');
             const driver = await this.launchPhiloApp();
-            
+            console.log('App launched successfully');
+
             // Search for existing emails first
             console.log('Step 1: Searching for existing Philo emails...');
             const deviceIp = this.currentDeviceType === 'fireTV' 
@@ -224,17 +244,27 @@ export class AppHelper {
             
             console.log('\nStep 2: Triggering sign-in email...');
             await driver.pause(2000);
-            await driver.$('android=text("Sign in")').click();
-            
+            console.log('Looking for sign-in button...');
+            const signInButton = await driver.$('android=text("Sign in")');
+            if (!signInButton) {
+                throw new Error('Sign in button not found');
+            }
+            console.log('Found sign-in button, clicking...');
+            await signInButton.click();
+
             // Use the correct login page based on device type
+            console.log('Initializing login page...');
             const loginPage = this.currentDeviceType === 'androidTV' 
                 ? new AndroidLoginPage(driver)
                 : new LoginPage(driver);
 
+            console.log('Clearing input field...');
             await loginPage.clearInput();
+            console.log('Entering email from environment...');
             await loginPage.enterEmailFromEnv();
+            console.log('Clicking submit button...');
             await loginPage.clickOnSubmitButton();
-            
+
             // Wait for email to be sent and process it
             console.log('Waiting for email to be delivered...');
             await driver.pause(10000);
@@ -243,34 +273,19 @@ export class AppHelper {
             console.log(`Using device IP: ${deviceIp} for device type: ${this.currentDeviceType}`);
             const success = await GmailHelper.processSignInEmail(deviceIp);
             
-            if (success) {
-                console.log('✅ Successfully processed sign-in email');
-                
-                // Wait for app to complete sign-in
-                console.log('Step 4: Waiting for app to complete sign-in...');
-                await driver.pause(10000);
-                
-                // Use correct package name for resource IDs
-                const packageName = this.currentDeviceType === 'androidTV' ? 'com.philo.philo.google' : 'com.philo.philo';
-                
-                // Verify profile selection screen
-                const profilesTitle = await driver.$(`android=resourceId("${packageName}:id/profiles_title")`);
-                await profilesTitle.waitForDisplayed({ timeout: 20000 });
-                
-                // Click profile to enter homescreen
-                const profileAvatar = await driver.$(`android=resourceId("${packageName}:id/avatar")`);
-                await profileAvatar.waitForDisplayed({ timeout: 5000 });
-                await profileAvatar.click();
-                
-                console.log('✅ Successfully completed sign-in process');
-                return true;
+            if (!success) {
+                throw new Error('Failed to process sign-in email');
             }
-            
-            console.log('❌ Sign-in process failed');
-            return false;
+
+            console.log('✅ Successfully processed sign-in email');
+            return true;
         } catch (error) {
-            console.error('❌ Error during sign-in process:', error);
-            return false;
+            console.error('\n=== Login Process Failed ===');
+            console.error('Error details:', error);
+            if (error instanceof Error) {
+                console.error('Error stack:', error.stack);
+            }
+            throw error;
         }
     }
 

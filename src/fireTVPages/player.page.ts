@@ -105,8 +105,13 @@ export class PlayerPage extends BasePage {
     }
 
     async togglePlayPause(): Promise<void> {
-        await this.driver.pressKeyCode(66);
-        await this.driver.pause(2000);
+        try {
+            const playButton = await this.waitForElement(this.selectors.playButton);
+            await playButton.click();
+        } catch (error) {
+            console.error('Error toggling play/pause:', error);
+            throw error;
+        }
     }
 
     async fastForward(times = 10, delay = 200): Promise<boolean> {
@@ -147,12 +152,12 @@ export class PlayerPage extends BasePage {
     }
 
     async getCurrentTime(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.currentTime) as Element;
+        const element = await this.waitForElement(this.selectors.currentTime);
         return element.getText();
     }
 
     async getDuration(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.duration) as Element;
+        const element = await this.waitForElement(this.selectors.duration);
         return element.getText();
     }
 
@@ -350,7 +355,7 @@ export class PlayerPage extends BasePage {
     }
 
     async getEpisodeInfo(): Promise<string> {
-        const element = await this.waitForElement(this.selectors.episodeInfo) as Element;
+        const element = await this.waitForElement(this.selectors.episodeInfo);
         return element.getText();
     }
 

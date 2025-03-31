@@ -193,11 +193,11 @@ export class LoginPage extends BasePage {
     async completeVerification(): Promise<void> {
         // Wait for email and process sign-in
         console.log('Processing sign-in email...');
-        const deviceIp = AppHelper.currentDeviceType === 'fireTV' 
+        const deviceIp = AppHelper.deviceType === 'fireTV' 
             ? process.env.FIRE_TV_IP 
             : process.env.ANDROID_TV_IP;
             
-        console.log(`Using device IP: ${deviceIp} for device type: ${AppHelper.currentDeviceType}`);
+        console.log(`Using device IP: ${deviceIp} for device type: ${AppHelper.deviceType}`);
         const success = await GmailHelper.processSignInEmail(deviceIp);
         if (!success) {
             throw new Error('Failed to process sign-in email');

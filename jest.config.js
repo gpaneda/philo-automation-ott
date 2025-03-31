@@ -2,21 +2,21 @@
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
+  roots: ['<rootDir>/src'],
+  testMatch: ['**/__tests__/**/*.ts', '**/?(*.)+(spec|test).ts'],
   transform: {
-    '^.+\\.tsx?$': ['ts-jest', {
-      tsconfig: 'tsconfig.json'
-    }]
+    '^.+\\.ts$': 'ts-jest',
   },
-  setupFilesAfterEnv: ['./jest.setup.ts'],
+  moduleFileExtensions: ['ts', 'js', 'json', 'node'],
+  setupFilesAfterEnv: ['<rootDir>/src/setup/jest.setup.ts'],
   testTimeout: 300000,
   bail: 0,
   verbose: true,
   maxWorkers: 1,
   globals: {
     'ts-jest': {
-      isolatedModules: true,
-      tsconfig: 'tsconfig.json'
-    }
+      tsconfig: 'tsconfig.json',
+    },
   },
   reporters: [
     'default',

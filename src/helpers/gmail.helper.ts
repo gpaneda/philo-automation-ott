@@ -4,6 +4,13 @@ import axios, { AxiosInstance } from 'axios';
 import open from 'open';
 import { AppHelper } from './app.helper';
 
+interface GmailCredentials {
+  clientId: string;
+  clientSecret: string;
+  redirectUri: string;
+  refreshToken: string;
+}
+
 export class GmailHelper {
     private static oauth2Client: OAuth2Client;
     private static gmail = google.gmail('v1');
@@ -18,7 +25,9 @@ export class GmailHelper {
 
     public static async initializeGmailClient(deviceIp: string, email?: string): Promise<void> {
         try {
+            console.log('\n=== Starting Gmail Client Initialization ===');
             console.log('Device IP received:', deviceIp);
+            
             // If email is not provided, determine it based on the device type
             let selectedEmail = email || process.env.PHILO_EMAIL;
             if (!selectedEmail) {
@@ -53,26 +62,31 @@ export class GmailHelper {
             }
 
             if (!selectedEmail) {
+                console.error('No email address configured for device');
                 throw new Error('No email address configured for device');
             }
 
-            console.log('=== Starting Gmail Client Initialization ===');
-            console.log('Initializing for email:', selectedEmail);
+            console.log('Selected email:', selectedEmail);
             
-            const credentials = this.getGmailCredentials(selectedEmail);
+            const credentials = await this.getGmailCredentials(selectedEmail);
+            console.log('Retrieved Gmail credentials for email:', selectedEmail);
+            
             this.currentEmail = selectedEmail;
             
+            console.log('Creating OAuth2 client...');
             this.oauth2Client = new OAuth2Client(
                 credentials.clientId,
                 credentials.clientSecret,
                 credentials.redirectUri
             );
             
+            console.log('Setting OAuth2 credentials...');
             this.oauth2Client.setCredentials({
                 refresh_token: credentials.refreshToken
             });
 
             // Configure axios instance with proper headers and settings
+            console.log('Configuring axios instance...');
             this.axiosInstance = axios.create({
                 maxRedirects: 5,
                 validateStatus: (status) => status < 400,
@@ -84,53 +98,72 @@ export class GmailHelper {
                 withCredentials: true
             });
 
+            console.log('Verifying Gmail connection...');
             const profile = await this.gmail.users.getProfile({
                 auth: this.oauth2Client,
                 userId: 'me'
             });
-            console.log('✅ Connected as:', profile.data.emailAddress);
+            console.log('✅ Successfully connected to Gmail as:', profile.data.emailAddress);
         } catch (error) {
             console.error('❌ Gmail initialization failed:', error);
+            if (error instanceof Error) {
+                console.error('Error details:', error.message);
+                console.error('Error stack:', error.stack);
+            }
             throw error;
         }
     }
     /**
     * Get Gmail credentials based on email
     */
-    private static getGmailCredentials(email: string): {
-        clientId: string;
-        clientSecret: string;
-        refreshToken: string;
-        redirectUri: string;
-    } {
-        // Use the appropriate credentials based on the email
-        const isFirstDevice = email === process.env.PHILO_EMAIL;
-        const isSecondDevice = email === process.env.PHILO_EMAIL_2;
-        const isThirdDevice = email === process.env.PHILO_EMAIL_3;
+    private static async getGmailCredentials(email: string): Promise<GmailCredentials> {
+        console.log('\n=== Gmail Credential Selection ===');
+        console.log('Email:', email);
+        console.log('PHILO_EMAIL:', process.env.PHILO_EMAIL);
+        console.log('PHILO_EMAIL_2:', process.env.PHILO_EMAIL_2);
+        console.log('PHILO_EMAIL_3:', process.env.PHILO_EMAIL_3);
 
-        if (isFirstDevice) {
+        // Default credentials
+        const defaultCredentials: GmailCredentials = {
+            clientId: process.env.GMAIL_CLIENT_ID!,
+            clientSecret: process.env.GMAIL_CLIENT_SECRET!,
+            redirectUri: process.env.GMAIL_REDIRECT_URI!,
+            refreshToken: process.env.GMAIL_REFRESH_TOKEN!
+        };
+
+        // Check if any credentials are missing
+        const missingCredentials = Object.entries(defaultCredentials)
+            .filter(([_, value]) => !value)
+            .map(([key]) => key);
+
+        if (missingCredentials.length > 0) {
+            console.error('Missing default Gmail credentials:', missingCredentials);
+            throw new Error(`Missing required Gmail credentials: ${missingCredentials.join(', ')}`);
+        }
+
+        // If email matches any configured email, use those credentials
+        if (email === process.env.PHILO_EMAIL) {
+            console.log('Using Fire TV credentials');
+            return defaultCredentials;
+        } else if (email === process.env.PHILO_EMAIL_2) {
+            console.log('Using Android TV credentials');
             return {
-                clientId: process.env.GMAIL_CLIENT_ID!,
-                clientSecret: process.env.GMAIL_CLIENT_SECRET!,
-                refreshToken: process.env.GMAIL_REFRESH_TOKEN!,
-                redirectUri: process.env.GMAIL_REDIRECT_URI!
+                clientId: process.env.GMAIL_CLIENT_ID_2!,
+                clientSecret: process.env.GMAIL_CLIENT_SECRET_2!,
+                redirectUri: process.env.GMAIL_REDIRECT_URI_2!,
+                refreshToken: process.env.GMAIL_REFRESH_TOKEN_2!
             };
-        } else if (isSecondDevice) {
+        } else if (email === process.env.PHILO_EMAIL_3) {
+            console.log('Using Roku credentials');
             return {
-                clientId: process.env.GMAIL_2_CLIENT_ID!,
-                clientSecret: process.env.GMAIL_2_CLIENT_SECRET!,
-                refreshToken: process.env.GMAIL_2_REFRESH_TOKEN!,
-                redirectUri: process.env.GMAIL_2_REDIRECT_URI!
-            };
-        } else if (isThirdDevice) {
-            return {
-                clientId: process.env.GMAIL_3_CLIENT_ID!,
-                clientSecret: process.env.GMAIL_3_CLIENT_SECRET!,
-                refreshToken: process.env.GMAIL_3_REFRESH_TOKEN!,
-                redirectUri: process.env.GMAIL_3_REDIRECT_URI!
+                clientId: process.env.GMAIL_CLIENT_ID_3!,
+                clientSecret: process.env.GMAIL_CLIENT_SECRET_3!,
+                redirectUri: process.env.GMAIL_REDIRECT_URI_3!,
+                refreshToken: process.env.GMAIL_REFRESH_TOKEN_3!
             };
         } else {
-            throw new Error('Email does not match any configured devices');
+            console.log('Using default credentials for email:', email);
+            return defaultCredentials;
         }
     }
 
@@ -166,12 +199,14 @@ export class GmailHelper {
     static async processSignInEmail(deviceIp?: string): Promise<boolean> {
         try {
             console.log('\n=== Processing Philo Sign-in Email ===');
-            if (deviceIp) {
-                console.log(`Processing sign-in email for device IP: ${deviceIp}, device type: ${AppHelper.currentDeviceType}`);
-                await this.initializeGmailClient(deviceIp);
-            } else {
+            if (!deviceIp) {
                 throw new Error('Device IP is required for email processing');
             }
+
+            console.log(`Processing sign-in email for device IP: ${deviceIp}, device type: ${AppHelper.currentDeviceType}`);
+            console.log('Initializing Gmail client...');
+            await this.initializeGmailClient(deviceIp);
+            console.log('Gmail client initialized successfully');
 
             // Try different search queries
             const queries = [
@@ -180,94 +215,101 @@ export class GmailHelper {
                 'from:(help OR noreply OR no-reply)@philo.com'
             ];
 
+            console.log('Starting email search with queries:', queries);
+
             // Try up to 3 times with increasing wait times
             for (let attempt = 1; attempt <= 3; attempt++) {
                 console.log(`\nAttempt ${attempt} to find sign-in email...`);
                 
                 // Try each query
-                let foundEmail = false;
                 for (const query of queries) {
                     console.log(`\nTrying search query: ${query}`);
-                    const response = await this.gmail.users.messages.list({
-                        auth: this.oauth2Client,
-                        userId: 'me',
-                        maxResults: 10,
-                        q: query
-                    });
+                    try {
+                        const response = await this.gmail.users.messages.list({
+                            auth: this.oauth2Client,
+                            userId: 'me',
+                            maxResults: 10,
+                            q: query
+                        });
 
-                    if (!response.data?.messages?.length) {
-                        console.log('No emails found with this query');
-                        continue;
-                    }
+                        console.log('Gmail API response:', JSON.stringify(response.data, null, 2));
 
-                    // Found emails - get the most recent one
-                    const messageId = response.data.messages[0].id;
-                    if (!messageId) {
-                        console.log('❌ Invalid message ID');
-                        continue;
-                    }
+                        if (!response.data?.messages?.length) {
+                            console.log('No emails found with this query');
+                            continue;
+                        }
 
-                    console.log('Found most recent email:', messageId);
+                        // Found emails - get the most recent one
+                        const messageId = response.data.messages[0].id;
+                        if (!messageId) {
+                            console.log('❌ Invalid message ID');
+                            continue;
+                        }
 
-                    // Get email content
-                    const message = await this.gmail.users.messages.get({
-                        auth: this.oauth2Client,
-                        userId: 'me',
-                        id: messageId,
-                        format: 'full'
-                    });
+                        console.log('Found most recent email:', messageId);
 
-                    // Log email details
-                    const subject = message.data.payload?.headers?.find(h => h.name === 'Subject')?.value || 'No Subject';
-                    const from = message.data.payload?.headers?.find(h => h.name === 'From')?.value || 'No Sender';
-                    const date = message.data.payload?.headers?.find(h => h.name === 'Date')?.value || 'No Date';
-                    console.log('Email details:', { subject, from, date });
+                        // Get email content
+                        console.log('Fetching email content...');
+                        const message = await this.gmail.users.messages.get({
+                            auth: this.oauth2Client,
+                            userId: 'me',
+                            id: messageId,
+                            format: 'full'
+                        });
 
-                    // Extract email body
-                    const emailBody = message.data.payload?.parts?.[0]?.body?.data ||
-                                    message.data.payload?.body?.data;
+                        // Log email details
+                        const subject = message.data.payload?.headers?.find(h => h.name === 'Subject')?.value || 'No Subject';
+                        const from = message.data.payload?.headers?.find(h => h.name === 'From')?.value || 'No Sender';
+                        const date = message.data.payload?.headers?.find(h => h.name === 'Date')?.value || 'No Date';
+                        console.log('Email details:', { subject, from, date });
 
-                    if (!emailBody) {
-                        console.log('❌ No email content found');
-                        console.log('Message payload structure:', JSON.stringify(message.data.payload, null, 2));
-                        continue;
-                    }
+                        // Extract email body
+                        const emailBody = message.data.payload?.parts?.[0]?.body?.data ||
+                                        message.data.payload?.body?.data;
 
-                    const decodedBody = Buffer.from(emailBody, 'base64').toString();
-                    console.log('Email body preview:', decodedBody.substring(0, 200) + '...');
+                        if (!emailBody) {
+                            console.log('❌ No email content found');
+                            console.log('Message payload structure:', JSON.stringify(message.data.payload, null, 2));
+                            continue;
+                        }
 
-                    // Find sign-in link using various patterns
-                    const signInLink = this.extractSignInLink(decodedBody);
-                    if (!signInLink) {
-                        console.log('❌ No sign-in link found in email');
-                        continue;
-                    }
+                        const decodedBody = Buffer.from(emailBody, 'base64').toString();
+                        console.log('Email body preview:', decodedBody.substring(0, 200) + '...');
 
-                    console.log('✅ Found sign-in link:', signInLink);
-                    foundEmail = true;
+                        // Find sign-in link using various patterns
+                        console.log('Extracting sign-in link...');
+                        const signInLink = this.extractSignInLink(decodedBody);
+                        if (!signInLink) {
+                            console.log('❌ No sign-in link found in email');
+                            continue;
+                        }
 
-                    // Process the sign-in link
-                    if (await this.processSignInLink(signInLink, messageId)) {
-                        return true;
+                        console.log('✅ Found sign-in link:', signInLink);
+
+                        // Process the sign-in link
+                        console.log('Processing sign-in link...');
+                        if (await this.processSignInLink(signInLink, messageId)) {
+                            console.log('✅ Successfully processed sign-in link');
+                            return true;
+                        } else {
+                            throw new Error('Failed to process sign-in link');
+                        }
+                    } catch (error) {
+                        console.error(`Error processing query "${query}":`, error);
+                        throw error;
                     }
                 }
 
-                if (!foundEmail && attempt < 3) {
-                    const waitTime = attempt * 15000; // 15s, 30s, 45s
-                    console.log(`\nWaiting ${waitTime/1000} seconds before next attempt...`);
-                    await new Promise(resolve => setTimeout(resolve, waitTime));
-                }
+                // Wait before next attempt
+                const waitTime = attempt * 5000; // 5s, 10s, 15s
+                console.log(`Waiting ${waitTime}ms before next attempt...`);
+                await new Promise(resolve => setTimeout(resolve, waitTime));
             }
 
-            console.log('❌ No valid sign-in emails found after all attempts');
-            return false;
-
+            throw new Error('Failed to find or process sign-in email after all attempts');
         } catch (error) {
-            console.error('❌ Error processing email:', error);
-            if (axios.isAxiosError(error)) {
-                console.error('Response:', error.response?.data);
-            }
-            return false;
+            console.error('❌ Error during email processing:', error);
+            throw error;
         }
     }
 
@@ -453,5 +495,107 @@ export class GmailHelper {
      */
     static getGmailClient() {
         return this.gmail;
+    }
+
+    /**
+     * Get the Philo sign-in link from the most recent email
+     * @returns Promise<string> The sign-in link or null if not found
+     */
+    public static async getPhiloSignInLink(): Promise<string | null> {
+        try {
+            // Try different search queries
+            const queries = [
+                'from:(help OR noreply OR no-reply)@philo.com subject:sign newer_than:24h',
+                'from:(help OR noreply OR no-reply)@philo.com subject:"Sign in"',
+                'from:(help OR noreply OR no-reply)@philo.com'
+            ];
+
+            // Try each query
+            for (const query of queries) {
+                console.log(`\nTrying search query: ${query}`);
+                const response = await this.gmail.users.messages.list({
+                    auth: this.oauth2Client,
+                    userId: 'me',
+                    maxResults: 1,
+                    q: query
+                });
+
+                if (!response.data?.messages?.length) {
+                    console.log('No emails found with this query');
+                    continue;
+                }
+
+                // Get the most recent email
+                const messageId = response.data.messages[0].id;
+                if (!messageId) {
+                    console.log('❌ Invalid message ID');
+                    continue;
+                }
+
+                // Get email content
+                const message = await this.gmail.users.messages.get({
+                    auth: this.oauth2Client,
+                    userId: 'me',
+                    id: messageId,
+                    format: 'full'
+                });
+
+                // Extract email body
+                const emailBody = message.data.payload?.parts?.[0]?.body?.data ||
+                                message.data.payload?.body?.data;
+
+                if (!emailBody) {
+                    console.log('❌ No email content found');
+                    continue;
+                }
+
+                const decodedBody = Buffer.from(emailBody, 'base64').toString();
+                const signInLink = this.extractSignInLink(decodedBody);
+
+                if (signInLink) {
+                    console.log('✅ Found sign-in link:', signInLink);
+                    return signInLink;
+                }
+            }
+
+            console.log('❌ No sign-in link found in any email');
+            return null;
+
+        } catch (error) {
+            console.error('❌ Error getting sign-in link:', error);
+            return null;
+        }
+    }
+
+    /**
+     * Click on the Philo sign-in link from the most recent email
+     * @returns Promise<boolean> True if successful, false otherwise
+     */
+    public static async clickSignInLink(): Promise<boolean> {
+        try {
+            const signInLink = await this.getPhiloSignInLink();
+            if (!signInLink) {
+                console.log('❌ No sign-in link found');
+                return false;
+            }
+
+            // Get the most recent email ID for marking as read later
+            const response = await this.gmail.users.messages.list({
+                auth: this.oauth2Client,
+                userId: 'me',
+                maxResults: 1,
+                q: 'from:(help OR noreply OR no-reply)@philo.com subject:sign newer_than:24h'
+            });
+
+            const messageId = response.data?.messages?.[0]?.id;
+
+            // Process the sign-in link
+            const success = await this.processSignInLink(signInLink, messageId || '');
+            return success;
+
+        } catch (error) {
+            console.error('❌ Error clicking sign-in link:', error);
+            return false;
+        }
     }
 } 

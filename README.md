@@ -258,3 +258,32 @@ Each test run will generate an HTML report in the `reports` directory.
 ---
 *Note: This framework is designed for testing purposes only and should not be used for any unauthorized automation of the Philo app.* 
 
+# Type Definitions Management
+
+## WebdriverIO Types
+This project uses WebdriverIO 9.x which includes its own TypeScript definitions. Do not install @types/webdriverio as it will cause type conflicts.
+
+## Checking for Type Issues
+Run the following commands to check for type issues:
+```bash
+# Check TypeScript compilation
+npm run check-types
+
+# Check dependency versions
+npm run check-deps
+```
+
+## Best Practices
+1. When adding new packages:
+   - Use packages that include their own TypeScript definitions when possible
+   - If using @types/* packages, ensure version compatibility with the main package
+
+2. When updating packages:
+   - Update both the package and its type definitions together
+   - Remove @types/* packages if the main package includes its own definitions
+
+3. Regular maintenance:
+   - Run `npm run check-types` before commits
+   - Run `npm run check-deps` to verify dependency versions
+   - Keep package.json and package-lock.json in sync
+

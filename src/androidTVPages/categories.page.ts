@@ -236,20 +236,20 @@ export class CategoriesPage extends HomeScreenPage {
     public async selectRandomTitle(): Promise<void> {
         try {
             // Get all visible titles using the class's defined selector
-            const titleElements = await this.driver.$$(this.selectors.movieTileWrapper);
-
-            if (titleElements.length === 0) {
+            const titleElements = await this.driver.$$(this.selectors.movieTileWrapper) as unknown as WebdriverIO.Element[];
+            
+            if ((await titleElements.length) === 0) {
                 throw new Error('No titles found on the page');
             }
 
             // Choose a random index
-            const randomIndex = randomInt(0, titleElements.length - 1);
-            console.log(`Selected random index ${randomIndex} out of ${titleElements.length} titles`);
+            const randomIndex = randomInt(0, (await titleElements.length) - 1);
+            console.log(`Selected random index ${randomIndex} out of ${await titleElements.length} titles`);
 
             // Get the current focused element's index
             const focusedElement = await this.driver.$('android=new UiSelector().className("android.view.ViewGroup").focused(true)');
             const focusedId = await focusedElement.elementId;
-
+            
             // Get element IDs one by one to avoid Promise.all type issues
             const elementIds: string[] = [];
             for (const element of titleElements) {
@@ -275,7 +275,7 @@ export class CategoriesPage extends HomeScreenPage {
                     await this.pressLeftButton();
                 }
                 // Wait for navigation animation
-                await this.driver.pause(1000);
+                await this.driver.pause(5000);
             }
 
             // Verify we landed on the right title
@@ -283,7 +283,7 @@ export class CategoriesPage extends HomeScreenPage {
             console.log(`Successfully navigated to title: ${selectedTitle}`);
 
             // Add a final pause to ensure focus is stable
-            await this.driver.pause(1000);
+            await this.driver.pause(5000);
         } catch (error) {
             console.error('Error in selectRandomTitle:', error);
             throw error;
@@ -779,16 +779,18 @@ export class CategoriesPage extends HomeScreenPage {
      * Wait for movie tiles to be loaded
      */
     async waitForMovieTilesLoaded(): Promise<void> {
-        await this.driver.$(this.selectors.movieTileWrapper).waitForDisplayed({ timeout: 10000 });
+        const element = await this.driver.$(this.selectors.movieTileWrapper);
+        await element.waitForDisplayed({ timeout: 10000 });
     }
 
     /**
      * Click on the first movie tile in the grid
      */
     async clickMovieTile(): Promise<void> {
-        await this.driver.pause(50000);
+        await this.driver.pause(5000);
         const movieTiles = await this.driver.$$(this.selectors.movieTileWrapper);
-        if (movieTiles.length > 0) {
+        const tileCount = await movieTiles.length;
+        if (tileCount > 0) {
             await movieTiles[0].click();
         } else {
             throw new Error('No movie tiles found to click');
