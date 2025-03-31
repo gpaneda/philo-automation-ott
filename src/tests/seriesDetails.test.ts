@@ -20,10 +20,18 @@ let seriesDetailsPage: SeriesDetailsPage | AndroidSeriesDetailsPage;
 
 // Helper function to terminate and activate the app
 const terminateAndActivateApp = async () => {
-    await driver.terminateApp(AppHelper.appPackage);
-    await driver.pause(APP_TERMINATION_DELAY);
-    await driver.activateApp(AppHelper.appPackage);
-    await driver.pause(APP_ACTIVATION_DELAY);
+    try {
+        await driver.terminateApp(AppHelper.appPackage);
+        await driver.pause(APP_TERMINATION_DELAY);
+        await driver.activateApp(AppHelper.appPackage);
+        await driver.pause(APP_ACTIVATION_DELAY);
+    } catch (error: unknown) {
+        console.error('Error in terminateAndActivateApp:', error);
+        if (error instanceof Error) {
+            throw new Error(`Failed to terminate and activate app: ${error.message}`);
+        }
+        throw new Error('Failed to terminate and activate app: Unknown error');
+    }
 };
 
 beforeAll(async () => {
@@ -71,18 +79,24 @@ beforeAll(async () => {
             categoriesPage = new CategoriesPage(driver);
             seriesDetailsPage = new SeriesDetailsPage(driver);
         }
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in beforeAll:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`Failed in beforeAll: ${error.message}`);
+        }
+        throw new Error('Failed in beforeAll: Unknown error');
     }
 }, 120000);
 
 beforeEach(async () => {
     try {
         await terminateAndActivateApp();
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in beforeEach:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`Failed in beforeEach: ${error.message}`);
+        }
+        throw new Error('Failed in beforeEach: Unknown error');
     }
 });
 
@@ -90,17 +104,23 @@ afterEach(async () => {
     try {
         await driver.terminateApp(AppHelper.appPackage);
         await driver.pause(2000);
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in afterEach:', error);
     }
 });
 
 afterAll(async () => {
-    // Clean up app data after test
-    console.log('Clearing app data after test...');
-    await AppHelper.clearAppData();
+    try {
+        // Clean up app data after test
+        console.log('Clearing app data after test...');
+        await AppHelper.clearAppData();
+        if (driver) {
+            await driver.deleteSession();
+        }
+    } catch (error: unknown) {
+        console.error('Error in afterAll:', error);
+    }
 });
-
 
 test.only('TC119 - Verify Episodes Tab Navigation', async () => {
     try {
@@ -113,9 +133,12 @@ test.only('TC119 - Verify Episodes Tab Navigation', async () => {
         console.log('Verifying Episodes tab...');
         await seriesDetailsPage.goToEpisodes();
         await driver.pause(2000);
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in episodes tab test:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`TC119 failed: ${error.message}`);
+        }
+        throw new Error('TC119 failed: Unknown error');
     }
 }, 180000);
 
@@ -130,9 +153,12 @@ test('TC120 - Verify Schedule Tab Navigation', async () => {
         console.log('Verifying Schedule tab...');
         await seriesDetailsPage.goToSchedule();
         await driver.pause(2000);
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in schedule tab test:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`TC120 failed: ${error.message}`);
+        }
+        throw new Error('TC120 failed: Unknown error');
     }
 }, 180000);
 
@@ -147,9 +173,12 @@ test('TC121 - Verify Related Tab Navigation', async () => {
         console.log('Verifying Related tab...');
         await seriesDetailsPage.goToRelated();
         await driver.pause(2000);
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in related tab test:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`TC121 failed: ${error.message}`);
+        }
+        throw new Error('TC121 failed: Unknown error');
     }
 }, 180000);
 
@@ -173,9 +202,12 @@ test('TC122 - Verify Extras Tab Navigation', async () => {
         console.log('Verifying Extras tab...');
         await seriesDetailsPage.goToExtras();
         await driver.pause(2000);
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in extras tab test:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`TC122 failed: ${error.message}`);
+        }
+        throw new Error('TC122 failed: Unknown error');
     }
 }, 180000);
 
@@ -195,8 +227,11 @@ test('TC123 - Verify Details Tab Navigation', async () => {
         console.log('Verifying Details tab...');
         await seriesDetailsPage.goToDetails();
         await driver.pause(2000);
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in details tab test:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`TC123 failed: ${error.message}`);
+        }
+        throw new Error('TC123 failed: Unknown error');
     }
 }, 180000);

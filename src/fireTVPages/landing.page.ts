@@ -55,4 +55,17 @@ export class LandingPage extends BasePage {
     async verifyHideChannelsDisplayed(): Promise<void> {
         await this.verifyElementDisplayed(this.HIDE_CHANNELS);
     }
+
+    // New wait methods to replace fixed delays
+    async waitForChannelsVisible(): Promise<void> {
+        await this.verifyElementDisplayed(this.CHANNELS_GROUP);
+    }
+
+    async waitForExploreFreeChannelsButton(): Promise<void> {
+        await this.verifyElementDisplayed(this.SEE_ALL_CHANNELS);
+    }
+
+    async waitForLoginScreen(): Promise<void> {
+        await this.verifyElementDisplayed(this.LOGIN_TITLE);
+    }
 } 

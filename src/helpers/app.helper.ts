@@ -61,7 +61,7 @@ export class AppHelper {
 
         return new Promise((resolve) => {
             // Get list of connected devices
-            exec('adb devices', (error, stdout) => {
+            exec('adb devices', (error: Error | null, stdout: string) => {
                 if (error) {
                     console.error('Error checking connected devices:', error);
                     resolve(null);
@@ -118,10 +118,21 @@ export class AppHelper {
                     connectionRetryTimeout: 120000,
                     connectionRetryCount: 5
                 });
-                console.log('WebDriver initialized successfully');
-            } catch (error) {
+
+                // Set timeouts for various operations
+                await this.driver.setTimeout({
+                    implicit: 15000,    // Wait up to 15 seconds for elements
+                    pageLoad: 40000,    // Wait up to 40 seconds for page loads
+                    script: 30000       // Wait up to 30 seconds for script execution
+                });
+
+                console.log('WebDriver initialized successfully with implicit waits');
+            } catch (error: unknown) {
                 console.error('Failed to initialize WebDriver:', error);
-                throw error;
+                if (error instanceof Error) {
+                    throw new Error(`Failed to initialize WebDriver: ${error.message}`);
+                }
+                throw new Error('Failed to initialize WebDriver: Unknown error');
             }
         }
         return this.driver;
@@ -140,8 +151,8 @@ export class AppHelper {
                 const deviceId = this.getDeviceId();
                 
                 // First check if the app is installed
-                const isInstalled = await new Promise((resolve) => {
-                    exec(`adb -s ${deviceId} shell pm list packages com.philo.philo.google`, (error, stdout) => {
+                const isInstalled = await new Promise<boolean>((resolve) => {
+                    exec(`adb -s ${deviceId} shell pm list packages com.philo.philo.google`, (error: Error | null, stdout: string) => {
                         resolve(!error && stdout.includes('com.philo.philo.google'));
                     });
                 });
@@ -153,23 +164,26 @@ export class AppHelper {
                 
                 // Try to launch the app using the launcher intent
                 try {
-                    await new Promise((resolve, reject) => {
+                    await new Promise<void>((resolve, reject) => {
                         exec(
                             `adb -s ${deviceId} shell monkey -p com.philo.philo.google -c android.intent.category.LAUNCHER 1`,
-                            (error, stdout, stderr) => {
+                            (error: Error | null, stdout: string, stderr: string) => {
                                 if (error) {
                                     console.error('Failed to launch app via monkey:', stderr);
                                     reject(error);
                                 } else {
                                     console.log('Successfully launched Android TV app via monkey');
-                                    resolve(stdout);
+                                    resolve();
                                 }
                             }
                         );
                     });
-                } catch (launchError) {
+                } catch (launchError: unknown) {
                     console.error('Failed to launch Android TV app:', launchError);
-                    throw launchError;
+                    if (launchError instanceof Error) {
+                        throw new Error(`Failed to launch Android TV app: ${launchError.message}`);
+                    }
+                    throw new Error('Failed to launch Android TV app: Unknown error');
                 }
             } else {
                 console.log('Launching Fire TV app...');
@@ -181,9 +195,12 @@ export class AppHelper {
             await new Promise(resolve => setTimeout(resolve, 10000));
             console.log('App launch completed');
             return driver;
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Failed to launch Philo app:', error);
-            throw error;
+            if (error instanceof Error) {
+                throw new Error(`Failed to launch Philo app: ${error.message}`);
+            }
+            throw new Error('Failed to launch Philo app: Unknown error');
         }
     }
 
@@ -197,8 +214,8 @@ export class AppHelper {
             ? 'com.philo.philo'
             : 'com.philo.philo.google';
 
-        return new Promise((resolve, reject) => {
-            exec(`adb -s ${deviceId} shell pm clear ${packageName}`, (error, stdout, stderr) => {
+        return new Promise<void>((resolve, reject) => {
+            exec(`adb -s ${deviceId} shell pm clear ${packageName}`, (error: Error | null, stdout: string, stderr: string) => {
                 if (error) {
                     console.error('Failed to clear app data:', stderr);
                     reject(error);
@@ -249,8 +266,8 @@ export class AppHelper {
             if (!signInButton) {
                 throw new Error('Sign in button not found');
             }
-            console.log('Found sign-in button, clicking...');
             await signInButton.click();
+            console.log('Clicked sign-in button');
 
             // Use the correct login page based on device type
             console.log('Initializing login page...');
@@ -279,13 +296,12 @@ export class AppHelper {
 
             console.log('✅ Successfully processed sign-in email');
             return true;
-        } catch (error) {
-            console.error('\n=== Login Process Failed ===');
-            console.error('Error details:', error);
+        } catch (error: unknown) {
+            console.error('Failed to login to Philo:', error);
             if (error instanceof Error) {
-                console.error('Error stack:', error.stack);
+                throw new Error(`Failed to login to Philo: ${error.message}`);
             }
-            throw error;
+            throw new Error('Failed to login to Philo: Unknown error');
         }
     }
 

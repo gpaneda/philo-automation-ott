@@ -37,7 +37,7 @@ describe('Landing Page Tests', () => {
                 homeScreenPage = new HomeScreenPage(driver);
                 appPackage = 'com.philo.philo';
             }
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Error in beforeAll:', error);
             throw error;
         }
@@ -53,9 +53,12 @@ describe('Landing Page Tests', () => {
     beforeEach(async () => {
         try {
             await terminateAndActivateApp();
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Error in beforeEach:', error);
-            throw new Error(`Failed to activate app: ${error.message}`);
+            if (error instanceof Error) {
+                throw new Error(`Failed to activate app: ${error.message}`);
+            }
+            throw new Error('Failed to activate app: Unknown error');
         }
     }, 60000);
 
@@ -69,7 +72,7 @@ describe('Landing Page Tests', () => {
                 await driver.deleteSession();
                 await new Promise(resolve => setTimeout(resolve, APP_DATA_CLEAR_DELAY));
             }
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Error in afterAll:', error);
         }
     });
@@ -77,9 +80,12 @@ describe('Landing Page Tests', () => {
     test('TC101 - should display landing page buttons', async () => {
         try {
             await landingPage.verifyLandingPageElements();
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Error in TC101:', error);
-            throw new Error(`TC101 failed: ${error.message}`);
+            if (error instanceof Error) {
+                throw new Error(`TC101 failed: ${error.message}`);
+            }
+            throw new Error('TC101 failed: Unknown error');
         }
     }, 60000);
 
@@ -91,9 +97,12 @@ describe('Landing Page Tests', () => {
             await landingPage.verifyLandingPageElements();
             await driver.pause(2000);
             await landingPage.verifyChannelsDisplayed();
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Error in TC102:', error);
-            throw new Error(`TC102 failed: ${error.message}`);
+            if (error instanceof Error) {
+                throw new Error(`TC102 failed: ${error.message}`);
+            }
+            throw new Error('TC102 failed: Unknown error');
         }
     }, 60000);
 
@@ -106,9 +115,12 @@ describe('Landing Page Tests', () => {
             await homeScreenPage.pressEnterButton();
             await driver.pause(3000);
             await landingPage.verifyLoginScreenDisplayed();
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Error in TC103:', error);
-            throw new Error(`TC103 failed: ${error.message}`);
+            if (error instanceof Error) {
+                throw new Error(`TC103 failed: ${error.message}`);
+            }
+            throw new Error('TC103 failed: Unknown error');
         }
     }, 60000);
 }); 

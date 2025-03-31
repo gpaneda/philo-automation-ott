@@ -20,26 +20,37 @@ export class AdbHelper {
             await execAsync('adb shell rm /sdcard/ui_dump.xml');
             
             return content;
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Failed to dump UI hierarchy:', error);
-            throw error;
+            if (error instanceof Error) {
+                throw new Error(`Failed to dump UI hierarchy: ${error.message}`);
+            }
+            throw new Error('Failed to dump UI hierarchy: Unknown error');
         }
     }
 
     static async parseUiDump(content: string): Promise<Record<string, string>> {
-        const selectors: Record<string, string> = {};
-        
-        // Extract resource-ids
-        const resourceIdRegex = /resource-id="([^"]+)"/g;
-        let match;
-        
-        while ((match = resourceIdRegex.exec(content)) !== null) {
-            const [, resourceId] = match;
-            const shortName = resourceId.split('/').pop() || resourceId;
-            selectors[shortName] = `android=resourceId("${resourceId}")`;
+        try {
+            const selectors: Record<string, string> = {};
+            
+            // Extract resource-ids
+            const resourceIdRegex = /resource-id="([^"]+)"/g;
+            let match;
+            
+            while ((match = resourceIdRegex.exec(content)) !== null) {
+                const [, resourceId] = match;
+                const shortName = resourceId.split('/').pop() || resourceId;
+                selectors[shortName] = `android=resourceId("${resourceId}")`;
+            }
+            
+            return selectors;
+        } catch (error: unknown) {
+            console.error('Failed to parse UI dump:', error);
+            if (error instanceof Error) {
+                throw new Error(`Failed to parse UI dump: ${error.message}`);
+            }
+            throw new Error('Failed to parse UI dump: Unknown error');
         }
-        
-        return selectors;
     }
 
     /**
@@ -52,9 +63,12 @@ export class AdbHelper {
             
             // Optional: Kill the app process
             await execAsync('adb shell am force-stop com.philo.philo');
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Failed to force sign out:', error);
-            throw error;
+            if (error instanceof Error) {
+                throw new Error(`Failed to force sign out: ${error.message}`);
+            }
+            throw new Error('Failed to force sign out: Unknown error');
         }
     }
 } 

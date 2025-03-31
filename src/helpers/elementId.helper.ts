@@ -54,9 +54,12 @@ export class ElementIdHelper {
             // Write the simplified content
             await fs.writeFile(this.SIMPLIFIED_DUMP_PATH, simplified, 'utf-8');
             
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Failed to create simplified dump:', error);
-            throw error;
+            if (error instanceof Error) {
+                throw new Error(`Failed to create simplified dump: ${error.message}`);
+            }
+            throw new Error('Failed to create simplified dump: Unknown error');
         }
     }
 
@@ -79,9 +82,12 @@ export class ElementIdHelper {
             const selectors = await AdbHelper.parseUiDump(uiDump);
             
             return selectors;
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Failed to get element IDs:', error);
-            throw error;
+            if (error instanceof Error) {
+                throw new Error(`Failed to get element IDs: ${error.message}`);
+            }
+            throw new Error('Failed to get element IDs: Unknown error');
         }
     }
 
@@ -94,9 +100,12 @@ export class ElementIdHelper {
         try {
             const selectors = await this.getAllElementIds();
             return selectors[elementName] || null;
-        } catch (error) {
+        } catch (error: unknown) {
             console.error(`Failed to get selector for element ${elementName}:`, error);
-            throw error;
+            if (error instanceof Error) {
+                throw new Error(`Failed to get selector for element ${elementName}: ${error.message}`);
+            }
+            throw new Error(`Failed to get selector for element ${elementName}: Unknown error`);
         }
     }
 
@@ -115,9 +124,12 @@ export class ElementIdHelper {
     static async readUiDump(): Promise<string> {
         try {
             return await fs.readFile(this.UI_DUMP_PATH, 'utf-8');
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Failed to read UI dump file:', error);
-            throw error;
+            if (error instanceof Error) {
+                throw new Error(`Failed to read UI dump file: ${error.message}`);
+            }
+            throw new Error('Failed to read UI dump file: Unknown error');
         }
     }
 
@@ -152,9 +164,12 @@ export class ElementIdHelper {
             // Write the formatted content to a new file
             await fs.writeFile(this.FORMATTED_UI_DUMP_PATH, formatted, 'utf-8');
             
-        } catch (error) {
+        } catch (error: unknown) {
             console.error('Failed to format UI dump:', error);
-            throw error;
+            if (error instanceof Error) {
+                throw new Error(`Failed to format UI dump: ${error.message}`);
+            }
+            throw new Error('Failed to format UI dump: Unknown error');
         }
     }
 } 

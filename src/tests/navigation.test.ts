@@ -70,16 +70,26 @@ async function verifyEnvVars(requiredEnvVars: string[]) {
     }
 }
 
-async function logError(message: string, error: any) {
-    console.error(message, error);
-    // Optionally, log to a file or monitoring system
+async function logError(message: string, error: unknown) {
+    console.error(message);
+    if (error instanceof Error) {
+        console.error('Error details:', error.message);
+        console.error('Stack trace:', error.stack);
+    } else {
+        console.error('Unknown error:', error);
+    }
 }
 
 const terminateAndActivateApp = async () => {
-    await driver.terminateApp(AppHelper.appPackage);
-    await driver.pause(APP_TERMINATION_DELAY);
-    await driver.activateApp(AppHelper.appPackage);
-    await driver.pause(APP_ACTIVATION_DELAY);
+    try {
+        await driver.terminateApp(AppHelper.appPackage);
+        await driver.pause(APP_TERMINATION_DELAY);
+        await driver.activateApp(AppHelper.appPackage);
+        await driver.pause(APP_ACTIVATION_DELAY);
+    } catch (error: unknown) {
+        await logError('Error in terminateAndActivateApp:', error);
+        throw new Error('Failed to terminate and activate app');
+    }
 };
 
 beforeAll(async () => {
@@ -107,25 +117,47 @@ beforeAll(async () => {
         if (!loginSuccess) throw new Error('Failed to login to Philo');
 
         await initializeDriverAndPages();
-    } catch (error) {
+    } catch (error: unknown) {
         await logError('Error in beforeAll:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`Failed in beforeAll: ${error.message}`);
+        }
+        throw new Error('Failed in beforeAll: Unknown error');
     }
 }, 120000);
 
 beforeEach(async () => {
     try {
         await terminateAndActivateApp();
-    } catch (error) {
+    } catch (error: unknown) {
         await logError('Error in beforeEach:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`Failed in beforeEach: ${error.message}`);
+        }
+        throw new Error('Failed in beforeEach: Unknown error');
+    }
+});
+
+afterEach(async () => {
+    try {
+        await driver.terminateApp(AppHelper.appPackage);
+        await driver.pause(APP_TERMINATION_DELAY);
+    } catch (error: unknown) {
+        await logError('Error in afterEach:', error);
     }
 });
 
 afterAll(async () => {
-    // Clean up app data after test
-    console.log('Clearing app data after test...');
-    await AppHelper.clearAppData();
+    try {
+        if (driver) {
+            await driver.deleteSession();
+        }
+        // Clean up app data after test
+        console.log('Clearing app data after test...');
+        await AppHelper.clearAppData();
+    } catch (error: unknown) {
+        await logError('Error in afterAll:', error);
+    }
 });
 
 describe('Navigation Tests', () => {

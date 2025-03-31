@@ -82,18 +82,24 @@ beforeAll(async () => {
             categoriesPage = new CategoriesPage(driver);
             moviesDetailsPage = new MoviesDetailsPage(driver, playerPage as PlayerPage);
         }
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in beforeAll:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`Failed in beforeAll: ${error.message}`);
+        }
+        throw new Error('Failed in beforeAll: Unknown error');
     }
 }, 120000);
 
 beforeEach(async () => {
     try {
         await terminateAndActivateApp();
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in beforeEach:', error);
-        throw new Error(`Failed to activate app: ${error.message}`);
+        if (error instanceof Error) {
+            throw new Error(`Failed to activate app: ${error.message}`);
+        }
+        throw new Error('Failed to activate app: Unknown error');
     }
 });
 
@@ -101,86 +107,111 @@ afterEach(async () => {
     try {
         await driver.terminateApp(AppHelper.appPackage);
         await driver.pause(APP_TERMINATION_DELAY);
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in afterEach:', error);
     }
 });
 
 afterAll(async () => {
-    console.log('Clearing app data after test...');
-    await AppHelper.clearAppData();
+    try {
+        console.log('Clearing app data after test...');
+        await AppHelper.clearAppData();
+    } catch (error: unknown) {
+        console.error('Error in afterAll:', error);
+    }
 });
 
 // Test cases will be added here
 describe('Movies Details Page', () => {
     test('TC124 - Verify that user can click on a movie and see its details', async () => {
-        await driver.pause(APP_ACTIVATION_DELAY);
-        await categoriesPage.goToTopFreeMovies();
-        await categoriesPage.waitForMovieTilesLoaded();
+        try {
+            await driver.pause(APP_ACTIVATION_DELAY);
+            await categoriesPage.goToTopFreeMovies();
+            await categoriesPage.waitForMovieTilesLoaded();
 
-        const titles = await categoriesPage.getAllVisibleMovieTitles();
-        console.log('Available titles:', titles);
+            const titles = await categoriesPage.getAllVisibleMovieTitles();
+            console.log('Available titles:', titles);
 
-        const titleBeforeClick = titles[0];
-        console.log('Title before click:', titleBeforeClick);
+            const titleBeforeClick = titles[0];
+            console.log('Title before click:', titleBeforeClick);
 
-        await categoriesPage.clickMovieTile();
-        await moviesDetailsPage.waitForLoaded();
-        const titleAfterClick = await moviesDetailsPage.getMovieTitle();
-        console.log('Title after click:', titleAfterClick);
+            await categoriesPage.clickMovieTile();
+            await moviesDetailsPage.waitForLoaded();
+            const titleAfterClick = await moviesDetailsPage.getMovieTitle();
+            console.log('Title after click:', titleAfterClick);
 
-        expect(titleAfterClick).toBe(titleBeforeClick);
+            expect(titleAfterClick).toBe(titleBeforeClick);
+        } catch (error: unknown) {
+            console.error('Error in TC124:', error);
+            if (error instanceof Error) {
+                throw new Error(`TC124 failed: ${error.message}`);
+            }
+            throw new Error('TC124 failed: Unknown error');
+        }
     });
 
     test('TC125 - should get the movie description, rating, rating advisories, release date, and channel name', async () => {
-        await driver.pause(APP_ACTIVATION_DELAY);
-        await categoriesPage.goToTopFreeMovies();
-        await categoriesPage.waitForMovieTilesLoaded();
+        try {
+            await driver.pause(APP_ACTIVATION_DELAY);
+            await categoriesPage.goToTopFreeMovies();
+            await categoriesPage.waitForMovieTilesLoaded();
 
-        await homeScreen.pressRightButton();
-        await driver.pause(1000);
+            await homeScreen.pressRightButton();
+            await driver.pause(1000);
 
-        const titleBefore = await homeScreen.getSecondMovieTitle();
-        console.log(`Title of the movie before: ${titleBefore}`);
+            const titleBefore = await homeScreen.getSecondMovieTitle();
+            console.log(`Title of the movie before: ${titleBefore}`);
 
-        await homeScreen.clickMovieTile();
-        await driver.pause(10000);
-        await moviesDetailsPage.waitForLoaded();
+            await homeScreen.clickMovieTile();
+            await driver.pause(10000);
+            await moviesDetailsPage.waitForLoaded();
 
-        let description, rating, releaseDate, duration;
+            let description, rating, releaseDate, duration;
 
-        for (let i = 0; i < 3; i++) {
-            try {
-                if (!description) description = await moviesDetailsPage.getMovieDescription();
-                if (!rating) rating = await moviesDetailsPage.getMovieRating();
-                if (!releaseDate) releaseDate = await moviesDetailsPage.getReleaseDate();
-                if (!duration) {
-                    if ('fetchMovieDuration' in moviesDetailsPage) {
-                        duration = await moviesDetailsPage.fetchMovieDuration();
-                    } else {
-                        throw new Error('fetchMovieDuration method does not exist on moviesDetailsPage');
+            for (let i = 0; i < 3; i++) {
+                try {
+                    if (!description) description = await moviesDetailsPage.getMovieDescription();
+                    if (!rating) rating = await moviesDetailsPage.getMovieRating();
+                    if (!releaseDate) releaseDate = await moviesDetailsPage.getReleaseDate();
+                    if (!duration) {
+                        if ('fetchMovieDuration' in moviesDetailsPage) {
+                            duration = await moviesDetailsPage.fetchMovieDuration();
+                        } else {
+                            throw new Error('fetchMovieDuration method does not exist on moviesDetailsPage');
+                        }
                     }
+
+                    if (description && rating && releaseDate && duration) break;
+                    await driver.pause(2000);
+                } catch (error: unknown) {
+                    console.log(`Attempt ${i + 1} failed:`, error);
+                    if (i === 2) {
+                        if (error instanceof Error) {
+                            throw new Error(`Failed after 3 attempts: ${error.message}`);
+                        }
+                        throw new Error('Failed after 3 attempts: Unknown error');
+                    }
+                    await driver.pause(2000);
                 }
-
-                if (description && rating && releaseDate && duration) break;
-                await driver.pause(2000);
-            } catch (error) {
-                console.log(`Attempt ${i + 1} failed:`, error);
-                if (i === 2) throw error;
-                await driver.pause(2000);
             }
+
+            console.log('Found movie details:', {
+                description,
+                rating,
+                releaseDate,
+                duration
+            });
+
+            expect(description).toBeTruthy();
+            expect(rating).toBeTruthy();
+            expect(releaseDate).toBeTruthy();
+            expect(duration).toBeTruthy();
+        } catch (error: unknown) {
+            console.error('Error in TC125:', error);
+            if (error instanceof Error) {
+                throw new Error(`TC125 failed: ${error.message}`);
+            }
+            throw new Error('TC125 failed: Unknown error');
         }
-
-        console.log('Found movie details:', {
-            description,
-            rating,
-            releaseDate,
-            duration
-        });
-
-        expect(description).toBeTruthy();
-        expect(rating).toBeTruthy();
-        expect(releaseDate).toBeTruthy();
-        expect(duration).toBeTruthy();
     });
 });

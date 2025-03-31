@@ -19,10 +19,18 @@ let webSocketHelper: WebSocketHelper;
 
 // Helper function to terminate and activate the app
 const terminateAndActivateApp = async () => {
-    await driver.terminateApp(AppHelper.appPackage);
-    await driver.pause(APP_TERMINATION_DELAY);
-    await driver.activateApp(AppHelper.appPackage);
-    await driver.pause(APP_ACTIVATION_DELAY);
+    try {
+        await driver.terminateApp(AppHelper.appPackage);
+        await driver.pause(APP_TERMINATION_DELAY);
+        await driver.activateApp(AppHelper.appPackage);
+        await driver.pause(APP_ACTIVATION_DELAY);
+    } catch (error: unknown) {
+        console.error('Error in terminateAndActivateApp:', error);
+        if (error instanceof Error) {
+            throw new Error(`Failed to terminate and activate app: ${error.message}`);
+        }
+        throw new Error('Failed to terminate and activate app: Unknown error');
+    }
 };
 
 beforeAll(async () => {
@@ -78,18 +86,24 @@ beforeAll(async () => {
             searchPage = new SearchPage(driver);
             moviesDetailsPage = new MoviesDetailsPage(driver, playerPage as PlayerPage);
         }
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in beforeAll:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`Failed in beforeAll: ${error.message}`);
+        }
+        throw new Error('Failed in beforeAll: Unknown error');
     }
 }, 120000);
 
 beforeEach(async () => {
     try {
         await terminateAndActivateApp();
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in beforeEach:', error);
-        throw error;
+        if (error instanceof Error) {
+            throw new Error(`Failed in beforeEach: ${error.message}`);
+        }
+        throw new Error('Failed in beforeEach: Unknown error');
     }
 });
 
@@ -97,15 +111,19 @@ afterEach(async () => {
     try {
         await driver.terminateApp(AppHelper.appPackage);
         await driver.pause(2000);
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error in afterEach:', error);
     }
 });
 
 afterAll(async () => {
-    // Clean up app data after test
-    console.log('Clearing app data after test...');
-    await AppHelper.clearAppData();
+    try {
+        if (driver) {
+            await driver.deleteSession();
+        }
+    } catch (error: unknown) {
+        console.error('Error in afterAll:', error);
+    }
 });
 
 describe('Search Test', () => {
