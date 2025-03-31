@@ -16,7 +16,7 @@ if (!deviceIp) {
 process.env.FIRE_TV_IP = deviceIp;
 
 // Get the corresponding email based on the device IP
-const email = deviceIp === '10.0.0.55' ? process.env.PHILO_EMAIL_2 : process.env.PHILO_EMAIL;
+const email = deviceIp === '10.0.0.56' ? process.env.PHILO_EMAIL_2 : process.env.PHILO_EMAIL;
 process.env.PHILO_EMAIL = email;
 
 console.log(`Running tests for device ${deviceIp} with email ${email}`);

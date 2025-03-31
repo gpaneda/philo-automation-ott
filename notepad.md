@@ -63,7 +63,7 @@ To add new devices to the dashboard and ensure they are properly integrated with
    - Update the logic to handle the new device IP and set the appropriate email. You can use a similar conditional or switch statement as in previous examples:
 
    ```typescript
-   const email = deviceIp === '10.0.0.55' ? process.env.PHILO_EMAIL_2 :
+   const email = deviceIp === '10.0.0.56' ? process.env.PHILO_EMAIL_2 :
                  deviceIp === '10.0.0.99' ? process.env.DEVICE_3_EMAIL :
                  process.env.PHILO_EMAIL;
    process.env.PHILO_EMAIL = email;
@@ -75,7 +75,7 @@ To add new devices to the dashboard and ensure they are properly integrated with
    ```typescript
    private getEmailForDevice(deviceIp: string): string {
        switch (deviceIp) {
-         case '10.0.0.55':
+         case '10.0.0.56':
            return process.env.PHILO_EMAIL_2!;
          case '10.0.0.15':
            return process.env.PHILO_EMAIL!;

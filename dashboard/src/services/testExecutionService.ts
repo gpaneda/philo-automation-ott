@@ -50,7 +50,7 @@ export class TestExecutionService {
     switch (deviceIp) {
       case '10.0.0.130':
         return process.env.PHILO_EMAIL_3!;
-      case '10.0.0.55':
+      case '10.0.0.56':
         return process.env.PHILO_EMAIL_2!;
       case '10.0.0.15':
         return process.env.PHILO_EMAIL_3!;

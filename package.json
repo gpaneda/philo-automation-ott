@@ -34,7 +34,8 @@
     "test:decreased-bandwidth": "./scripts/start-appium.sh NODE_OPTIONS=--experimental-vm-modules jest src/scripts/decreasedBandwidth.test.ts",
     "test:vizio": "ts-node src/vizioSmartCast.ts",
     "test:vizio-key-events": "ts-node src/vizioKeyEvents.ts",
-    "test:get-gmail-token": "ts-node src/scripts/getGmailToken.ts"
+    "test:get-gmail-token": "ts-node src/scripts/getGmailToken.ts",
+    "scan": "ts-node src/scripts/scan-network.ts"
   },
   "dependencies": {
     "@appium/base-driver": "^9.15.0",
