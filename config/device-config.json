@@ -6,95 +6,115 @@
       "deviceType": "Vizio TV",
       "model": "M50QXM-K01",
       "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.757Z"
+      "lastSeen": "2025-03-31T21:46:36.767Z"
     },
     {
       "ip": "10.0.0.46",
       "mac": "40:b8:9a:47:f6:23",
-      "deviceType": "Samsung TV",
-      "model": "QN43Q60AAFXZA",
+      "deviceType": "Fire TV",
+      "model": "Fire TV Stick Lite",
       "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
+      "lastSeen": "2025-03-31T21:46:36.768Z"
     },
     {
       "ip": "10.0.0.15",
       "mac": "ac:41:6a:c3:4b:e9",
       "deviceType": "Fire TV",
+      "model": "Fire TV Stick 3rd Gen",
+      "isConnected": true,
+      "lastSeen": "2025-03-31T21:46:36.768Z"
+    },
+    {
+      "ip": "10.0.0.12",
+      "deviceType": "Samsung TV",
+      "model": "QN43Q60AAFXZA",
+      "isConnected": true,
+      "lastSeen": "2025-03-31T21:46:36.768Z"
+    },
+    {
+      "ip": "10.0.0.25",
+      "deviceType": "Fire TV",
       "model": "Fire TV Stick 4K",
       "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
+      "lastSeen": "2025-03-31T21:46:36.768Z"
+    },
+    {
+      "ip": "10.0.0.26",
+      "deviceType": "Vizio TV",
+      "model": "M50QXM-K01",
+      "isConnected": true,
+      "lastSeen": "2025-03-31T21:46:36.768Z"
+    },
+    {
+      "ip": "10.0.0.29",
+      "mac": "60:6d:3c:29:13:76",
+      "deviceType": "Android TV",
+      "model": "Android TV Box",
+      "isConnected": true,
+      "lastSeen": "2025-03-31T21:46:36.768Z"
+    },
+    {
+      "ip": "10.0.0.33",
+      "mac": "f0:f6:c1:5e:ca:34",
+      "deviceType": "Android TV",
+      "model": "Android TV Box",
+      "isConnected": true,
+      "lastSeen": "2025-03-31T21:46:36.768Z"
+    },
+    {
+      "ip": "10.0.0.35",
+      "mac": "1c:f2:9a:37:d2:7d",
+      "deviceType": "Fire TV",
+      "model": "Fire TV Stick 4K",
+      "isConnected": true,
+      "lastSeen": "2025-03-31T21:46:36.768Z"
+    },
+    {
+      "ip": "10.0.0.40",
+      "deviceType": "Vizio TV",
+      "model": "M50QXM-K01",
+      "isConnected": true,
+      "lastSeen": "2025-03-31T21:46:36.768Z"
+    },
+    {
+      "ip": "10.0.0.56",
+      "mac": "bc:df:58:4a:fe:40",
+      "deviceType": "Android TV",
+      "model": "Chromecast with Google TV",
+      "isConnected": true,
+      "lastSeen": "2025-03-31T21:46:36.768Z"
+    },
+    {
+      "ip": "10.0.0.57",
+      "deviceType": "Vizio TV",
+      "model": "M50QXM-K01",
+      "isConnected": true,
+      "lastSeen": "2025-03-31T21:46:36.768Z"
+    },
+    {
+      "ip": "10.0.0.59",
+      "mac": "6a:80:c2:d9:9d:7f",
+      "deviceType": "Android TV",
+      "model": "Android TV Box",
+      "isConnected": true,
+      "lastSeen": "2025-03-31T21:46:36.768Z"
     },
     {
       "ip": "10.0.0.9",
       "mac": "10:59:32:dc:33:90",
       "deviceType": "Vizio TV",
       "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
+      "lastSeen": "2025-03-31T21:46:36.768Z"
     },
     {
-      "ip": "10.0.0.12",
-      "mac": "8c:ea:48:5:b9:5c",
-      "deviceType": "Samsung TV",
+      "ip": "10.0.0.30",
+      "mac": "f0:f6:c1:54:ad:5e",
+      "deviceType": "Android TV",
+      "model": "Android TV Box",
       "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
-    },
-    {
-      "ip": "10.0.0.25",
-      "mac": "0:e0:4c:68:5:52",
-      "deviceType": "Vizio TV",
-      "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
-    },
-    {
-      "ip": "10.0.0.26",
-      "mac": "c:8b:7d:22:5e:eb",
-      "deviceType": "Vizio TV",
-      "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
-    },
-    {
-      "ip": "10.0.0.29",
-      "mac": "60:6d:3c:29:13:76",
-      "deviceType": "Fire TV",
-      "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
-    },
-    {
-      "ip": "10.0.0.33",
-      "mac": "f0:f6:c1:5e:ca:34",
-      "deviceType": "Vizio TV",
-      "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
-    },
-    {
-      "ip": "10.0.0.35",
-      "mac": "1c:f2:9a:37:d2:7d",
-      "deviceType": "Vizio TV",
-      "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
-    },
-    {
-      "ip": "10.0.0.40",
-      "mac": "e:17:bc:e3:33:13",
-      "deviceType": "Vizio TV",
-      "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
-    },
-    {
-      "ip": "10.0.0.56",
-      "mac": "bc:df:58:4a:fe:40",
-      "deviceType": "Vizio TV",
-      "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
-    },
-    {
-      "ip": "10.0.0.57",
-      "mac": "c8:a3:62:8f:c:75",
-      "deviceType": "Vizio TV",
-      "isConnected": true,
-      "lastSeen": "2025-03-31T21:21:25.758Z"
+      "lastSeen": "2025-03-31T21:46:36.768Z"
     }
   ],
-  "lastScan": "2025-03-31T21:21:25.758Z",
+  "lastScan": "2025-03-31T21:46:36.768Z",
   "networkSubnet": "10.0.0.0/24"
 }

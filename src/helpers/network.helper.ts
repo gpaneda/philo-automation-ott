@@ -10,42 +10,45 @@ const readFileAsync = promisify(fs.readFile);
 // MAC address prefixes for different device types
 const MAC_PREFIXES: { [key: string]: { type: string; model?: string } } = {
     // Fire TV devices
-    'F0:F0:A4': { type: 'Fire TV', model: 'Fire TV Stick 4K' },
-    'F0:27:2D': { type: 'Fire TV', model: 'Fire TV Stick 2nd Gen' },
-    '74:C2:46': { type: 'Fire TV', model: 'Fire TV Cube 2nd Gen' },
-    'AC:41:6A': { type: 'Fire TV', model: 'Fire TV Stick 3rd Gen' },
-    'BC:DF:58': { type: 'Fire TV', model: 'Fire TV Stick 4K Max' },
-    '0C:47:C9': { type: 'Fire TV', model: 'Fire TV Cube 3rd Gen' },
-    '40:B8:9A': { type: 'Fire TV', model: 'Fire TV Stick Lite' },
+    'F0F0A4': { type: 'Fire TV', model: 'Fire TV Stick 4K' },
+    'F0272D': { type: 'Fire TV', model: 'Fire TV Stick 2nd Gen' },
+    '74C246': { type: 'Fire TV', model: 'Fire TV Cube 2nd Gen' },
+    'AC416A': { type: 'Fire TV', model: 'Fire TV Stick 3rd Gen' },
+    '0C47C9': { type: 'Fire TV', model: 'Fire TV Cube 3rd Gen' },
+    '40B89A': { type: 'Fire TV', model: 'Fire TV Stick Lite' },
     
     // Android TV devices
-    '00:B0:7D': { type: 'Android TV', model: 'NVIDIA Shield TV' },
-    '7C:76:35': { type: 'Android TV', model: 'Chromecast with Google TV' },
-    '48:C7:96': { type: 'Android TV', model: 'Android TV Box' },
+    '00B07D': { type: 'Android TV', model: 'Android TV Box' },
+    '7C7635': { type: 'Android TV', model: 'Chromecast with Google TV' },
+    '48C796': { type: 'Android TV', model: 'Android TV Box' },
+    '6A80C2': { type: 'Android TV', model: 'Android TV Box' },
+    '606D3C': { type: 'Android TV', model: 'Android TV Box' },
+    'F0F6C1': { type: 'Android TV', model: 'Android TV Box' },
+    'BCDF58': { type: 'Android TV', model: 'Chromecast with Google TV' },
     
     // Vizio TVs
-    '00:0C:56': { type: 'Vizio TV', model: 'M50QXM-K01' },
-    '00:24:2F': { type: 'Vizio TV', model: 'M50QXM-K01' },
-    '00:9D:6B': { type: 'Vizio TV', model: 'M50QXM-K01' },
-    'C4:48:38': { type: 'Vizio TV', model: 'M50QXM-K01' },
-    '8C:DE:52': { type: 'Vizio TV', model: 'M50QXM-K01' },
-    'A4:7E:39': { type: 'Vizio TV', model: 'M50QXM-K01' },
-    'D8:EB:97': { type: 'Vizio TV', model: 'M50QXM-K01' },
-    'CC:95:D7': { type: 'Vizio TV', model: 'M50QXM-K01' },
-    '00:24:23': { type: 'Vizio TV', model: 'M50QXM-K01' },
-    '00:1C:62': { type: 'Vizio TV', model: 'M50QXM-K01' },
-    '00:26:B4': { type: 'Vizio TV', model: 'M50QXM-K01' },
-    '84:C9:B2': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    '000C56': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    '00242F': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    '009D6B': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    'C44838': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    '8CDE52': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    'A47E39': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    'D8EB97': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    'CC95D7': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    '002423': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    '001C62': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    '0026B4': { type: 'Vizio TV', model: 'M50QXM-K01' },
+    '84C9B2': { type: 'Vizio TV', model: 'M50QXM-K01' },
     
     // LG TVs
-    '00:05:C9': { type: 'LG TV', model: 'LG Smart TV' },
-    'C8:08:E9': { type: 'LG TV', model: 'LG Smart TV' },
-    'C4:36:6C': { type: 'LG TV', model: 'LG Smart TV' },
+    '0005C9': { type: 'LG TV', model: 'LG Smart TV' },
+    'C808E9': { type: 'LG TV', model: 'LG Smart TV' },
+    'C4366C': { type: 'LG TV', model: 'LG Smart TV' },
     
     // Samsung TVs
-    '8C:71:F8': { type: 'Samsung TV', model: 'QN43Q60AAFXZA' },
-    '84:25:DB': { type: 'Samsung TV', model: 'QN43Q60AAFXZA' },
-    '68:27:37': { type: 'Samsung TV', model: 'QN43Q60AAFXZA' }
+    '8C71F8': { type: 'Samsung TV', model: 'QN43Q60AAFXZA' },
+    '8425DB': { type: 'Samsung TV', model: 'QN43Q60AAFXZA' },
+    '682737': { type: 'Samsung TV', model: 'QN43Q60AAFXZA' }
 };
 
 // Common ports used by smart TVs
@@ -111,14 +114,21 @@ interface DeviceConfig {
 export class NetworkHelper {
     private static readonly CONFIG_FILE = 'device-config.json';
     private static readonly CONFIG_DIR = 'config';
-    private static readonly BATCH_SIZE = 10; // Number of concurrent operations
+    private static readonly BATCH_SIZE = 5; // Reduced from 10 to 5 concurrent operations
+    private static readonly PORT_CHECK_TIMEOUT = 2000; // 2 second timeout for port checks
+    private static readonly DEVICE_CHECK_TIMEOUT = 3000; // 3 second timeout for device checks
 
     /**
      * Get device type based on MAC address prefix
      */
     private static getDeviceType(mac: string): { type: string; model?: string } | undefined {
         const prefix = mac.replace(/[^0-9A-Fa-f]/g, '').substring(0, 6).toUpperCase();
-        return MAC_PREFIXES[prefix];
+        console.log(`  Checking MAC prefix: ${prefix}`);
+        const deviceType = MAC_PREFIXES[prefix];
+        if (deviceType) {
+            console.log(`  Initial device type: ${deviceType.type}`);
+        }
+        return deviceType;
     }
 
     /**
@@ -143,32 +153,18 @@ export class NetworkHelper {
             
             // Set a timeout for the entire port check
             const timeout = new Promise<{ isSmartTV: boolean }>((resolve) => {
-                setTimeout(() => resolve({ isSmartTV: false }), 3000); // 3 second timeout
+                setTimeout(() => resolve({ isSmartTV: false }), this.PORT_CHECK_TIMEOUT);
             });
 
             const portCheck = new Promise<{ isSmartTV: boolean; deviceType?: string; model?: string }>(async (resolve) => {
-                // Check Vizio ports first (since we know about the Vizio TV)
-                for (const port of SMART_TV_PORTS.vizio) {
-                    try {
-                        await execAsync(`nc -z -w1 ${ip} ${port}`);
-                        return resolve({ 
-                            isSmartTV: true, 
-                            deviceType: 'Vizio TV',
-                            model: 'M50QXM-K01' // Default Vizio model
-                        });
-                    } catch {
-                        continue;
-                    }
-                }
-
-                // Check Fire TV ports
+                // Check Fire TV ports first
                 for (const port of SMART_TV_PORTS.firetv) {
                     try {
                         await execAsync(`nc -z -w1 ${ip} ${port}`);
                         return resolve({ 
                             isSmartTV: true, 
                             deviceType: 'Fire TV',
-                            model: 'Fire TV Stick 4K' // Default Fire TV model
+                            model: 'Fire TV Stick 4K'
                         });
                     } catch {
                         continue;
@@ -182,7 +178,21 @@ export class NetworkHelper {
                         return resolve({ 
                             isSmartTV: true, 
                             deviceType: 'Android TV',
-                            model: 'NVIDIA Shield TV' // Default Android TV model
+                            model: 'Android TV Box'
+                        });
+                    } catch {
+                        continue;
+                    }
+                }
+
+                // Check Vizio ports
+                for (const port of SMART_TV_PORTS.vizio) {
+                    try {
+                        await execAsync(`nc -z -w1 ${ip} ${port}`);
+                        return resolve({ 
+                            isSmartTV: true, 
+                            deviceType: 'Vizio TV',
+                            model: 'M50QXM-K01'
                         });
                     } catch {
                         continue;
@@ -196,36 +206,31 @@ export class NetworkHelper {
                     ...SMART_TV_PORTS.common
                 ];
 
-                // Check all ports concurrently
-                const portPromises = allPorts.map(port => 
-                    execAsync(`nc -z -w1 ${ip} ${port}`)
-                        .then(() => ({ port, success: true }))
-                        .catch(() => ({ port, success: false }))
-                );
-
-                const results = await Promise.all(portPromises);
-                const openPorts = results.filter(r => r.success).map(r => r.port);
-
-                if (openPorts.length > 0) {
-                    // Determine device type based on open ports
-                    if (openPorts.some(port => SMART_TV_PORTS.samsung.includes(port))) {
-                        return resolve({ 
-                            isSmartTV: true, 
-                            deviceType: 'Samsung TV',
-                            model: 'QN43Q60AAFXZA' // Default Samsung model
-                        });
-                    } else if (openPorts.some(port => SMART_TV_PORTS.lg.includes(port))) {
-                        return resolve({ 
-                            isSmartTV: true, 
-                            deviceType: 'LG TV',
-                            model: 'LG Smart TV' // Default LG model
-                        });
-                    } else {
-                        return resolve({ 
-                            isSmartTV: true, 
-                            deviceType: 'Smart TV',
-                            model: 'Generic Smart TV'
-                        });
+                // Check ports sequentially instead of concurrently
+                for (const port of allPorts) {
+                    try {
+                        await execAsync(`nc -z -w1 ${ip} ${port}`);
+                        if (SMART_TV_PORTS.samsung.includes(port)) {
+                            return resolve({ 
+                                isSmartTV: true, 
+                                deviceType: 'Samsung TV',
+                                model: 'QN43Q60AAFXZA'
+                            });
+                        } else if (SMART_TV_PORTS.lg.includes(port)) {
+                            return resolve({ 
+                                isSmartTV: true, 
+                                deviceType: 'LG TV',
+                                model: 'LG Smart TV'
+                            });
+                        } else {
+                            return resolve({ 
+                                isSmartTV: true, 
+                                deviceType: 'Smart TV',
+                                model: 'Generic Smart TV'
+                            });
+                        }
+                    } catch {
+                        continue;
                     }
                 }
 
@@ -242,57 +247,87 @@ export class NetworkHelper {
     /**
      * Get device information using arp and additional checks
      */
-    private static async getDeviceInfo(ip: string): Promise<DeviceInfo | null> {
+    static async getDeviceInfo(ip: string): Promise<DeviceInfo> {
         try {
             console.log(`\nGetting device info for ${ip}...`);
             
             // Set a timeout for the entire device check
-            const timeout = new Promise<null>((resolve) => {
-                setTimeout(() => resolve(null), 5000); // 5 second timeout
+            const timeout = new Promise<DeviceInfo>((resolve) => {
+                setTimeout(() => resolve({
+                    ip,
+                    deviceType: '',
+                    isConnected: false
+                }), this.DEVICE_CHECK_TIMEOUT);
             });
 
-            const deviceCheck = new Promise<DeviceInfo | null>(async (resolve) => {
-                const { stdout } = await execAsync(`arp -n ${ip}`);
-                const macMatch = stdout.match(/([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})/);
-                const mac = macMatch ? macMatch[0] : undefined;
-                let deviceInfo = mac ? this.getDeviceType(mac) : undefined;
-                
-                console.log(`  MAC: ${mac || 'Not found'}`);
-                console.log(`  Initial device type: ${deviceInfo?.type || 'Unknown'}`);
-                
+            const deviceCheck = new Promise<DeviceInfo>(async (resolve) => {
+                // First check if device is responding
                 const isConnected = await this.checkDeviceConnectivity(ip);
-                
-                // If no device type was found but device is responding, check for smart TV ports
-                if (!deviceInfo && isConnected) {
-                    console.log('  Device is responding, checking for smart TV ports...');
-                    const portCheck = await this.checkSmartTVPorts(ip);
-                    if (portCheck.isSmartTV) {
-                        deviceInfo = { 
-                            type: portCheck.deviceType || 'Smart TV',
-                            model: portCheck.model
-                        };
-                        console.log(`  ✓ Device identified as ${deviceInfo.type} (${deviceInfo.model})`);
-                    } else {
-                        console.log('  ✗ Device is not a Smart TV');
+                if (!isConnected) {
+                    return resolve({
+                        ip,
+                        deviceType: '',
+                        isConnected: false
+                    });
+                }
+
+                // Get MAC address
+                let mac: string | undefined;
+                try {
+                    const { stdout } = await execAsync(`arp -n ${ip}`);
+                    const macMatch = stdout.match(/([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})/);
+                    if (macMatch) {
+                        mac = macMatch[0];
+                    }
+                } catch {
+                    // MAC address not found
+                }
+
+                // If we have a MAC address, try to identify device type from it first
+                if (mac) {
+                    console.log(`  MAC: ${mac}`);
+                    const deviceType = this.getDeviceType(mac);
+                    if (deviceType) {
+                        console.log(`  Initial device type: ${deviceType.type}`);
+                        return resolve({
+                            ip,
+                            mac,
+                            deviceType: deviceType.type,
+                            model: deviceType.model,
+                            isConnected: true
+                        });
                     }
                 }
-                
-                console.log(`  Connection status: ${isConnected ? 'Connected' : 'Not Connected'}`);
-                
-                resolve({ 
-                    ip, 
-                    mac, 
-                    deviceType: deviceInfo?.type || '', 
-                    model: deviceInfo?.model, 
-                    isConnected 
+
+                // If no MAC or unknown type, check ports
+                const portCheck = await this.checkSmartTVPorts(ip);
+                if (portCheck.isSmartTV) {
+                    return resolve({
+                        ip,
+                        mac,
+                        deviceType: portCheck.deviceType || '',
+                        model: portCheck.model,
+                        isConnected: true
+                    });
+                }
+
+                // If still no type, but device is connected
+                resolve({
+                    ip,
+                    mac,
+                    deviceType: '',
+                    isConnected: true
                 });
             });
 
-            // Race between the device check and timeout
             return Promise.race([deviceCheck, timeout]);
         } catch (error) {
-            console.log(`  Error getting device info: ${error}`);
-            return null;
+            console.error(`Error getting device info for ${ip}:`, error);
+            return {
+                ip,
+                deviceType: '',
+                isConnected: false
+            };
         }
     }
 
@@ -365,7 +400,20 @@ export class NetworkHelper {
                 '10.0.0.63',  // Known Vizio TV
                 '10.0.0.46',  // Previous Fire TV
                 '10.0.0.15',  // Previous device
-                '10.0.0.10'   // Previous device
+                '10.0.0.10',
+                '10.0.0.12',
+                '10.0.0.25',
+                '10.0.0.26',
+                '10.0.0.29',
+                '10.0.0.33',
+                '10.0.0.35',
+                '10.0.0.40',
+                '10.0.0.56',
+                '10.0.0.57',
+                '10.0.0.58',
+                '10.0.0.59',
+                '10.0.0.60',
+                '10.0.0.61',
             ];
 
             for (const ip of knownIPs) {
