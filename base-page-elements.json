@@ -1,0 +1,28 @@
+{
+  "elements": [
+    {
+      "name": "waitForElement",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(1)"
+    },
+    {
+      "name": "isElementDisplayed",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(1)"
+    },
+    {
+      "name": "click",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(1)"
+    },
+    {
+      "name": "getText",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(1)"
+    },
+    {
+      "name": "verifyElementDisplayed",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(1)"
+    },
+    {
+      "name": "verifyElementWithText",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(1)"
+    }
+  ]
+} 

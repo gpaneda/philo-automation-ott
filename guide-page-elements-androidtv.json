@@ -1,0 +1,68 @@
+{
+  "elements": [
+    {
+      "name": "widgetTabs",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/widget_tabs\")"
+    },
+    {
+      "name": "tabBar",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/tab_bar\")"
+    },
+    {
+      "name": "movieTileWrapper",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/movie_tile_wrapper\")"
+    },
+    {
+      "name": "movieTileTitle",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/movie_tile_title\")"
+    },
+    {
+      "name": "movieTileDescription",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/movie_tile_description\")"
+    },
+    {
+      "name": "movieTileThumbnail",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/movie_tile_thumbnail\")"
+    },
+    {
+      "name": "saveButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/big_tile_save_button\")"
+    },
+    {
+      "name": "unSaveButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/big_tile_unsave_button\")"
+    },
+    {
+      "name": "savedButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/big_tile_saved_button\")"
+    },
+    {
+      "name": "playButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/big_tile_play_button\")"
+    },
+    {
+      "name": "backgroundImage",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/background_image\")"
+    },
+    {
+      "name": "backgroundVideo",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/background_video\")"
+    },
+    {
+      "name": "backgroundGradient",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/background_gradient\")"
+    },
+    {
+      "name": "detailsContainer",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/details_container\")"
+    },
+    {
+      "name": "otherInfoContainer",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/other_info_container\")"
+    },
+    {
+      "name": "buttonsContainer",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/buttons_container\")"
+    }
+  ]
+} 

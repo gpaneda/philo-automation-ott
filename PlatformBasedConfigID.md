@@ -14,15 +14,6 @@ I'll help create a comprehensive markdown file that includes all the topics we d
 ## Overview
 This document outlines the implementation of platform-specific device identification and configuration for test automation across different TV platforms.
 
-## WebDriver Configuration
-```typescript
-// Initial WebDriver setup with implicit waits
-await this.driver.setTimeout({
-    implicit: 15000,    // Wait up to 15 seconds for elements
-    pageLoad: 40000,    // Wait up to 40 seconds for page loads
-    script: 30000       // Wait up to 30 seconds for script execution
-});
-```
 
 ## Platform Detection Methods
 

@@ -1,0 +1,44 @@
+{
+  "elements": [
+    {
+      "name": "profileHeader",
+      "selector": "android=resourceId(\"com.philo.philo:id/profile_header\")"
+    },
+    {
+      "name": "accountName",
+      "selector": "android=resourceId(\"com.philo.philo:id/account_name\")"
+    },
+    {
+      "name": "emailLabel",
+      "selector": "android=resourceId(\"com.philo.philo:id/email_label\")"
+    },
+    {
+      "name": "settingsButton",
+      "selector": "android=resourceId(\"com.philo.philo:id/settings_button\")"
+    },
+    {
+      "name": "menuItem",
+      "selector": "android=resourceId(\"com.philo.philo:id/menu_item\")"
+    },
+    {
+      "name": "menuItemTitle",
+      "selector": "android=resourceId(\"com.philo.philo:id/menu_item_title\")"
+    },
+    {
+      "name": "menuItemDescription",
+      "selector": "android=resourceId(\"com.philo.philo:id/menu_item_description\")"
+    },
+    {
+      "name": "menuItemIcon",
+      "selector": "android=resourceId(\"com.philo.philo:id/menu_item_icon\")"
+    },
+    {
+      "name": "versionLabel",
+      "selector": "android=resourceId(\"com.philo.philo:id/version_label\")"
+    },
+    {
+      "name": "versionNumber",
+      "selector": "android=resourceId(\"com.philo.philo:id/version_number\")"
+    }
+  ]
+} 

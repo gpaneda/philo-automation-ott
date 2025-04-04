@@ -1,0 +1,104 @@
+{
+  "elements": [
+    {
+      "name": "widgetTabs",
+      "selector": "android=resourceId(\"com.philo.philo:id/widget_tabs\")"
+    },
+    {
+      "name": "tabBar",
+      "selector": "android=resourceId(\"com.philo.philo:id/tab_bar\")"
+    },
+    {
+      "name": "movieTileWrapper",
+      "selector": "android=resourceId(\"com.philo.philo:id/movie_tile_wrapper\")"
+    },
+    {
+      "name": "movieTileTitle",
+      "selector": "android=resourceId(\"com.philo.philo:id/movie_tile_title\")"
+    },
+    {
+      "name": "movieTileDescription",
+      "selector": "android=resourceId(\"com.philo.philo:id/movie_tile_description\")"
+    },
+    {
+      "name": "movieTileThumbnail",
+      "selector": "android=resourceId(\"com.philo.philo:id/movie_tile_thumbnail\")"
+    },
+    {
+      "name": "saveButton",
+      "selector": "android=resourceId(\"com.philo.philo:id/big_tile_save_button\")"
+    },
+    {
+      "name": "unSaveButton",
+      "selector": "android=resourceId(\"com.philo.philo:id/big_tile_unsave_button\")"
+    },
+    {
+      "name": "savedButton",
+      "selector": "android=resourceId(\"com.philo.philo:id/big_tile_saved_button\")"
+    },
+    {
+      "name": "playButton",
+      "selector": "android=resourceId(\"com.philo.philo:id/big_tile_play_button\")"
+    },
+    {
+      "name": "backgroundImage",
+      "selector": "android=resourceId(\"com.philo.philo:id/background_image\")"
+    },
+    {
+      "name": "backgroundVideo",
+      "selector": "android=resourceId(\"com.philo.philo:id/background_video\")"
+    },
+    {
+      "name": "backgroundGradient",
+      "selector": "android=resourceId(\"com.philo.philo:id/background_gradient\")"
+    },
+    {
+      "name": "detailsContainer",
+      "selector": "android=resourceId(\"com.philo.philo:id/details_container\")"
+    },
+    {
+      "name": "otherInfoContainer",
+      "selector": "android=resourceId(\"com.philo.philo:id/other_info_container\")"
+    },
+    {
+      "name": "buttonsContainer",
+      "selector": "android=resourceId(\"com.philo.philo:id/buttons_container\")"
+    },
+    {
+      "name": "topFreeMovies",
+      "selector": "android=text(\"Top Free Movies\")"
+    },
+    {
+      "name": "topFreeShows",
+      "selector": "android=text(\"Top Free Shows\")"
+    },
+    {
+      "name": "recommended",
+      "selector": "android=text(\"Recommended\")"
+    },
+    {
+      "name": "trendingLive",
+      "selector": "android=text(\"Trending Live\")"
+    },
+    {
+      "name": "realityRoundup",
+      "selector": "android=text(\"Reality Roundup\")"
+    },
+    {
+      "name": "trueCrime",
+      "selector": "android=text(\"True Crime\")"
+    },
+    {
+      "name": "saved",
+      "selector": "android=text(\"Saved\")"
+    },
+    {
+      "name": "homeAndTravel",
+      "selector": "android=text(\"Home & Travel\")"
+    },
+    {
+      "name": "keepWatching",
+      "selector": "android=text(\"Keep Watching\")"
+    }
+  ]
+} 

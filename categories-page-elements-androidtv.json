@@ -1,0 +1,72 @@
+{
+  "elements": [
+    {
+      "name": "headerWhitespace",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/header_whitespace\")"
+    },
+    {
+      "name": "categoryIcon",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/category_icon\")"
+    },
+    {
+      "name": "categoryLabel",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/category_label\")"
+    },
+    {
+      "name": "movieTileWrapper",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/movie_tile_wrapper\")"
+    },
+    {
+      "name": "movieTileTitle",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/movie_tile_title\")"
+    },
+    {
+      "name": "movieTileDescription",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/movie_tile_description\")"
+    },
+    {
+      "name": "movieTileThumbnail",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/movie_tile_thumbnail\")"
+    },
+    {
+      "name": "killBill",
+      "selector": "android=text(\"Kill Bill: Vol. 1\")"
+    },
+    {
+      "name": "twilight",
+      "selector": "android=text(\"Twilight\")"
+    },
+    {
+      "name": "theMatrix",
+      "selector": "android=text(\"The Matrix\")"
+    },
+    {
+      "name": "inception",
+      "selector": "android=text(\"Inception\")"
+    },
+    {
+      "name": "theDarkKnight",
+      "selector": "android=text(\"The Dark Knight\")"
+    },
+    {
+      "name": "interstellar",
+      "selector": "android=text(\"Interstellar\")"
+    },
+    {
+      "name": "theGodfather",
+      "selector": "android=text(\"The Godfather\")"
+    },
+    {
+      "name": "pulpFiction",
+      "selector": "android=text(\"Pulp Fiction\")"
+    },
+    {
+      "name": "fightClub",
+      "selector": "android=text(\"Fight Club\")"
+    },
+    {
+      "name": "forrestGump",
+      "selector": "android=text(\"Forrest Gump\")"
+    }
+  ]
+} 

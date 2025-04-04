@@ -1,0 +1,36 @@
+{
+  "elements": [
+    {
+      "name": "searchInput",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/search_input\")"
+    },
+    {
+      "name": "searchButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/search_button\")"
+    },
+    {
+      "name": "searchResultsList",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/search_results_list\")"
+    },
+    {
+      "name": "keypadContainer",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/keypad_container\")"
+    },
+    {
+      "name": "backspace",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/backspace\")"
+    },
+    {
+      "name": "resultTitle",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/result_title\")"
+    },
+    {
+      "name": "resultDescription",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/result_description\")"
+    },
+    {
+      "name": "resultThumbnail",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/result_thumbnail\")"
+    }
+  ]
+} 

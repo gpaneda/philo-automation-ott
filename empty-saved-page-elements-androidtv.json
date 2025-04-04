@@ -1,0 +1,24 @@
+{
+  "elements": [
+    {
+      "name": "emptyStateContainer",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/empty_state_container\")"
+    },
+    {
+      "name": "messageText",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/message_text\")"
+    },
+    {
+      "name": "instructionText",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/instruction_text\")"
+    },
+    {
+      "name": "iconSave",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/icon_save\")"
+    },
+    {
+      "name": "findShowButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/find_show_button\")"
+    }
+  ]
+} 

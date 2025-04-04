@@ -1,0 +1,48 @@
+{
+  "elements": [
+    {
+      "name": "homeHeader",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/home_header\")"
+    },
+    {
+      "name": "profilesTitle",
+      "selector": "android=text(\"Who's watching?\")"
+    },
+    {
+      "name": "topFreeMovies",
+      "selector": "android=text(\"Top Free Movies\")"
+    },
+    {
+      "name": "topFreeShows",
+      "selector": "android=text(\"Top Free Shows\")"
+    },
+    {
+      "name": "recommended",
+      "selector": "android=text(\"Recommended\")"
+    },
+    {
+      "name": "trendingLive",
+      "selector": "android=text(\"Trending Live\")"
+    },
+    {
+      "name": "realityRoundup",
+      "selector": "android=text(\"Reality Roundup\")"
+    },
+    {
+      "name": "trueCrime",
+      "selector": "android=text(\"True Crime\")"
+    },
+    {
+      "name": "saved",
+      "selector": "android=text(\"Saved\")"
+    },
+    {
+      "name": "homeAndTravel",
+      "selector": "android=text(\"Home & Travel\")"
+    },
+    {
+      "name": "keepWatching",
+      "selector": "android=text(\"Keep Watching\")"
+    }
+  ]
+} 

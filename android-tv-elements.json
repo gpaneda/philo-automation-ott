@@ -1,0 +1,92 @@
+{
+  "elements": [
+    {
+      "name": "actionBarRoot",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/action_bar_root\")"
+    },
+    {
+      "name": "actionBarTitle",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/action_bar_title\")"
+    },
+    {
+      "name": "actionBarBackButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/action_bar_back_button\")"
+    },
+    {
+      "name": "content",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/content\")"
+    },
+    {
+      "name": "contentContainer",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/content_container\")"
+    },
+    {
+      "name": "tabBar",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/tab_bar\")"
+    },
+    {
+      "name": "tabHome",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/tab_home\")"
+    },
+    {
+      "name": "tabGuide",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/tab_guide\")"
+    },
+    {
+      "name": "tabTop",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/tab_top\")"
+    },
+    {
+      "name": "tabSaved",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/tab_saved\")"
+    },
+    {
+      "name": "tabSearch",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/tab_search\")"
+    },
+    {
+      "name": "tabProfile",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/tab_profile\")"
+    },
+    {
+      "name": "playButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/big_tile_play_button\")"
+    },
+    {
+      "name": "saveButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/big_tile_save_button\")"
+    },
+    {
+      "name": "unSaveButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/big_tile_unsave_button\")"
+    },
+    {
+      "name": "savedButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/big_tile_saved_button\")"
+    },
+    {
+      "name": "backgroundImage",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/background_image\")"
+    },
+    {
+      "name": "backgroundVideo",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/background_video\")"
+    },
+    {
+      "name": "backgroundGradient",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/background_gradient\")"
+    },
+    {
+      "name": "detailsContainer",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/details_container\")"
+    },
+    {
+      "name": "otherInfoContainer",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/other_info_container\")"
+    },
+    {
+      "name": "buttonsContainer",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/buttons_container\")"
+    }
+  ]
+} 

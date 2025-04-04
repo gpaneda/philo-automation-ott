@@ -1,0 +1,36 @@
+{
+  "elements": [
+    {
+      "name": "emailInput",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/email_input\")"
+    },
+    {
+      "name": "passwordInput",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/password_input\")"
+    },
+    {
+      "name": "loginButton",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/login_button\")"
+    },
+    {
+      "name": "forgotPasswordLink",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/forgot_password_link\")"
+    },
+    {
+      "name": "createAccountLink",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/create_account_link\")"
+    },
+    {
+      "name": "errorMessage",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/error_message\")"
+    },
+    {
+      "name": "emailError",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/email_error\")"
+    },
+    {
+      "name": "passwordError",
+      "selector": "android=resourceId(\"com.philo.philo.google:id/password_error\")"
+    }
+  ]
+} 

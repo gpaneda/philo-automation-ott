@@ -1,0 +1,88 @@
+{
+  "elements": [
+    {
+      "name": "movieTitle",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(1)"
+    },
+    {
+      "name": "movieDescription",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(2)"
+    },
+    {
+      "name": "movieYear",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(3)"
+    },
+    {
+      "name": "movieRating",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(4)"
+    },
+    {
+      "name": "movieDuration",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(5)"
+    },
+    {
+      "name": "movieGenre",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(6)"
+    },
+    {
+      "name": "movieDirector",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(7)"
+    },
+    {
+      "name": "movieCast",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(8)"
+    },
+    {
+      "name": "seriesTitle",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(1)"
+    },
+    {
+      "name": "seriesDescription",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(2)"
+    },
+    {
+      "name": "seriesYear",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(3)"
+    },
+    {
+      "name": "seriesRating",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(4)"
+    },
+    {
+      "name": "seriesGenre",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(5)"
+    },
+    {
+      "name": "seriesCreator",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(6)"
+    },
+    {
+      "name": "seriesCast",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(7)"
+    },
+    {
+      "name": "seriesSeasons",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(8)"
+    },
+    {
+      "name": "seriesEpisodes",
+      "selector": "android=new UiSelector().className(\"android.widget.TextView\").index(9)"
+    },
+    {
+      "name": "seriesTab",
+      "selector": "android=resourceId(\"com.philo.philo:id/series_tab\")"
+    },
+    {
+      "name": "episodesTab",
+      "selector": "android=resourceId(\"com.philo.philo:id/episodes_tab\")"
+    },
+    {
+      "name": "castTab",
+      "selector": "android=resourceId(\"com.philo.philo:id/cast_tab\")"
+    },
+    {
+      "name": "detailsTab",
+      "selector": "android=resourceId(\"com.philo.philo:id/details_tab\")"
+    }
+  ]
+} 
